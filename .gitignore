@@ -26,5 +26,7 @@ _testmain.go
 
 # Created by .ignore support plugin (hsz.mobi)
 
+.DS_Store
 *.iml
-.idea
+.idea/
+
