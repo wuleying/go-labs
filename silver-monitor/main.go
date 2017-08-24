@@ -13,6 +13,7 @@ import (
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
     "github.com/server-nado/orm"
+    "github.com/Unknwon/goconfig"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -28,12 +29,23 @@ type Log struct {
     InsertTime      string `field:"insert_time"`
 }
 
+type Config struct {
+    setting  map[string]string
+    database map[string]string
+    email    map[string]string
+}
+
+// 全局配置项
+var config Config
+
 func main() {
     getPid()
 
+    initConfig();
+
     crontab := cron.New()
 
-    crontab.AddFunc("0 0 * * * *", func() {
+    crontab.AddFunc(config.setting["schedule"], func() {
         getPrice();
     })
 
@@ -42,10 +54,24 @@ func main() {
     select {}
 }
 
+// 初始化配置
+func initConfig() {
+    goconfig, err := goconfig.LoadConfigFile("config.ini")
+
+    if err != nil {
+        log.Print("读取配置文件失败[config.ini]")
+        return
+    }
+
+    config.setting, _ = goconfig.GetSection("setting")
+    config.database, _ = goconfig.GetSection("database")
+    config.email, _ = goconfig.GetSection("email")
+}
+
 // 获取实时银价
 func getPrice() {
     // 抓取目标页
-    var url string = "http://www.icbc.com.cn/ICBCDynamicSite/Charts/GoldTendencyPicture.aspx"
+    var url string = config.setting["tendency_picture_url"]
 
     doc, err := goquery.NewDocument(url)
 
@@ -73,12 +99,16 @@ func getPrice() {
 
     price, _ := strconv.ParseFloat(prices[2], 64)
 
-    if (price < 3) {
+    alert_price, _ := strconv.ParseFloat(config.setting["alert_price"], 64)
+
+    if (price <= alert_price) {
         go func() {
-            email_err := sendMail("xxx@qq.com", "xxx", "smtp.qq.com:25", "xxx@qq.com", "监控报告", fmt.Sprintf("当前价格:%s", prices[2]))
+            email_err := sendMail(config.email["user"], config.email["passwd"],
+                fmt.Sprintf("%s:%s", config.email["host"], config.email["port"]),
+                config.email["to"], config.email["subject"], fmt.Sprintf("当前价格:%f", price))
 
             if email_err != nil {
-                log.Printf("send email failed. 当前价格:%s", prices[2])
+                log.Printf("Send email failed: %s. 当前价格:%f", email_err, price)
                 return
             }
         }()
@@ -88,8 +118,16 @@ func getPrice() {
 }
 
 // 数据落地
+// "user:password@tcp(127.0.0.1:3306)/silver_monitor?charset=utf8"
 func saveData(prices map[int]string) (int64) {
-    orm.NewDatabase("default", "mysql", "user:password@tcp(127.0.0.1:3306)/silver_monitor?charset=utf8")
+    orm.NewDatabase("default", config.database["driver"], fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
+        config.database["user"],
+        config.database["passwd"],
+        config.database["protocol"],
+        config.database["host"],
+        config.database["port"],
+        config.database["name"],
+        config.database["charset"]))
     orm.SetDebug(false)
 
     currentTime := time.Now().Local()

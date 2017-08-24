@@ -24,9 +24,8 @@ _testmain.go
 *.test
 *.prof
 
-# Created by .ignore support plugin (hsz.mobi)
-
+### Other
 .DS_Store
 *.iml
 .idea/
-
+config-dev.ini
