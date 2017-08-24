@@ -28,4 +28,3 @@ _testmain.go
 .DS_Store
 *.iml
 .idea/
-config-dev.ini
