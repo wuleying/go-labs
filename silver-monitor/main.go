@@ -60,7 +60,7 @@ func main() {
 // 初始化配置
 func initConfig() {
     flag.Parse()
-    goconfig, err := goconfig.q(*config_path)
+    goconfig, err := goconfig.LoadConfigFile(*config_path)
 
     if err != nil {
         log.Printf("Read config file failed: %s", err)
