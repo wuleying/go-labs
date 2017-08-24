@@ -9,6 +9,7 @@ import (
     "strconv"
     "bytes"
     "fmt"
+    "flag"
 
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
@@ -37,6 +38,8 @@ type Config struct {
 
 // 全局配置项
 var config Config
+// 命令行参数，配置文件路径
+var config_path = flag.String("config", "config.ini", "config file path")
 
 func main() {
     getPid()
@@ -56,12 +59,15 @@ func main() {
 
 // 初始化配置
 func initConfig() {
-    goconfig, err := goconfig.LoadConfigFile("config.ini")
+    flag.Parse()
+    goconfig, err := goconfig.q(*config_path)
 
     if err != nil {
-        log.Print("读取配置文件失败[config.ini]")
+        log.Printf("Read config file failed: %s", err)
         return
     }
+
+    log.Printf("Load config file success: %s", *config_path)
 
     config.setting, _ = goconfig.GetSection("setting")
     config.database, _ = goconfig.GetSection("database")
@@ -108,7 +114,7 @@ func getPrice() {
                 config.email["to"], config.email["subject"], fmt.Sprintf("当前价格:%f", price))
 
             if email_err != nil {
-                log.Printf("Send email failed: %s. 当前价格:%f", email_err, price)
+                log.Printf("Send email failed: %s. Current price:%f", email_err, price)
                 return
             }
         }()
