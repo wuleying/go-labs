@@ -118,7 +118,6 @@ func getPrice() {
 }
 
 // 数据落地
-// "user:password@tcp(127.0.0.1:3306)/silver_monitor?charset=utf8"
 func saveData(prices map[int]string) (int64) {
     orm.NewDatabase("default", config.database["driver"], fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
         config.database["user"],
