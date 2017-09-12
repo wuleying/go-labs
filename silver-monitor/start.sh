@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
 
-#杀死原进程
-kill -9 `sed -n 1p  ./pid`
+# 杀死原进程
+kill_process() {
+    echo "kill process..."
+    kill -9 "$(sed -n 1p ./pid)"
+}
 
-go clean
+build() {
+    echo "clean..."
+    go clean
 
-echo "build begin..."
-go build -o silver-monitor main.go
+    echo "build begin..."
+    go build -o silver-monitor main.go
+    chmod +x ./silver-monitor
+    echo "build end..."
+}
 
-echo "run..."
-chmod +x ./silver-monitor
-#./silver_monitor
-nohup ./silver-monitor &
+begin_monitor() {
+    nohup ./silver-monitor &
+}
+
+main(){
+    kill_process "$@"
+    build
+    begin_monitor
+}
+
+main "$@"
