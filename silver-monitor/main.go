@@ -125,7 +125,8 @@ func getPrice() {
 
 // 数据落地
 func saveData(prices map[int]string) (int64) {
-    orm.NewDatabase("default", config.database["driver"], fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
+    orm.NewDatabase("default", config.database["driver"],
+        fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
         config.database["user"],
         config.database["passwd"],
         config.database["protocol"],
