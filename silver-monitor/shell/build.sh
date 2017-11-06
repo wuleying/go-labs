@@ -3,12 +3,14 @@
 # 项目名称
 PROJECT_NAME="silver-monitor"
 # 服务端名称
-SERVER_NAME="$PROJECT_NAME"-server
+SERVER_NAME=server
 # 管理端名称
-MANAGER_NAME="$PROJECT_NAME"-manager
+MANAGER_NAME=manager
 
 # 根目录
 ENV_ROOT_DIR=""
+# src目录
+ENV_SRC_DIR=""
 # bin目录
 ENV_BIN_DIR=""
 
@@ -34,6 +36,7 @@ init(){
     fi
 
     ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
+    ENV_SRC_DIR="$ENV_ROOT_DIR"/src
     ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 
     if [[ "$BUILD_MODE" != "server" && "$BUILD_MODE" != "manager" ]]; then
@@ -42,6 +45,7 @@ init(){
 
     _info "BUILD_MODE:         $BUILD_MODE"
     _info "ENV_ROOT_DIR:       $ENV_ROOT_DIR"
+    _info "ENV_SRC_DIR:        $ENV_SRC_DIR"
     _info "ENV_BIN_DIR:        $ENV_BIN_DIR"
 }
 
@@ -76,13 +80,13 @@ build() {
     _info "start..."
 
     if [[ "$BUILD_MODE" == "server" ]]; then
-        go build -o "$ENV_BIN_DIR"/"$SERVER_NAME" "$SERVER_NAME".go
-        chmod +x "$ENV_BIN_DIR"/"$SERVER_NAME"
+        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME" "$ENV_SRC_DIR"/"$SERVER_NAME".go
+        chmod +x "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME"
     fi
 
     if [[ "$BUILD_MODE" == "manager" ]]; then
-        go build -o "$ENV_BIN_DIR"/"$MANAGER_NAME" "$MANAGER_NAME".go
-        chmod +x "$ENV_BIN_DIR"/"$MANAGER_NAME"
+        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" "$ENV_SRC_DIR"/"$MANAGER_NAME".go
+        chmod +x "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME"
     fi
 
     _info "end..."
