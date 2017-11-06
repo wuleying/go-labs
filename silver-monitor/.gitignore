@@ -1,4 +1,4 @@
-config-dev.ini
-silver-monitor
-pid
+config/config-dev.ini
+bin/
+*.pid
 nohup.out
