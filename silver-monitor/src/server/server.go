@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
     "log"
@@ -39,7 +39,7 @@ type Config struct {
 // 全局配置项
 var config Config
 // 命令行参数，配置文件路径
-var config_path = flag.String("config", "config.ini", "config file path")
+var config_path = flag.String("config", "config/config.ini", "config file path")
 
 func main() {
     getPid()
@@ -158,7 +158,7 @@ func saveData(prices map[int]string) (int64) {
 
 // 获取pid
 func getPid() {
-    file, err := os.OpenFile("./pid", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)
+    file, err := os.OpenFile("./pid/silver-monitor-server.pid", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)
 
     if err != nil {
         log.Fatal("open file failed.", err.Error())
