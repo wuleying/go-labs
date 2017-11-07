@@ -77,7 +77,7 @@ func initConfig() {
 // 获取实时银价
 func getPrice() {
     // 抓取目标页
-    var url string = config.setting["tendency_picture_url"]
+    var url string = config.setting["tendency_url"]
 
     doc, err := goquery.NewDocument(url)
 
