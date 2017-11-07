@@ -5,15 +5,6 @@ source ./shell/common.sh
 
 # 初始化
 init(){
-    # 编译参数
-    if [ -n "$1" ]; then
-        BUILD_MODE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    fi
-
-    if [[ "$BUILD_MODE" != "server" && "$BUILD_MODE" != "manager" ]]; then
-        _error "Build mode must be 'server' or 'manager'."
-    fi
-
     _info "BUILD_MODE:      $BUILD_MODE"
     _info "ENV_ROOT_DIR:    $ENV_ROOT_DIR"
     _info "ENV_SRC_DIR:     $ENV_SRC_DIR"

@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-./kill.sh
+# shellcheck disable=SC1091
+source ./shell/common.sh
