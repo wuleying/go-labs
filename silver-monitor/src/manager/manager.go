@@ -5,10 +5,10 @@ import (
     "net/http"
     "log"
     "flag"
-    "github.com/Unknwon/goconfig"
-    "strconv"
-    "os"
     "fmt"
+
+    "github.com/Unknwon/goconfig"
+    "go-labs/silver-monitor/src/common"
 )
 
 type Config struct {
@@ -31,7 +31,7 @@ func TestServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-    getPid();
+    common.SavePid("./pid/silver-monitor-server.pid");
 
     initConfig();
 
@@ -60,19 +60,3 @@ func initConfig() {
     config.manager, _ = goconfig.GetSection("manager")
 }
 
-// 获取pid
-func getPid() {
-    file, err := os.OpenFile("./pid/silver-monitor-manager.pid", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)
-
-    if err != nil {
-        log.Fatal("open file failed.", err.Error())
-    }
-
-    defer file.Close()
-
-    pid := os.Getpid()
-
-    log.Printf("pid:%d", pid)
-
-    file.WriteString(strconv.Itoa(pid))
-}
