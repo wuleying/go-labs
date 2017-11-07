@@ -1,32 +1,7 @@
 #!/usr/bin/env bash
 
-# 项目名称
-PROJECT_NAME="silver-monitor"
-# 服务端名称
-SERVER_NAME=server
-# 管理端名称
-MANAGER_NAME=manager
-
-# 根目录
-ENV_ROOT_DIR=""
-# src目录
-ENV_SRC_DIR=""
-# bin目录
-ENV_BIN_DIR=""
-
-# 编译参数
-BUILD_MODE="server"
-
-# 控制台输出
-_info() {
-    printf "[%-5s] %s\n" "${FUNCNAME[1]}" "$1"
-}
-
-# 错误信息
-_error() {
-    printf "[%-5s] Error: %s \n" "${FUNCNAME[1]}" "$1"
-    exit
-}
+# shellcheck disable=SC1091
+source ./shell/common.sh
 
 # 初始化
 init(){
@@ -35,18 +10,14 @@ init(){
         BUILD_MODE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     fi
 
-    ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
-    ENV_SRC_DIR="$ENV_ROOT_DIR"/src
-    ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
-
     if [[ "$BUILD_MODE" != "server" && "$BUILD_MODE" != "manager" ]]; then
         _error "Build mode must be 'server' or 'manager'."
     fi
 
-    _info "BUILD_MODE:         $BUILD_MODE"
-    _info "ENV_ROOT_DIR:       $ENV_ROOT_DIR"
-    _info "ENV_SRC_DIR:        $ENV_SRC_DIR"
-    _info "ENV_BIN_DIR:        $ENV_BIN_DIR"
+    _info "BUILD_MODE:      $BUILD_MODE"
+    _info "ENV_ROOT_DIR:    $ENV_ROOT_DIR"
+    _info "ENV_SRC_DIR:     $ENV_SRC_DIR"
+    _info "ENV_BIN_DIR:     $ENV_BIN_DIR"
 }
 
 # 清理工作
