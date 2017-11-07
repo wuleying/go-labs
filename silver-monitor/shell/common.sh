@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2034
+
 # 项目名称
 PROJECT_NAME="silver-monitor"
 # 服务端名称
