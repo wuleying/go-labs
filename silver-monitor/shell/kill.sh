@@ -20,7 +20,7 @@ kill_process(){
         # 删除pid文件
         rm "$PID_FILE_PATH"
 
-        _info "silver-monitor-server stopped."
+        _info "silver-monitor-$PID_FILE_PATH stopped."
     fi
 }
 
