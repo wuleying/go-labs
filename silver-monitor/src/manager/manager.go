@@ -23,13 +23,10 @@ func TestServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-    common.SavePid("./pid/silver-monitor-server.pid");
+    common.SavePid("./pid/silver-monitor-manager.pid");
 
     // 命令行参数，配置文件路径
     var config_path = flag.String("config", "config/config.ini", "config file path")
-
-    log.Printf("config_path=%s", *config_path)
-
     config, _ = common.InitConfig(*config_path);
 
     http.HandleFunc("/", HelloServer)
