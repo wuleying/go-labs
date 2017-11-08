@@ -38,7 +38,7 @@ func main() {
     common.SavePid("./pid/silver-monitor-server.pid")
 
     // 命令行参数，配置文件路径
-    var config_path = flag.String("config", "config/config.ini", "config file path")
+    config_path := flag.String("config", "config/config.ini", "config file path")
     config, _ = common.InitConfig(*config_path);
 
     crontab := cron.New()
