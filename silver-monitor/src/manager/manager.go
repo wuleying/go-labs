@@ -27,7 +27,6 @@ func main() {
 
     // 命令行参数，配置文件路径
     config_path := flag.String("config", "config/config.ini", "config file path")
-
     config, _ = common.InitConfig(*config_path);
 
     http.HandleFunc("/", HelloServer)

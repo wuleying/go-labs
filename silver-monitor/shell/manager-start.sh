@@ -11,9 +11,7 @@ start() {
     "$ENV_SHELL_DIR"/build.sh manager
 
     # 执行
-    #nohup "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" --config="$ENV_CONFIG_DIR"/config-dev.ini &
-
-    "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" --config="$ENV_CONFIG_DIR/config-dev.ini"
+    nohup "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" --config="$ENV_CONFIG_DIR"/config-dev.ini &
 }
 
 main(){
