@@ -13,6 +13,8 @@ import (
 // 全局配置
 var config common.Config
 
+var config_path = flag.String("config", "config/config.ini", "config file path")
+
 // hello world, the web server
 func HelloServer(w http.ResponseWriter, req *http.Request) {
     io.WriteString(w, "hello, world!\n")
@@ -26,7 +28,6 @@ func main() {
     common.SavePid("./pid/silver-monitor-manager.pid");
 
     // 命令行参数，配置文件路径
-    var config_path = flag.String("config", "config/config.ini", "config file path")
     config, _ = common.InitConfig(*config_path);
 
     http.HandleFunc("/", HelloServer)
