@@ -5,7 +5,6 @@ import (
     "strings"
     "time"
     "net/smtp"
-    "os"
     "strconv"
     "bytes"
     "fmt"
@@ -14,8 +13,9 @@ import (
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
     "github.com/server-nado/orm"
-    "github.com/Unknwon/goconfig"
     _ "github.com/go-sql-driver/mysql"
+
+    "go-labs/silver-monitor/src/common"
 )
 
 // 日志结构体
@@ -30,25 +30,22 @@ type Log struct {
     InsertTime      string `field:"insert_time"`
 }
 
-type Config struct {
-    setting  map[string]string
-    database map[string]string
-    email    map[string]string
-}
-
-// 全局配置项
-var config Config
-// 命令行参数，配置文件路径
-var config_path = flag.String("config", "config/config.ini", "config file path")
+// 全局配置
+var config common.Config
 
 func main() {
-    getPid()
+    // 保存pid
+    common.SavePid("./pid/silver-monitor-server.pid")
 
-    initConfig();
+    // 命令行参数，配置文件路径
+    var config_path = flag.String("config", "config/config.ini", "config file path")
+    log.Printf("config_path=%s", *config_path)
+
+    config, _ = common.InitConfig(*config_path);
 
     crontab := cron.New()
 
-    crontab.AddFunc(config.setting["schedule"], func() {
+    crontab.AddFunc(config.Setting["schedule"], func() {
         getPrice();
     })
 
@@ -57,27 +54,10 @@ func main() {
     select {}
 }
 
-// 初始化配置
-func initConfig() {
-    flag.Parse()
-    goconfig, err := goconfig.LoadConfigFile(*config_path)
-
-    if err != nil {
-        log.Printf("Read config file failed: %s", err)
-        return
-    }
-
-    log.Printf("Load config file success: %s", *config_path)
-
-    config.setting, _ = goconfig.GetSection("setting")
-    config.database, _ = goconfig.GetSection("database")
-    config.email, _ = goconfig.GetSection("email")
-}
-
 // 获取实时银价
 func getPrice() {
     // 抓取目标页
-    var url string = config.setting["tendency_url"]
+    var url string = config.Setting["tendency_url"]
 
     doc, err := goquery.NewDocument(url)
 
@@ -105,13 +85,17 @@ func getPrice() {
 
     price, _ := strconv.ParseFloat(prices[2], 64)
 
-    alert_price, _ := strconv.ParseFloat(config.setting["alert_price"], 64)
+    alert_price, _ := strconv.ParseFloat(config.Setting["alert_price"], 64)
 
     if (price <= alert_price) {
         go func() {
-            email_err := sendMail(config.email["user"], config.email["passwd"],
-                fmt.Sprintf("%s:%s", config.email["host"], config.email["port"]),
-                config.email["to"], config.email["subject"], fmt.Sprintf("当前价格:%f", price))
+            email_err := sendMail(
+                config.Email["user"],
+                config.Email["passwd"],
+                fmt.Sprintf("%s:%s", config.Email["host"], config.Email["port"]),
+                config.Email["to"],
+                config.Email["subject"],
+                fmt.Sprintf("当前价格:%f", price))
 
             if email_err != nil {
                 log.Printf("Send email failed: %s. Current price:%f", email_err, price)
@@ -125,15 +109,16 @@ func getPrice() {
 
 // 数据落地
 func saveData(prices map[int]string) (int64) {
-    orm.NewDatabase("default", config.database["driver"],
-        fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
-        config.database["user"],
-        config.database["passwd"],
-        config.database["protocol"],
-        config.database["host"],
-        config.database["port"],
-        config.database["name"],
-        config.database["charset"]))
+    orm.NewDatabase("default",
+            config.Database["driver"],
+            fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
+            config.Database["user"],
+            config.Database["passwd"],
+            config.Database["protocol"],
+            config.Database["host"],
+            config.Database["port"],
+            config.Database["name"],
+            config.Database["charset"]))
     orm.SetDebug(false)
 
     currentTime := time.Now().Local()
@@ -154,23 +139,6 @@ func saveData(prices map[int]string) (int64) {
     }
 
     return id
-}
-
-// 获取pid
-func getPid() {
-    file, err := os.OpenFile("./pid/silver-monitor-server.pid", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)
-
-    if err != nil {
-        log.Fatal("open file failed.", err.Error())
-    }
-
-    defer file.Close()
-
-    pid := os.Getpid()
-
-    log.Printf("pid:%d", pid)
-
-    file.WriteString(strconv.Itoa(pid))
 }
 
 // 发送邮件
