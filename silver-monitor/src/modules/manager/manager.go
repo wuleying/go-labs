@@ -40,7 +40,7 @@ func main() {
     http.HandleFunc("/", HomeHandler)
     http.HandleFunc("/data", DataHandler)
 
-    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
+    http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("src/statics"))))
 
     err := http.ListenAndServe(fmt.Sprintf(":%s", config.Manager["port"]), nil)
     if err != nil {
