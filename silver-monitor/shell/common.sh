@@ -16,7 +16,7 @@ ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 # bin目录
 ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 # pid目录
-ENV_PID_DIR="$ENV_ROOT_DIR"/pid
+ENV_PID_DIR="$ENV_ROOT_DIR"/pids
 # config目录
 ENV_CONFIG_DIR="$ENV_ROOT_DIR"/config
 # shell目录

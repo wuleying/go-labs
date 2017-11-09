@@ -40,6 +40,8 @@ func main() {
     http.HandleFunc("/", HomeHandler)
     http.HandleFunc("/data", DataHandler)
 
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
+
     err := http.ListenAndServe(fmt.Sprintf(":%s", config.Manager["port"]), nil)
     if err != nil {
         log.Fatal("Listen and serve failed: ", err.Error())
