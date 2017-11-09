@@ -10,6 +10,8 @@ import (
 
 // 保存pid
 func SavePid(pid_path string) {
+    pid_path = PIDS_DIR + "/" + pid_path
+
     file, err := os.OpenFile(pid_path, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)
 
     if err != nil {

@@ -33,7 +33,7 @@ func DataHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
-    common.SavePid("./pid/silver-monitor-manager.pid");
+    common.SavePid("silver-monitor-manager.pid");
 
     config, _ = common.InitConfig();
 

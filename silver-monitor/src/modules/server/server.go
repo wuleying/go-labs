@@ -15,26 +15,15 @@ import (
     _ "github.com/go-sql-driver/mysql"
 
     "go-labs/silver-monitor/src/common"
+    "go-labs/silver-monitor/src/models"
 )
-
-// 日志结构体
-type Log struct {
-    orm.DBHook
-    Id              int64 `field:"id" auto:"true" index:"pk"`
-    PriceBid        string `field:"price_bid"`
-    PriceSell       string `field:"price_sell"`
-    PriceMiddle     string `field:"price_middle"`
-    PriceMiddleHigh string `field:"price_middle_high"`
-    PriceMiddleLow  string `field:"price_middle_low"`
-    InsertTime      string `field:"insert_time"`
-}
 
 // 全局配置
 var config common.Config
 
 func main() {
     // 保存pid
-    common.SavePid("./pid/silver-monitor-server.pid")
+    common.SavePid("silver-monitor-server.pid")
 
     config, _ = common.InitConfig();
 
@@ -118,7 +107,7 @@ func saveData(prices map[int]string) (int64) {
 
     currentTime := time.Now().Local()
 
-    logModel := new(Log)
+    logModel := new(models.Log)
 
     logModel.PriceBid = prices[2]
     logModel.PriceSell = prices[3]
