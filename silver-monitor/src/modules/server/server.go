@@ -8,7 +8,6 @@ import (
     "strconv"
     "bytes"
     "fmt"
-    "flag"
 
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
@@ -37,11 +36,7 @@ func main() {
     // 保存pid
     common.SavePid("./pid/silver-monitor-server.pid")
 
-    // 命令行参数，配置文件路径
-    config_path := flag.String("config", "config/config.ini", "config file path")
-
-    flag.Parse()
-    config, _ = common.InitConfig(*config_path);
+    config, _ = common.InitConfig();
 
     crontab := cron.New()
 

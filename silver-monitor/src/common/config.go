@@ -15,19 +15,19 @@ type Config struct {
 }
 
 // 初始化配置
-func InitConfig(config_path string) (Config, error) {
+func InitConfig() (Config, error) {
     var config Config
 
     flag.Parse()
 
-    goconfig, err := goconfig.LoadConfigFile(config_path)
+    goconfig, err := goconfig.LoadConfigFile(*CONFIG_PATH)
 
     if err != nil {
         log.Printf("Read config file failed: %s", err)
         return config, err
     }
 
-    log.Printf("Load config file success: %s", config_path)
+    log.Printf("Load config file success: %s", *CONFIG_PATH)
 
     config.Setting, _ = goconfig.GetSection("setting")
     config.Database, _ = goconfig.GetSection("database")

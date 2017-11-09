@@ -50,12 +50,12 @@ build() {
     _info "start..."
 
     if [[ "$BUILD_MODE" == "server" ]]; then
-        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME" "$ENV_SRC_DIR"/"$SERVER_NAME"/*.go
+        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME" "$ENV_SRC_DIR"/modules/"$SERVER_NAME"/*.go
         chmod +x "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME"
     fi
 
     if [[ "$BUILD_MODE" == "manager" ]]; then
-        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" "$ENV_SRC_DIR"/"$MANAGER_NAME"/*.go
+        go build -o "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME" "$ENV_SRC_DIR"/modules/"$MANAGER_NAME"/*.go
         chmod +x "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$MANAGER_NAME"
     fi
 
