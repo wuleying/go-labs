@@ -23,8 +23,6 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     }
 
     template.Execute(response, "Hello world")
-
-    io.WriteString(response, common.TEMPLATES_DIR + "/manager/home.html")
 }
 
 // 数据

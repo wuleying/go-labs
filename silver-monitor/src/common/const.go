@@ -15,6 +15,7 @@ const (
     // http头
     ApplicationJSON = "application/json"
     ApplicationXML = "application/xml"
+    TextHTML = "text/html"
     TextXML = "text/xml"
 )
 
