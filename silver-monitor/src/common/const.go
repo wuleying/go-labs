@@ -6,18 +6,19 @@ import (
 
 // 全局常量
 const (
-    VERSION = "1.0.0"
+    // 系统版本
+    VERSION = "0.0.2"
+
     DEV = "dev"
     PROD = "prod"
-)
 
-// http头
-const (
+    // http头
     ApplicationJSON = "application/json"
     ApplicationXML = "application/xml"
     TextXML = "text/xml"
 )
 
+// 全局变量
 var (
     // 项目根目录
     ROOT_DIR = GetParentDirectory(GetCurrentDirectory())
