@@ -3,6 +3,19 @@
 # shellcheck disable=SC1091
 source ./shell/common.sh
 
+# 编译参数缺省值
+BUILD_MODE="server"
+
+# 编译参数
+if [ -n "$1" ]; then
+    BUILD_MODE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+fi
+
+# 编译参数校验
+if [[ "$BUILD_MODE" != "server" && "$BUILD_MODE" != "manager" ]]; then
+    _error "Build mode must be 'server' or 'manager'."
+fi
+
 # 初始化
 init(){
     _info "BUILD_MODE:      $BUILD_MODE"
