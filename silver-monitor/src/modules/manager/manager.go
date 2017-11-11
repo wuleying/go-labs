@@ -2,7 +2,6 @@ package main
 
 import (
     "log"
-    "io"
     "fmt"
     "net/http"
     "html/template"
@@ -13,21 +12,9 @@ import (
 // 全局配置
 var config common.Config
 
-// 首页
-func HomeHandler(response http.ResponseWriter, request *http.Request) {
-    template, err := template.ParseFiles(common.TEMPLATES_DIR + "/manager/home.html")
-
-    if err != nil {
-        log.Fatal("Load template failed: ", err.Error())
-        return
-    }
-
-    template.Execute(response, "Hello world")
-}
-
-// 数据
-func DataHandler(response http.ResponseWriter, request *http.Request) {
-    io.WriteString(response, "hello, data!\n")
+// 首页数据结构体
+type HomeData struct {
+    Type string
 }
 
 func main() {
@@ -36,7 +23,6 @@ func main() {
     config, _ = common.InitConfig();
 
     http.HandleFunc("/", HomeHandler)
-    http.HandleFunc("/data", DataHandler)
 
     http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("src/statics"))))
 
@@ -44,4 +30,23 @@ func main() {
     if err != nil {
         log.Fatal("Listen and serve failed: ", err.Error())
     }
+}
+
+// 首页
+func HomeHandler(response http.ResponseWriter, request *http.Request) {
+    var data HomeData;
+
+    template, err := template.ParseFiles(common.TEMPLATES_DIR + "/manager/home.html")
+
+    if err != nil {
+        log.Fatal("Load template failed: ", err.Error())
+        return
+    }
+
+    // 解析请求参数
+    request.ParseForm();
+
+    data.Type = request.Form.Get("type")
+
+    template.Execute(response, data)
 }
