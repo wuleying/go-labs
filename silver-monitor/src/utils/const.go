@@ -1,8 +1,6 @@
-package common
+package utils
 
-import (
-    "flag"
-)
+import "flag"
 
 // 全局常量
 const (

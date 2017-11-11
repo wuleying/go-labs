@@ -11,21 +11,23 @@ import (
 
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
-    "github.com/server-nado/orm"
     _ "github.com/go-sql-driver/mysql"
 
-    "go-labs/silver-monitor/src/common"
     "go-labs/silver-monitor/src/models"
+    "go-labs/silver-monitor/src/utils"
 )
 
 // 全局配置
-var config common.Config
+var config utils.Config
 
 func main() {
     // 保存pid
-    common.SavePid("silver-monitor-server.pid")
+    utils.SavePid("silver-monitor-server.pid")
 
-    config, _ = common.InitConfig();
+    config, _ = utils.InitConfig();
+
+    // 初始化模型
+    models.InitModel(config)
 
     crontab := cron.New()
 
@@ -60,7 +62,7 @@ func getPrice() {
         }
     })
 
-    id := saveData(prices)
+    id := models.SaveData(prices)
 
     if (prices[2] == "") {
         log.Print("get price failed")
@@ -89,40 +91,6 @@ func getPrice() {
     }
 
     log.Printf("monitor id:%d", id)
-}
-
-// 数据落地
-func saveData(prices map[int]string) (int64) {
-    orm.NewDatabase("default",
-            config.Database["driver"],
-            fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
-            config.Database["user"],
-            config.Database["passwd"],
-            config.Database["protocol"],
-            config.Database["host"],
-            config.Database["port"],
-            config.Database["name"],
-            config.Database["charset"]))
-    orm.SetDebug(false)
-
-    currentTime := time.Now().Local()
-
-    logModel := new(models.Log)
-
-    logModel.PriceBid = prices[2]
-    logModel.PriceSell = prices[3]
-    logModel.PriceMiddle = prices[4]
-    logModel.PriceMiddleHigh = prices[5]
-    logModel.PriceMiddleLow = prices[6]
-    logModel.InsertTime = currentTime.Format("2006-01-02 15:04:05")
-    logModel.Objects(logModel).SetTable("log")
-    _, id, err := logModel.Objects(logModel).Save()
-
-    if err != nil {
-        log.Print(err)
-    }
-
-    return id
 }
 
 // 发送邮件

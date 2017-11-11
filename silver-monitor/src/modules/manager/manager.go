@@ -6,11 +6,11 @@ import (
     "net/http"
     "html/template"
 
-    "go-labs/silver-monitor/src/common"
+    "go-labs/silver-monitor/src/utils"
 )
 
 // 全局配置
-var config common.Config
+var config utils.Config
 
 // 首页数据结构体
 type HomeData struct {
@@ -18,9 +18,9 @@ type HomeData struct {
 }
 
 func main() {
-    common.SavePid("silver-monitor-manager.pid");
+    utils.SavePid("silver-monitor-manager.pid");
 
-    config, _ = common.InitConfig();
+    config, _ = utils.InitConfig();
 
     http.HandleFunc("/", HomeHandler)
 
@@ -36,7 +36,7 @@ func main() {
 func HomeHandler(response http.ResponseWriter, request *http.Request) {
     var data HomeData;
 
-    template, err := template.ParseFiles(common.TEMPLATES_DIR + "/manager/home.html")
+    template, err := template.ParseFiles(utils.TEMPLATES_DIR + "/manager/home.html")
 
     if err != nil {
         log.Fatal("Load template failed: ", err.Error())

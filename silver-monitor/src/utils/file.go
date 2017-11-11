@@ -1,11 +1,11 @@
-package common
+package utils
 
 import (
     "strconv"
     "os"
     "log"
-    "path/filepath"
     "strings"
+    "path/filepath"
 )
 
 // 保存pid
@@ -39,5 +39,5 @@ func GetCurrentDirectory() string {
 
 // 获取上级目录
 func GetParentDirectory(dirctory string) string {
-    return substr(dirctory, 0, strings.LastIndex(dirctory, "/"))
+    return Substr(dirctory, 0, strings.LastIndex(dirctory, "/"))
 }
