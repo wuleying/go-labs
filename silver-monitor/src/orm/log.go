@@ -1,4 +1,4 @@
-package models
+package orm
 
 import (
     "time"
@@ -20,7 +20,7 @@ type Log struct {
 }
 
 // 数据落地
-func SaveData(prices map[int]string) (int64) {
+func LogSaveData(prices map[int]string) (int64) {
     currentTime := time.Now().Local()
 
     logModel := new(Log)

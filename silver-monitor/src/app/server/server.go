@@ -3,31 +3,28 @@ package main
 import (
     "log"
     "strings"
-    "time"
-    "net/smtp"
     "strconv"
-    "bytes"
     "fmt"
 
     "github.com/robfig/cron"
     "github.com/PuerkitoBio/goquery"
     _ "github.com/go-sql-driver/mysql"
 
-    "go-labs/silver-monitor/src/models"
-    "go-labs/silver-monitor/src/utils"
+    "go-labs/silver-monitor/src/orm"
+    "go-labs/silver-monitor/src/util"
 )
 
 // 全局配置
-var config utils.Config
+var config util.Config
 
 func main() {
     // 保存pid
-    utils.SavePid("silver-monitor-server.pid")
+    util.SavePid("silver-monitor-server.pid")
 
-    config, _ = utils.InitConfig();
+    config, _ = util.InitConfig();
 
     // 初始化模型
-    models.InitModel(config)
+    orm.InitModel(config)
 
     crontab := cron.New()
 
@@ -62,7 +59,7 @@ func getPrice() {
         }
     })
 
-    id := models.SaveData(prices)
+    id := orm.LogSaveData(prices)
 
     if (prices[2] == "") {
         log.Print("get price failed")
@@ -75,7 +72,7 @@ func getPrice() {
 
     if (price <= alert_price) {
         go func() {
-            email_err := sendMail(
+            email_err := util.SendMail(
                 config.Email["user"],
                 config.Email["passwd"],
                 fmt.Sprintf("%s:%s", config.Email["host"], config.Email["port"]),
@@ -91,31 +88,4 @@ func getPrice() {
     }
 
     log.Printf("monitor id:%d", id)
-}
-
-// 发送邮件
-func sendMail(user string, password string, host string, to string, subject string, body string) error {
-    hp := strings.Split(host, ":")
-    auth := smtp.PlainAuth("", user, password, hp[0])
-    send_to := strings.Split(to, ";")
-
-    buffer := bytes.NewBuffer(nil)
-
-    boudary := "SILVER_MONITOR"
-
-    msg := fmt.Sprintf("To:%s\r\n" +
-    "From:%s\r\n" +
-    "Subject:%s\r\n" +
-    "Content-Type:multipart/mixed;Boundary=\"%s\"\r\n" +
-    "Mime-Version:1.0\r\n" +
-    "Date:%s\r\n" +
-    "\r\n\r\n--%s\r\n" +
-    "Content-Type:text/plain;charset=utf-8\r\n\r\n%s\r\n",
-        to, user, subject, boudary, time.Now().String(), boudary, body)
-
-    buffer.WriteString(msg)
-
-    err := smtp.SendMail(host, auth, user, send_to, buffer.Bytes())
-
-    return err
 }

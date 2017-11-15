@@ -1,15 +1,15 @@
-package models
+package orm
 
 import (
     "fmt"
 
     "github.com/server-nado/orm"
-    "go-labs/silver-monitor/src/utils"
+    "go-labs/silver-monitor/src/util"
     "strconv"
 )
 
 // 初始化数据库配置项
-func InitModel(config utils.Config) {
+func InitModel(config util.Config) {
     orm.NewDatabase("default",
         config.Database["driver"],
         fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",

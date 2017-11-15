@@ -1,4 +1,4 @@
-package utils
+package util
 
 // 截断字符串
 func Substr(s string, pos, length int) string {
