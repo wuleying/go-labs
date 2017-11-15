@@ -48,7 +48,7 @@ func LogList(data_type string) ([]*Log) {
     logs := []*Log{}
     logModel := new(Log)
 
-    err := logModel.Objects(logModel).All(&logs)
+    err := logModel.Objects(logModel).Filter("Uid__lt",10).All(&logs)
 
     if err != nil {
         log.Print(err.Error())

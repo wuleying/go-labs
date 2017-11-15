@@ -15,13 +15,14 @@ var config util.Config
 
 type HomeData struct {
     Type string
-    Logs []*orm.Log
+    Logs []*(orm.Log)
 }
 
 func main() {
     util.SavePid("silver-monitor-manager.pid");
 
     config, _ = util.InitConfig();
+    orm.InitModel(config)
 
     http.HandleFunc("/", HomeHandler)
 
@@ -48,7 +49,8 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     request.ParseForm();
 
     data.Type = request.Form.Get("type")
-    data.Logs = orm.LogList(data.Type)
+
+    //logs := orm.LogList(data.Type)
 
     template.Execute(response, data)
 }
