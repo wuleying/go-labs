@@ -35,8 +35,26 @@ func LogSaveData(prices map[int]string) (int64) {
     _, id, err := logModel.Objects(logModel).Save()
 
     if err != nil {
-        log.Print(err)
+        log.Print(err.Error())
+
+        return 0
     }
 
     return id
+}
+
+// 获取日志列表
+func LogList(data_type string) ([]*Log) {
+    logs := []*Log{}
+    logModel := new(Log)
+
+    err := logModel.Objects(logModel).All(&logs)
+
+    if err != nil {
+        log.Print(err.Error())
+
+        return logs
+    }
+
+    return logs
 }

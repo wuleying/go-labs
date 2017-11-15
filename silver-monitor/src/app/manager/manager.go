@@ -7,14 +7,15 @@ import (
     "html/template"
 
     "go-labs/silver-monitor/src/util"
+    "go-labs/silver-monitor/src/orm"
 )
 
 // 全局配置
 var config util.Config
 
-// 首页数据结构体
 type HomeData struct {
     Type string
+    Logs []*orm.Log
 }
 
 func main() {
@@ -47,6 +48,7 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     request.ParseForm();
 
     data.Type = request.Form.Get("type")
+    data.Logs = orm.LogList(data.Type)
 
     template.Execute(response, data)
 }
