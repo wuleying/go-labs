@@ -11,7 +11,7 @@ import (
 )
 
 // 初始化数据库配置项
-func InitModel(config util.Config) {
+func Init(config util.Config) {
     orm.NewDatabase("default",
         config.Database["driver"],
         fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",

@@ -32,5 +32,5 @@ var (
     TEMPLATES_DIR = SRC_DIR + "/views"
 
     // 命令行参数，配置文件路径
-    CONFIG_PATH = flag.String("config", "config/config-prod.ini", "config file path")
+    CONFIG_PATH = flag.String("config", "config/config-dev.ini", "config file path")
 )

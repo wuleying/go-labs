@@ -43,6 +43,7 @@ func LogSaveData(prices map[int]string) (int64) {
     return id
 }
 
+// 日志列表
 func LogList() {
     logModel := new(Log)
 

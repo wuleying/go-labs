@@ -28,7 +28,7 @@ func main() {
     }
 
     // 初始化模型
-    model.InitModel(config)
+    model.Init(config)
 
     crontab := cron.New()
 
