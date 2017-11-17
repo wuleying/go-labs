@@ -1,6 +1,8 @@
 package model
 
-import "github.com/jmoiron/sqlx"
+import (
+    "github.com/jmoiron/sqlx"
+)
 
 // 日志结构体
 type Log struct {
@@ -19,11 +21,10 @@ type LogReport struct {
 }
 
 // 日志列表
-func LogReportList(db *sqlx.DB) ([]*LogReport) {
+func LogReportList(db *sqlx.DB, start string, end string) ([]*LogReport) {
     logReport := []*LogReport{}
-
-    db.Select(&logReport, "SELECT DATE_FORMAT(`insert_time`, \"%Y-%m-%d\") AS `date`, AVG(`price_bid`) AS `price` FROM `log` WHERE `insert_time` > '2017-10-16 00:00:00' GROUP BY `date` ORDER BY `date`")
-
+    sql := "SELECT DATE_FORMAT(`insert_time`, \"%Y-%m-%d\") AS `date`, AVG(`price_bid`) AS `price` FROM `log` WHERE `insert_time` > ? AND `insert_time` < ? GROUP BY `date` ORDER BY `date`"
+    db.Select(&logReport, sql, start, end)
     return logReport
 }
 

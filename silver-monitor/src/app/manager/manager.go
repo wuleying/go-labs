@@ -9,6 +9,7 @@ import (
     "net/http"
     "html/template"
     "github.com/jmoiron/sqlx"
+    "time"
 )
 
 // 首页数据结构体
@@ -55,7 +56,14 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     // 解析请求参数
     request.ParseForm();
     data.Type = request.Form.Get("type")
-    data.LogData = model.LogReportList(db)
+
+    currentTime := time.Now().Unix()
+    startTime := currentTime - (100 * 86400)
+
+    start := time.Unix(startTime, 0).Format("2006-01-02")
+    end := time.Unix(currentTime, 0).Format("2006-01-02")
+
+    data.LogData = model.LogReportList(db, start, end)
 
     template.Execute(response, data)
 }
