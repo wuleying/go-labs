@@ -13,6 +13,7 @@ import (
 // 首页数据结构体
 type HomeData struct {
     Type string
+    LogData []*model.Log
 }
 
 // 全局配置
@@ -39,6 +40,7 @@ func main() {
     }
 }
 
+// 首页
 func HomeHandler(response http.ResponseWriter, request *http.Request) {
     var data HomeData;
     template, err := template.ParseFiles(util.TEMPLATES_DIR + "/manager/home.html")
@@ -50,10 +52,7 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
 
     // 解析请求参数
     request.ParseForm();
-
     data.Type = request.Form.Get("type")
-
-    model.LogList()
-
+    data.LogData = model.LogList()
     template.Execute(response, data)
 }

@@ -2,7 +2,6 @@ package model
 
 import (
     "time"
-    "fmt"
     "log"
 
     "github.com/server-nado/orm"
@@ -44,16 +43,12 @@ func LogSaveData(prices map[int]string) (int64) {
 }
 
 // 日志列表
-func LogList() {
+func LogList() ([]*Log) {
     logModel := new(Log)
-
     logs := []*Log{}
 
     logModel.Objects(logModel).SetTable("log")
+    logModel.Objects(logModel).Filter("Id__lt", 10).All(&logs)
 
-    if err := logModel.Objects(logModel).Filter("Id__lt", 10).All(&logs); err == nil {
-        for _, u := range logs {
-            fmt.Println(u.Id, u.PriceSell)
-        }
-    }
+    return logs
 }
