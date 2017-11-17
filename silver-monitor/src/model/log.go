@@ -1,25 +1,33 @@
 package model
 
-import (
-    "time"
-    "log"
-
-    "github.com/server-nado/orm"
-    _ "github.com/go-sql-driver/mysql"
-)
+import "github.com/jmoiron/sqlx"
 
 // 日志结构体
 type Log struct {
-    orm.DBHook
-    Id              int64 `field:"id" auto:"true" index:"pk"`
-    PriceBid        string `field:"price_bid"`
-    PriceSell       string `field:"price_sell"`
-    PriceMiddle     string `field:"price_middle"`
-    PriceMiddleHigh string `field:"price_middle_high"`
-    PriceMiddleLow  string `field:"price_middle_low"`
-    InsertTime      string `field:"insert_time"`
+    Id              int64 `db:"id"`
+    PriceBid        string `db:"price_bid"`
+    PriceSell       string `db:"price_sell"`
+    PriceMiddle     string `db:"price_middle"`
+    PriceMiddleHigh string `db:"price_middle_high"`
+    PriceMiddleLow  string `db:"price_middle_low"`
+    InsertTime      string `db:"insert_time"`
 }
 
+type LogReport struct {
+    Date  string `db:"date"`
+    Price string `db:"price"`
+}
+
+// 日志列表
+func LogReportList(db *sqlx.DB) ([]*LogReport) {
+    logReport := []*LogReport{}
+
+    db.Select(&logReport, "SELECT DATE_FORMAT(`insert_time`, \"%Y-%m-%d\") AS `date`, AVG(`price_bid`) AS `price` FROM `log` WHERE `insert_time` > '2017-10-16 00:00:00' GROUP BY `date` ORDER BY `date`")
+
+    return logReport
+}
+
+/*
 // 日志数据落地
 func LogSaveData(prices map[int]string) (int64) {
     currentTime := time.Now().Local()
@@ -53,3 +61,4 @@ func LogList() ([]*Log) {
     return logs
     //logModel.Objects(logModel).Filter("InsertTime__gt", "2017-10-17 00:00:00").All(&logs)
 }
+*/

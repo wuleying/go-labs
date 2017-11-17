@@ -2,18 +2,17 @@ package model
 
 import (
     "fmt"
-    "strconv"
+    "log"
 
-    "github.com/server-nado/orm"
+    "github.com/jmoiron/sqlx"
     _ "github.com/go-sql-driver/mysql"
 
     "go-labs/silver-monitor/src/util"
 )
 
 // 初始化数据库配置项
-func Init(config util.Config) {
-    orm.NewDatabase("default",
-        config.Database["driver"],
+func Init(config util.Config) (db *sqlx.DB) {
+    db, err := sqlx.Connect(config.Database["driver"],
         fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
             config.Database["user"],
             config.Database["passwd"],
@@ -23,7 +22,9 @@ func Init(config util.Config) {
             config.Database["dbname"],
             config.Database["charset"]))
 
-    debug, _ := strconv.ParseBool(config.Database["debug"])
+    if err != nil {
+        log.Fatalln(err)
+    }
 
-    orm.SetDebug(debug)
+    return db
 }

@@ -2,23 +2,25 @@ package main
 
 import (
     "log"
-    "fmt"
-    "net/http"
-    "html/template"
 
     "go-labs/silver-monitor/src/util"
     "go-labs/silver-monitor/src/model"
+    "fmt"
+    "net/http"
+    "html/template"
+    "github.com/jmoiron/sqlx"
 )
 
 // 首页数据结构体
 type HomeData struct {
-    Type string
-    LogData []*model.Log
+    Type    string
+    LogData []*model.LogReport
 }
 
 // 全局配置
 var config util.Config
 var err error
+var db *sqlx.DB
 
 func main() {
     util.SavePid("silver-monitor-manager.pid");
@@ -29,7 +31,7 @@ func main() {
     }
 
     // 初始化模型
-    model.Init(config)
+    db = model.Init(config)
 
     http.HandleFunc("/", HomeHandler)
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
@@ -53,11 +55,7 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     // 解析请求参数
     request.ParseForm();
     data.Type = request.Form.Get("type")
-    data.LogData = model.LogList()
-
-    for _, l := range data.LogData {
-        log.Printf("%d, %s", l.Id, l.PriceBid)
-    }
+    data.LogData = model.LogReportList(db)
 
     template.Execute(response, data)
 }
