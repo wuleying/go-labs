@@ -10,7 +10,7 @@ import (
     "github.com/PuerkitoBio/goquery"
     _ "github.com/go-sql-driver/mysql"
 
-    "go-labs/silver-monitor/src/orm"
+    "go-labs/silver-monitor/src/model"
     "go-labs/silver-monitor/src/util"
 )
 
@@ -24,7 +24,7 @@ func main() {
     config, _ = util.InitConfig();
 
     // 初始化模型
-    orm.InitModel(config)
+    model.InitModel(config)
 
     crontab := cron.New()
 
@@ -59,7 +59,7 @@ func getPrice() {
         }
     })
 
-    id := orm.LogSaveData(prices)
+    id := model.LogSaveData(prices)
 
     if (prices[2] == "") {
         log.Print("get price failed")
