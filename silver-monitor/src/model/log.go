@@ -50,16 +50,4 @@ func LogSaveData(prices map[int]string) (int64) {
 
     return id
 }
-
-// 日志列表
-func LogList() ([]*Log) {
-    logModel := new(Log)
-    logs := []*Log{}
-
-    model := logModel.Objects(logModel)
-    model.SetTable("log")
-    model.All(&logs)
-    return logs
-    //logModel.Objects(logModel).Filter("InsertTime__gt", "2017-10-17 00:00:00").All(&logs)
-}
 */
