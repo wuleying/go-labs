@@ -54,5 +54,10 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
     request.ParseForm();
     data.Type = request.Form.Get("type")
     data.LogData = model.LogList()
+
+    for _, l := range data.LogData {
+        log.Printf("%d, %s", l.Id, l.PriceBid)
+    }
+
     template.Execute(response, data)
 }

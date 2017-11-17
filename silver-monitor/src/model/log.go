@@ -47,8 +47,9 @@ func LogList() ([]*Log) {
     logModel := new(Log)
     logs := []*Log{}
 
-    logModel.Objects(logModel).SetTable("log")
-    logModel.Objects(logModel).Filter("Id__lt", 10).All(&logs)
-
+    model := logModel.Objects(logModel)
+    model.SetTable("log")
+    model.All(&logs)
     return logs
+    //logModel.Objects(logModel).Filter("InsertTime__gt", "2017-10-17 00:00:00").All(&logs)
 }
