@@ -2,8 +2,8 @@ package main
 
 import (
     "log"
-    "go-labs/silver-monitor/src/model"
     "go-labs/silver-monitor/src/util"
+    "go-labs/silver-monitor/src/model"
 )
 
 // 全局配置
@@ -18,8 +18,9 @@ func main() {
         log.Fatal("Init config failed: ", err.Error())
     }
 
-    db := model.Init(config)
+    // 初始化模型
+    model.InitModel(config)
 
-    print(db)
+    model.LogList()
 }
 

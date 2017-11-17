@@ -16,12 +16,16 @@ import (
 
 // 全局配置
 var config util.Config
+var err error
 
 func main() {
     // 保存pid
     util.SavePid("silver-monitor-server.pid")
 
     config, _ = util.InitConfig();
+    if err != nil {
+        log.Fatal("Init config failed: ", err.Error())
+    }
 
     // 初始化模型
     model.InitModel(config)

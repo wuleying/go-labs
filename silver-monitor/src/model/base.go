@@ -2,27 +2,28 @@ package model
 
 import (
     "fmt"
-    "log"
+    "strconv"
 
-    "github.com/jinzhu/gorm"
-    _ "github.com/jinzhu/gorm/dialects/mysql"
+    "github.com/server-nado/orm"
+    _ "github.com/go-sql-driver/mysql"
 
     "go-labs/silver-monitor/src/util"
 )
 
 // 初始化数据库配置项
-func Init(config util.Config) (*gorm.DB) {
-    connectParams := fmt.Sprintf("%s:%s@/%s?charset=%s",
-        config.Database["user"],
-        config.Database["passwd"],
-        config.Database["dbname"],
-        config.Database["charset"])
+func InitModel(config util.Config) {
+    orm.NewDatabase("default",
+        config.Database["driver"],
+        fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s",
+            config.Database["user"],
+            config.Database["passwd"],
+            config.Database["protocol"],
+            config.Database["host"],
+            config.Database["port"],
+            config.Database["dbname"],
+            config.Database["charset"]))
 
-    db, err := gorm.Open(config.Database["driver"], connectParams)
+    debug, _ := strconv.ParseBool(config.Database["debug"])
 
-    if err != nil {
-        log.Printf("Connect mysql failed. %s", connectParams)
-    }
-
-    return db
+    orm.SetDebug(debug)
 }
