@@ -7,16 +7,17 @@ import (
     "fmt"
 
     "github.com/robfig/cron"
-    "github.com/PuerkitoBio/goquery"
-    _ "github.com/go-sql-driver/mysql"
+    "github.com/jmoiron/sqlx"
 
     "go-labs/silver-monitor/src/model"
     "go-labs/silver-monitor/src/util"
+    "github.com/PuerkitoBio/goquery"
 )
 
 // 全局配置
 var config util.Config
 var err error
+var db *sqlx.DB
 
 func main() {
     // 保存pid
@@ -28,7 +29,7 @@ func main() {
     }
 
     // 初始化模型
-    model.Init(config)
+    db = model.Init(config)
 
     crontab := cron.New()
 
@@ -63,7 +64,7 @@ func getPrice() {
         }
     })
 
-    id := model.LogSaveData(prices)
+    id := model.LogSaveData(db, prices)
 
     if (prices[2] == "") {
         log.Print("get price failed")

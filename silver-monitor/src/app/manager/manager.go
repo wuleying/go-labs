@@ -2,14 +2,14 @@ package main
 
 import (
     "log"
-
-    "go-labs/silver-monitor/src/util"
-    "go-labs/silver-monitor/src/model"
     "fmt"
     "net/http"
     "html/template"
-    "github.com/jmoiron/sqlx"
     "time"
+    "github.com/jmoiron/sqlx"
+
+    "go-labs/silver-monitor/src/util"
+    "go-labs/silver-monitor/src/model"
 )
 
 // 首页数据结构体

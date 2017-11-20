@@ -1,7 +1,9 @@
 package model
 
 import (
+    "time"
     "github.com/jmoiron/sqlx"
+    "log"
 )
 
 // 日志结构体
@@ -28,26 +30,17 @@ func LogReportList(db *sqlx.DB, start string, end string) ([]*LogReport) {
     return logReport
 }
 
-/*
 // 日志数据落地
-func LogSaveData(prices map[int]string) (int64) {
-    currentTime := time.Now().Local()
+func LogSaveData(db *sqlx.DB, prices map[int]string) (int64) {
+    currentTime := time.Now().Local().Format("2006-01-02 15:04:05")
 
-    logModel := new(Log)
+    logState := `INSERT INTO log (price_bid, price_sell, price_middle, price_middle_high, price_middle_low, insert_time) VALUES (?, ?, ?, ?, ?, ?)`
 
-    logModel.PriceBid = prices[2]
-    logModel.PriceSell = prices[3]
-    logModel.PriceMiddle = prices[4]
-    logModel.PriceMiddleHigh = prices[5]
-    logModel.PriceMiddleLow = prices[6]
-    logModel.InsertTime = currentTime.Format("2006-01-02 15:04:05")
-    logModel.Objects(logModel).SetTable("log")
-    _, id, err := logModel.Objects(logModel).Save()
+    id, err := db.MustExec(logState, prices[2], prices[3], prices[4], prices[5], prices[6], currentTime).LastInsertId()
 
     if err != nil {
-        log.Fatalf("Save log failed. %s", err.Error())
+        log.Printf("insert log failed. %s", err.Error())
     }
 
     return id
 }
-*/
