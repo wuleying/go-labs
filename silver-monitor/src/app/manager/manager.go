@@ -3,9 +3,9 @@ package main
 import (
     "log"
     "fmt"
+    "time"
     "net/http"
     "html/template"
-    "time"
     "github.com/jmoiron/sqlx"
 
     "go-labs/silver-monitor/src/util"

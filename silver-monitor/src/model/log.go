@@ -2,8 +2,9 @@ package model
 
 import (
     "time"
-    "github.com/jmoiron/sqlx"
     "log"
+
+    "github.com/jmoiron/sqlx"
 )
 
 // 日志结构体

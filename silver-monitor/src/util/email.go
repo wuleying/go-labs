@@ -1,11 +1,11 @@
 package util
 
 import (
-    "net/smtp"
     "strings"
     "bytes"
     "fmt"
     "time"
+    "net/smtp"
 )
 
 // 发送邮件

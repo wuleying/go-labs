@@ -8,10 +8,10 @@ import (
 
     "github.com/robfig/cron"
     "github.com/jmoiron/sqlx"
+    "github.com/PuerkitoBio/goquery"
 
     "go-labs/silver-monitor/src/model"
     "go-labs/silver-monitor/src/util"
-    "github.com/PuerkitoBio/goquery"
 )
 
 // 全局配置
