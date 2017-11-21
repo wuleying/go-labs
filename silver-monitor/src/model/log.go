@@ -25,7 +25,7 @@ type LogReport struct {
 // 日志列表
 func LogReportList(db *sqlx.DB, start string, end string) ([]*LogReport) {
     logReport := []*LogReport{}
-    sql := "SELECT DATE_FORMAT(`insert_time`, \"%Y-%m-%d\") AS `date`, AVG(`price_bid`) AS `price` FROM `log` WHERE `insert_time` > ? AND `insert_time` < ? GROUP BY `date` ORDER BY `date`"
+    sql := "SELECT DATE_FORMAT(`insert_time`, \"%Y-%m-%d\") AS `date`, AVG(`price_bid`) AS `price` FROM `log` WHERE `insert_time` >= ? AND `insert_time` <= ? GROUP BY `date` ORDER BY `date`"
     db.Select(&logReport, sql, start, end)
     return logReport
 }

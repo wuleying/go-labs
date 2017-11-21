@@ -14,7 +14,6 @@ import (
 
 // 首页数据结构体
 type HomeData struct {
-    Type    string
     LogData []*model.LogReport
 }
 
@@ -46,6 +45,8 @@ func main() {
 // 首页
 func HomeHandler(response http.ResponseWriter, request *http.Request) {
     var data HomeData;
+    var start string
+    var end string
     template, err := template.ParseFiles(util.TEMPLATES_DIR + "/manager/home.html")
 
     if err != nil {
@@ -53,15 +54,25 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
         return
     }
 
-    // 解析请求参数
-    request.ParseForm();
-    data.Type = request.Form.Get("type")
-
     currentTime := time.Now().Unix()
     startTime := currentTime - (100 * 86400)
 
-    start := time.Unix(startTime, 0).Format("2006-01-02")
-    end := time.Unix(currentTime, 0).Format("2006-01-02")
+    // 解析请求参数
+    request.ParseForm();
+    start_param := request.Form.Get("start")
+    end_param := request.Form.Get("end")
+
+    if len(start_param) > 0 {
+        start = start_param
+    } else {
+        start = time.Unix(startTime, 0).Format("2006-01-02")
+    }
+
+    if len(end_param) > 0 {
+        end = end_param
+    } else {
+        end = time.Unix(currentTime, 0).Format("2006-01-02")
+    }
 
     data.LogData = model.LogReportList(db, start, end)
 
