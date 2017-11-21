@@ -15,7 +15,7 @@ type Config struct {
 }
 
 // 初始化配置
-func InitConfig() (Config, error) {
+func ConfigInit() (Config, error) {
     var config Config
 
     flag.Parse()

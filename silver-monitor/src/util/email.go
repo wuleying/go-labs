@@ -9,7 +9,7 @@ import (
 )
 
 // 发送邮件
-func SendMail(user string, password string, host string, to string, subject string, body string) error {
+func EmailSend(user string, password string, host string, to string, subject string, body string) error {
     hp := strings.Split(host, ":")
     auth := smtp.PlainAuth("", user, password, hp[0])
     send_to := strings.Split(to, ";")

@@ -21,9 +21,9 @@ var db *sqlx.DB
 
 func main() {
     // 保存pid
-    util.SavePid("silver-monitor-server.pid")
+    util.FileSavePid("silver-monitor-server.pid")
 
-    config, _ = util.InitConfig();
+    config, _ = util.ConfigInit();
     if err != nil {
         log.Fatal("Init config failed: ", err.Error())
     }
@@ -77,7 +77,7 @@ func getPrice() {
 
     if (price <= alert_price) {
         go func() {
-            email_err := util.SendMail(
+            email_err := util.EmailSend(
                 config.Email["user"],
                 config.Email["passwd"],
                 fmt.Sprintf("%s:%s", config.Email["host"], config.Email["port"]),

@@ -23,9 +23,9 @@ var err error
 var db *sqlx.DB
 
 func main() {
-    util.SavePid("silver-monitor-manager.pid");
+    util.FileSavePid("silver-monitor-manager.pid");
 
-    config, err = util.InitConfig();
+    config, err = util.ConfigInit();
     if err != nil {
         log.Fatal("Init config failed: ", err.Error())
     }

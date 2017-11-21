@@ -20,7 +20,7 @@ const (
 // 全局变量
 var (
     // 项目根目录
-    ROOT_DIR = GetParentDirectory(GetCurrentDirectory())
+    ROOT_DIR = FileGetParentDirectory(FileGetCurrentDirectory())
     // 源代码目录
     SRC_DIR = ROOT_DIR + "/src"
     // PID文件目录
