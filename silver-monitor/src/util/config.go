@@ -1,38 +1,38 @@
 package util
 
 import (
-    "flag"
-    "log"
+	"flag"
+	"log"
 
-    "github.com/Unknwon/goconfig"
+	"github.com/Unknwon/goconfig"
 )
 
 type Config struct {
-    Setting  map[string]string
-    Database map[string]string
-    Email    map[string]string
-    Manager  map[string]string
+	Setting  map[string]string
+	Database map[string]string
+	Email    map[string]string
+	Manager  map[string]string
 }
 
 // 初始化配置
 func ConfigInit() (Config, error) {
-    var config Config
+	var config Config
 
-    flag.Parse()
+	flag.Parse()
 
-    goconfig, err := goconfig.LoadConfigFile(*CONFIG_PATH)
+	goconfig, err := goconfig.LoadConfigFile(*CONFIG_PATH)
 
-    if err != nil {
-        log.Printf("Read config file failed: %s", err)
-        return config, err
-    }
+	if err != nil {
+		log.Printf("Read config file failed: %s", err)
+		return config, err
+	}
 
-    log.Printf("Load config file success: %s", *CONFIG_PATH)
+	log.Printf("Load config file success: %s", *CONFIG_PATH)
 
-    config.Setting, _ = goconfig.GetSection("setting")
-    config.Database, _ = goconfig.GetSection("database")
-    config.Email, _ = goconfig.GetSection("email")
-    config.Manager, _ = goconfig.GetSection("manager")
+	config.Setting, _ = goconfig.GetSection("setting")
+	config.Database, _ = goconfig.GetSection("database")
+	config.Email, _ = goconfig.GetSection("email")
+	config.Manager, _ = goconfig.GetSection("manager")
 
-    return config, nil
+	return config, nil
 }
