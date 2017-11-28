@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/smtp"
 	"strings"
-	"time"
 )
 
 // 发送邮件
@@ -26,7 +25,7 @@ func EmailSend(user string, password string, host string, to string, subject str
 		"Date:%s\r\n"+
 		"\r\n\r\n--%s\r\n"+
 		"Content-Type:text/plain;charset=utf-8\r\n\r\n%s\r\n",
-		to, user, subject, boudary, time.Now().String(), boudary, body)
+		to, user, subject, boudary, CURRENT_TIME, boudary, body)
 
 	buffer.WriteString(msg)
 
