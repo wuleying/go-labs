@@ -11,7 +11,7 @@ start() {
     "$ENV_SHELL_DIR"/build.sh server
 
     # 执行
-    nohup "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME" --config "$ENV_CONFIG_DIR"/config-dev.ini &
+    nohup "$ENV_BIN_DIR"/"$PROJECT_NAME"-"$SERVER_NAME" --config="$ENV_CONFIG_DIR"/config-dev.ini &
 }
 
 main(){
