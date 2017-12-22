@@ -1,1 +1,3 @@
 bin/
+pids/
+nohup.out
