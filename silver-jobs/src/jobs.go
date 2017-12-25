@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Print("Hello, silver credit.")
+	fmt.Print("Hello, silver jobs.\n")
 }

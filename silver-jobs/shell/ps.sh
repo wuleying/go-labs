@@ -3,7 +3,7 @@
 # shellcheck disable=SC2009
 
 silver_ps(){
-    ps -ef | grep silver-credit | grep -v grep
+    ps -ef | grep silver-jobs | grep -v grep
 }
 
 main(){

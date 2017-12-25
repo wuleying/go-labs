@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034
 
 # 项目名称
-PROJECT_NAME="silver-credit"
+PROJECT_NAME="silver-jobs"
 
 # 根目录
 ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
