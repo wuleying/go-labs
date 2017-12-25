@@ -8,7 +8,7 @@ start() {
     "$ENV_SHELL_DIR"/build.sh
 
     # 执行
-    nohup \
+    #nohup \
     "$ENV_BIN_DIR"/"$PROJECT_NAME"
 
     _info "silver-credit started."
