@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "===images==="
 docker images
 
 docker rmi hyperledger/fabric-tools \
@@ -22,4 +23,5 @@ docker rmi 0403fd1c72c7 \
            9f2e9ec7c527 \
            4b0cab202084
 
+echo "===images==="
 docker images

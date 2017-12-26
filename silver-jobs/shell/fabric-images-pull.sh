@@ -7,7 +7,6 @@ PROJECT_VERSION=1.0.0
 IMG_TAG=1.0.0
 
 echo "Downloading fabric images from DockerHub...with tag = ${IMG_TAG}... need a while"
-# TODO: we may need some checking on pulling result?
 docker pull hyperledger/fabric-peer:$ARCH-$IMG_TAG
 docker pull hyperledger/fabric-orderer:$ARCH-$IMG_TAG
 docker pull hyperledger/fabric-ca:$ARCH-$IMG_TAG
@@ -32,4 +31,5 @@ docker tag hyperledger/fabric-ccenv:$ARCH-$PROJECT_VERSION hyperledger/fabric-cc
 docker tag hyperledger/fabric-baseimage:$ARCH-$BASEIMAGE_RELEASE hyperledger/fabric-baseimage
 docker tag hyperledger/fabric-baseos:$ARCH-$BASEIMAGE_RELEASE hyperledger/fabric-baseos
 
+echo "===images==="
 docker images
