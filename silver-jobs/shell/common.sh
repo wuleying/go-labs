@@ -17,7 +17,7 @@ ENV_PID_DIR="$ENV_ROOT_DIR"/pids
 ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
 
 # 编译参数缺省值 dev/test/prod
-BUILD_MODE="dev"
+BUILD_MODE="prod"
 
 # 编译参数校验
 if [[ "$BUILD_MODE" != "dev" && "$BUILD_MODE" != "test" && "$BUILD_MODE" != "prod" ]]; then
