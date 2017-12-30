@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const targetBits = 24
+const targetBits = 18
 
 var maxNonce = math.MaxInt64
 
@@ -54,7 +54,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		data := pow.prepareData(nonce)
 
 		hash = sha256.Sum256(data)
-		fmt.Printf("\r%x", hash)
+		fmt.Printf("\rhash: %x, nonce: %d", hash, nonce)
 		hashInt.SetBytes(hash[:])
 
 		if hashInt.Cmp(pow.target) == -1 {
