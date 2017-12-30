@@ -58,7 +58,8 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		hashInt.SetBytes(hash[:])
 
 		if hashInt.Cmp(pow.target) == -1 {
-			fmt.Printf("[%s] run elapsed: %s\n", pow.block.Data, time.Since(startTime))
+			fmt.Println()
+			fmt.Printf("Mining the block [%s] elapsed: %s", pow.block.Data, time.Since(startTime))
 			break
 		} else {
 			nonce++
