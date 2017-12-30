@@ -12,8 +12,8 @@ func main() {
 
 	bc := b.NewBlockchain()
 
-	bc.AddBlock("First block.")
-	bc.AddBlock("Second block.")
+	bc.AddBlock("First block")
+	bc.AddBlock("Second block")
 
 	for _, block := range bc.Blocks {
 		fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
