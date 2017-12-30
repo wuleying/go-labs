@@ -7,6 +7,7 @@ import (
 	"go-labs/silver-blockchain/src/utils"
 	"math"
 	"math/big"
+	"time"
 )
 
 const targetBits = 24
@@ -45,8 +46,9 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	var hashInt big.Int
 	var hash [32]byte
 	nonce := 0
+	startTime := time.Now()
 
-	fmt.Printf("Mining the block containing \"%s\"\n", pow.block.Data)
+	fmt.Printf("Mining the block containing [%s]\n", pow.block.Data)
 
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)
@@ -56,6 +58,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		hashInt.SetBytes(hash[:])
 
 		if hashInt.Cmp(pow.target) == -1 {
+			fmt.Printf("[%s] run elapsed: %s\n", pow.block.Data, time.Since(startTime))
 			break
 		} else {
 			nonce++
