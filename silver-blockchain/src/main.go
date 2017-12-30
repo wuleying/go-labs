@@ -1,12 +1,15 @@
 package main
 
-import "fmt"
 import (
+	"fmt"
 	b "go-labs/silver-blockchain/src/block"
 	"strconv"
+	"time"
 )
 
 func main() {
+	startTime := time.Now()
+
 	bc := b.NewBlockchain()
 
 	bc.AddBlock("First block.")
@@ -21,4 +24,6 @@ func main() {
 		fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
 		fmt.Println()
 	}
+
+	fmt.Printf("Run elapsed: %s\n", time.Since(startTime))
 }

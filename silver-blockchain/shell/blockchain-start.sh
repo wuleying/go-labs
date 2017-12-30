@@ -11,7 +11,7 @@ start() {
     #nohup \
     "$ENV_BIN_DIR"/"$PROJECT_NAME"
 
-    _info "silver-credit started."
+    _info "silver-blockchain started."
 }
 
 main(){
