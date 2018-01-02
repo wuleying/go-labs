@@ -27,6 +27,7 @@ func (bc *Blockchain) AddBlock(data string) {
 	var lastBlock *Block
 
 	err := bc.Db.View(func(tx *bolt.Tx) error {
+		// 获取区块链最后一个区块的信息
 		b := tx.Bucket([]byte(blockBucket))
 		lastHash = b.Get([]byte("lastHash"))
 		lastBlock = DeserializeBlock(b.Get(lastHash))
@@ -38,7 +39,7 @@ func (bc *Blockchain) AddBlock(data string) {
 		log.Panic(err)
 	}
 
-	// todo block.Id
+	// 创建新区块
 	newBlock := NewBlock(data, lastBlock.Id, lastBlock.Hash)
 
 	err = bc.Db.Update(func(tx *bolt.Tx) error {
