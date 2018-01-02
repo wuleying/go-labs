@@ -3,6 +3,7 @@ package block
 import (
 	"fmt"
 	"github.com/boltdb/bolt"
+	"github.com/juju/errors"
 	"log"
 )
 
@@ -65,23 +66,19 @@ func (bc *Blockchain) AddBlock(data string) {
 	})
 }
 
-// 根据hash值获取区块信息
-func (bc *Blockchain) GetBlock(hashKey string) *Block {
-	var block *Block
+// 根据id获取区块信息
+func (bc *Blockchain) GetBlock(id int64) (*Block, error) {
+	bci := bc.Iterator()
 
-	err := bc.Db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blockBucket))
-		encodedBlock := b.Get([]byte(hashKey))
-		block = DeserializeBlock(encodedBlock)
+	for {
+		block := bci.Next()
 
-		return nil
-	})
-
-	if err != nil {
-		log.Panic(err)
+		if block.Id == id {
+			return block, nil
+		}
 	}
 
-	return block
+	return nil, errors.New("Block is not exist.")
 }
 
 // 区块链迭代器
@@ -91,6 +88,7 @@ func (bc *Blockchain) Iterator() *BlockchainIterator {
 	return bci
 }
 
+// 迭代区获取区块信息
 func (i *BlockchainIterator) Next() *Block {
 	var block *Block
 

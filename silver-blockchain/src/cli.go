@@ -17,7 +17,7 @@ type CLI struct {
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
 	fmt.Println("    add -d [BLOCK_DATA] \t Add a block to the blockchain.")
-	fmt.Println("    get -h [BLOCK_HASH] \t Get a block inf by hash.")
+	fmt.Println("    get -i [BLOCK_ID] \t\t Get a block inf by id.")
 	fmt.Println("    print \t\t\t Print all the blocks of the blockchain.")
 }
 
@@ -47,8 +47,12 @@ func (cli *CLI) addBlock(data string) {
 }
 
 // 根据hash值获取区块信息
-func (cli *CLI) getBlock(hashKey string) {
-	block := cli.bc.GetBlock(hashKey)
+func (cli *CLI) getBlock(blockId int64) {
+	block, err := cli.bc.GetBlock(blockId)
+
+	if err != nil {
+		log.Panic(err)
+	}
 
 	cli.printBlockInfo(block)
 }
@@ -77,7 +81,7 @@ func (cli *CLI) Run() {
 	printChainCmd := flag.NewFlagSet("print", flag.ExitOnError)
 
 	addBlockData := addBlockCmd.String("d", "", "Block data")
-	BlockHashKey := getBlockCmd.String("h", "", "Block hash")
+	BlockId := getBlockCmd.Int64("i", 0, "Block id")
 
 	switch os.Args[1] {
 	case "add":
@@ -113,12 +117,12 @@ func (cli *CLI) Run() {
 	}
 
 	if getBlockCmd.Parsed() {
-		if *BlockHashKey == "" {
+		if *BlockId <= 0 {
 			cli.printUsage()
 			os.Exit(1)
 		}
 
-		cli.getBlock(*BlockHashKey)
+		cli.getBlock(*BlockId)
 	}
 
 	if printChainCmd.Parsed() {
