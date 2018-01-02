@@ -17,6 +17,7 @@ type CLI struct {
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
 	fmt.Println("    add -d [BLOCK_DATA] \t Add a block to the blockchain.")
+	fmt.Println("    get -h [BLOCK_HASH] \t Get a block inf by hash.")
 	fmt.Println("    print \t\t\t Print all the blocks of the blockchain.")
 }
 
@@ -28,10 +29,28 @@ func (cli *CLI) validateArgs() {
 	}
 }
 
+func (cli *CLI) printBlockInfo(block *b.Block) {
+	fmt.Printf("Id: #%d\n", block.Id)
+	fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
+	fmt.Printf("Data: %s\n", block.Data)
+	fmt.Printf("Hash: %x\n", block.Hash)
+
+	pow := b.NewProofOfWork(block)
+	fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
+	fmt.Println()
+}
+
 // 添加区块
 func (cli *CLI) addBlock(data string) {
 	cli.bc.AddBlock(data)
 	fmt.Println("Add block success!")
+}
+
+// 根据hash值获取区块信息
+func (cli *CLI) getBlock(hashKey string) {
+	block := cli.bc.GetBlock(hashKey)
+
+	cli.printBlockInfo(block)
 }
 
 // 打印全部区块链数据
@@ -41,14 +60,7 @@ func (cli *CLI) printChain() {
 	for {
 		block := bci.Next()
 
-		fmt.Printf("Id: #%d\n", block.Id)
-		fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %x\n", block.Hash)
-
-		pow := b.NewProofOfWork(block)
-		fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
-		fmt.Println()
+		cli.printBlockInfo(block)
 
 		if len(block.PrevBlockHash) == 0 {
 			break
@@ -61,13 +73,21 @@ func (cli *CLI) Run() {
 	cli.validateArgs()
 
 	addBlockCmd := flag.NewFlagSet("add", flag.ExitOnError)
+	getBlockCmd := flag.NewFlagSet("get", flag.ExitOnError)
 	printChainCmd := flag.NewFlagSet("print", flag.ExitOnError)
 
 	addBlockData := addBlockCmd.String("d", "", "Block data")
+	BlockHashKey := getBlockCmd.String("h", "", "Block hash")
 
 	switch os.Args[1] {
 	case "add":
 		err := addBlockCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Panic(err)
+		}
+
+	case "get":
+		err := getBlockCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Panic(err)
 		}
@@ -90,6 +110,15 @@ func (cli *CLI) Run() {
 		}
 
 		cli.addBlock(*addBlockData)
+	}
+
+	if getBlockCmd.Parsed() {
+		if *BlockHashKey == "" {
+			cli.printUsage()
+			os.Exit(1)
+		}
+
+		cli.getBlock(*BlockHashKey)
 	}
 
 	if printChainCmd.Parsed() {

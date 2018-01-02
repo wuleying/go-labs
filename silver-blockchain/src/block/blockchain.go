@@ -65,6 +65,25 @@ func (bc *Blockchain) AddBlock(data string) {
 	})
 }
 
+// 根据hash值获取区块信息
+func (bc *Blockchain) GetBlock(hashKey string) *Block {
+	var block *Block
+
+	err := bc.Db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blockBucket))
+		encodedBlock := b.Get([]byte(hashKey))
+		block = DeserializeBlock(encodedBlock)
+
+		return nil
+	})
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return block
+}
+
 // 区块链迭代器
 func (bc *Blockchain) Iterator() *BlockchainIterator {
 	bci := &BlockchainIterator{bc.Tip, bc.Db}
