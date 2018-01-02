@@ -6,7 +6,10 @@ import (
 	"log"
 )
 
+// 数据库路径
 const dbFile = "db/silver-blockchain.db"
+
+// Bucket名称
 const blockBucket = "blocks"
 
 // 区块链结构体
