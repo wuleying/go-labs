@@ -48,7 +48,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	nonce := 0
 	startTime := time.Now()
 
-	fmt.Printf("Mining the block containing [%s]\n", pow.block.Data)
+	fmt.Printf("Mining the block containing [#%d %s]\n", pow.block.Id, pow.block.Data)
 
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)

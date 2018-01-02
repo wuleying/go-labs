@@ -8,7 +8,7 @@ type Blockchain struct {
 // 将区块加入区块链
 func (bc *Blockchain) AddBlock(data string) {
 	prevBlock := bc.Blocks[len(bc.Blocks)-1]
-	newBlock := NewBlock(data, prevBlock.Hash)
+	newBlock := NewBlock(data, prevBlock.Id, prevBlock.Hash)
 	bc.Blocks = append(bc.Blocks, newBlock)
 }
 

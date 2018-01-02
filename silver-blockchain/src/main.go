@@ -16,6 +16,7 @@ func main() {
 	bc.AddBlock("Second block")
 
 	for _, block := range bc.Blocks {
+		fmt.Printf("Id: #%d\n", block.Id)
 		fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
 		fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("Hash: %x\n", block.Hash)

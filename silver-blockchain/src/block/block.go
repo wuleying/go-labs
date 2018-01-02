@@ -6,6 +6,7 @@ import (
 
 // 区块结构体
 type Block struct {
+	Id            int64
 	Timestamp     int64
 	Data          []byte
 	PrevBlockHash []byte
@@ -14,8 +15,9 @@ type Block struct {
 }
 
 // 创建新区块
-func NewBlock(data string, prevBlockHash []byte) *Block {
-	block := &Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+func NewBlock(data string, prevId int64, prevBlockHash []byte) *Block {
+	id := prevId + 1
+	block := &Block{id, time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
 
@@ -27,5 +29,5 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 
 // 创建创世区块
 func NewGenesisBlock() *Block {
-	return NewBlock("Genesis block", []byte{})
+	return NewBlock("Genesis block", 0, []byte{})
 }
