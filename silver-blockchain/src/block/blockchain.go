@@ -24,10 +24,12 @@ type BlockchainIterator struct {
 // 将区块加入区块链
 func (bc *Blockchain) AddBlock(data string) {
 	var lastHash []byte
+	var lastBlock *Block
 
 	err := bc.Db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
 		lastHash = b.Get([]byte("lastHash"))
+		lastBlock = DeserializeBlock(b.Get(lastHash))
 
 		return nil
 	})
@@ -37,7 +39,7 @@ func (bc *Blockchain) AddBlock(data string) {
 	}
 
 	// todo block.Id
-	newBlock := NewBlock(data, 0, lastHash)
+	newBlock := NewBlock(data, lastBlock.Id, lastBlock.Hash)
 
 	err = bc.Db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
