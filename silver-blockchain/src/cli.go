@@ -16,9 +16,9 @@ type CLI struct {
 // 打印命令行使用说明
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
-	fmt.Println("    add -d [BLOCK_DATA] \t Add a block to the blockchain.")
-	fmt.Println("    get -i [BLOCK_ID] \t\t Get a block inf by id.")
-	fmt.Println("    print \t\t\t Print all the blocks of the blockchain.")
+	fmt.Println("  add -d [BLOCK_DATA] \t Add a block to the blockchain.")
+	fmt.Println("  get -i [BLOCK_ID] \t Get a block inf by id.")
+	fmt.Println("  print \t\t Print all the blocks of the blockchain.")
 }
 
 // 校验命令行参数
