@@ -1,6 +1,7 @@
 package block
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/juju/errors"
@@ -108,6 +109,67 @@ func (i *BlockchainIterator) Next() *Block {
 	i.currentHash = block.PrevBlockHash
 
 	return block
+}
+
+func (bc *Blockchain) FindUTXO(address string) []TOutput {
+	var UTXO []TOutput
+
+	unspentTransactions := bc.FineUnspentTransactions(address)
+
+	for _, t := range unspentTransactions {
+		for _, out := range t.Out {
+			if out.CanBeUnlockWith(address) {
+				UTXO = append(UTXO, out)
+			}
+		}
+	}
+
+	return UTXO
+}
+
+func (bc *Blockchain) FineUnspentTransactions(address string) []Transaction {
+	var unspentT []Transaction
+	spentTXO := make(map[string][]int)
+
+	bci := bc.Iterator()
+
+	for {
+		block := bci.Next()
+
+		for _, t := range block.Transaction {
+			tId := hex.EncodeToString(t.Id)
+
+		Outputs:
+			for outId, out := range t.Out {
+				if spentTXO[tId] != nil {
+					for _, spentOut := range spentTXO[tId] {
+						if spentOut == outId {
+							continue Outputs
+						}
+					}
+				}
+
+				if out.CanBeUnlockWith(address) {
+					unspentT = append(unspentT, *t)
+				}
+			}
+
+			if t.IsCoinbase() == false {
+				for _, in := range t.In {
+					if in.CanUnlockOutputWith(address) {
+						inTId := hex.EncodeToString(in.Id)
+						spentTXO[inTId] = append(spentTXO[inTId], in.Out)
+					}
+				}
+			}
+		}
+
+		if len(block.PrevBlockHash) == 0 {
+			break
+		}
+	}
+
+	return unspentT
 }
 
 // 检查数据库文件是否存在

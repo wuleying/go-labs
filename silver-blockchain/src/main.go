@@ -1,6 +1,8 @@
 package main
 
+import "go-labs/silver-blockchain/src/client"
+
 func main() {
-	cli := CLI{}
+	cli := client.CLI{}
 	cli.Run()
 }

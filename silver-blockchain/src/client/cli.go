@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"flag"
@@ -36,6 +36,29 @@ func (cli *CLI) printBlockInfo(block *b.Block) {
 	pow := b.NewProofOfWork(block)
 	fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
 	fmt.Println()
+}
+
+// 创建区块链
+func (cli *CLI) createBlockchain(address string) {
+	bc := b.CreateBlockchain(address)
+	bc.Db.Close()
+	fmt.Println("Create blockchain success.")
+}
+
+// 获取账户余额
+func (cli *CLI) getBalance(address string) {
+	bc := b.NewBlockchain(address)
+	defer bc.Db.Close()
+
+	balance := 0
+
+	UTXO := bc.FindUTXO(address)
+
+	for _, out := range UTXO {
+		balance += out.Value
+	}
+
+	fmt.Printf("Balance of %s: %d", address, balance)
 }
 
 // 运行命令行

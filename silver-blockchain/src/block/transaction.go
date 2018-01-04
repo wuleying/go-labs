@@ -27,7 +27,7 @@ type TOutput struct {
 	ScriptPubKey string
 }
 
-func (t Transaction) IsCoinBase() bool {
+func (t Transaction) IsCoinbase() bool {
 	return len(t.In) == 1 && len(t.In[0].Id) == 0 && t.In[0].Out == -1
 }
 
