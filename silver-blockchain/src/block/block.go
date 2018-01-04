@@ -2,6 +2,7 @@ package block
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/gob"
 	"log"
 	"time"
@@ -11,7 +12,7 @@ import (
 type Block struct {
 	Id            int64
 	Timestamp     int64
-	Data          []byte
+	Transaction   []*Transaction
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
@@ -45,10 +46,22 @@ func DeserializeBlock(d []byte) *Block {
 	return &block
 }
 
+func (b *Block) HashTransaction() []byte {
+	var tHashes [][]byte
+	var tHash [32]byte
+
+	for _, t := range b.Transaction {
+		tHashes = append(tHashes, t.Id)
+	}
+	tHash = sha256.Sum256(bytes.Join(tHashes, []byte{}))
+
+	return tHash[:]
+}
+
 // 创建新区块
-func NewBlock(data string, prevId int64, prevBlockHash []byte) *Block {
+func NewBlock(transaction []*Transaction, prevId int64, prevBlockHash []byte) *Block {
 	id := prevId + 1
-	block := &Block{id, time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+	block := &Block{id, time.Now().Unix(), transaction, prevBlockHash, []byte{}, 0}
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
 
@@ -59,6 +72,6 @@ func NewBlock(data string, prevId int64, prevBlockHash []byte) *Block {
 }
 
 // 创建创世区块
-func NewGenesisBlock() *Block {
-	return NewBlock("Genesis block", 0, []byte{})
+func NewGenesisBlock(coinbase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinbase}, 0, []byte{})
 }

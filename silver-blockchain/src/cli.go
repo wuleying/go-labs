@@ -9,9 +9,7 @@ import (
 	"strconv"
 )
 
-type CLI struct {
-	bc *b.Blockchain
-}
+type CLI struct{}
 
 // 打印命令行使用说明
 func (cli *CLI) printUsage() {
@@ -32,44 +30,12 @@ func (cli *CLI) validateArgs() {
 func (cli *CLI) printBlockInfo(block *b.Block) {
 	fmt.Printf("Id: #%d\n", block.Id)
 	fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
-	fmt.Printf("Data: %s\n", block.Data)
+	fmt.Printf("HashTransaction: %s\n", block.HashTransaction())
 	fmt.Printf("Hash: %x\n", block.Hash)
 
 	pow := b.NewProofOfWork(block)
 	fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
 	fmt.Println()
-}
-
-// 添加区块
-func (cli *CLI) addBlock(data string) {
-	cli.bc.AddBlock(data)
-	fmt.Println("Add block success!")
-}
-
-// 根据hash值获取区块信息
-func (cli *CLI) getBlock(blockId int64) {
-	block, err := cli.bc.GetBlock(blockId)
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	cli.printBlockInfo(block)
-}
-
-// 打印全部区块链数据
-func (cli *CLI) printChain() {
-	bci := cli.bc.Iterator()
-
-	for {
-		block := bci.Next()
-
-		cli.printBlockInfo(block)
-
-		if len(block.PrevBlockHash) == 0 {
-			break
-		}
-	}
 }
 
 // 运行命令行
@@ -79,9 +45,6 @@ func (cli *CLI) Run() {
 	addBlockCmd := flag.NewFlagSet("add", flag.ExitOnError)
 	getBlockCmd := flag.NewFlagSet("get", flag.ExitOnError)
 	printChainCmd := flag.NewFlagSet("print", flag.ExitOnError)
-
-	addBlockData := addBlockCmd.String("d", "", "Block data")
-	BlockId := getBlockCmd.Int64("i", 0, "Block id")
 
 	switch os.Args[1] {
 	case "add":
@@ -105,27 +68,5 @@ func (cli *CLI) Run() {
 	default:
 		cli.printUsage()
 		os.Exit(1)
-	}
-
-	if addBlockCmd.Parsed() {
-		if *addBlockData == "" {
-			cli.printUsage()
-			os.Exit(1)
-		}
-
-		cli.addBlock(*addBlockData)
-	}
-
-	if getBlockCmd.Parsed() {
-		if *BlockId <= 0 {
-			cli.printUsage()
-			os.Exit(1)
-		}
-
-		cli.getBlock(*BlockId)
-	}
-
-	if printChainCmd.Parsed() {
-		cli.printChain()
 	}
 }

@@ -1,11 +1,10 @@
-package transaction
+package block
 
 import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
 	"fmt"
-	"go-labs/silver-blockchain/src/block"
 	"log"
 )
 
@@ -67,10 +66,10 @@ func NewCoinbase(to string, data string) *Transaction {
 	t := Transaction{nil, []TInput{tIn}, []TOutput{tOut}}
 	t.SetId()
 
-	return t
+	return &t
 }
 
-func NewUTXOTransaction(from string, to string, amout int, bc *block.Blockchain) *Transaction {
+func NewUTXOTransaction(from string, to string, amount int, bc *Blockchain) *Transaction {
 	var inputs []TInput
 	var outputs []TOutput
 
@@ -79,5 +78,5 @@ func NewUTXOTransaction(from string, to string, amout int, bc *block.Blockchain)
 	t := Transaction{nil, inputs, outputs}
 	t.SetId()
 
-	return t
+	return &t
 }
