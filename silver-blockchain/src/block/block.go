@@ -12,7 +12,7 @@ import (
 type Block struct {
 	Id            int64
 	Timestamp     int64
-	Transaction   []*Transaction
+	Transactions  []*Transaction
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
@@ -50,7 +50,7 @@ func (b *Block) HashTransaction() []byte {
 	var tHashes [][]byte
 	var tHash [32]byte
 
-	for _, t := range b.Transaction {
+	for _, t := range b.Transactions {
 		tHashes = append(tHashes, t.Id)
 	}
 	tHash = sha256.Sum256(bytes.Join(tHashes, []byte{}))

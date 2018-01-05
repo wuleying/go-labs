@@ -8,6 +8,7 @@ import (
 	"log"
 )
 
+// 挖出新块的奖励金
 const subsidy = 10
 
 type Transaction struct {

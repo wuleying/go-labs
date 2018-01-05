@@ -136,7 +136,7 @@ func (bc *Blockchain) FineUnspentTransactions(address string) []Transaction {
 	for {
 		block := bci.Next()
 
-		for _, t := range block.Transaction {
+		for _, t := range block.Transactions {
 			tId := hex.EncodeToString(t.Id)
 
 		Outputs:

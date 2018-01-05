@@ -12,6 +12,7 @@ import (
 
 const targetBits = 18
 
+// Number once最大值
 var maxNonce = math.MaxInt64
 
 // 工作量证明结构体
