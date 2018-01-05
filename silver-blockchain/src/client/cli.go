@@ -41,15 +41,15 @@ func (cli *CLI) printBlockInfo(block *b.Block) {
 }
 
 // 创建区块链
-func (cli *CLI) createBlockchain(address string) {
-	bc := b.CreateBlockchain(address)
+func (cli *CLI) createBlockChain(address string) {
+	bc := b.CreateBlockChain(address)
 	bc.Db.Close()
 	fmt.Println("Create blockchain success.")
 }
 
 // 获取账户余额
 func (cli *CLI) getBalance(address string) {
-	bc := b.NewBlockchain(address)
+	bc := b.NewBlockChain(address)
 	defer bc.Db.Close()
 
 	balance := 0
@@ -64,8 +64,8 @@ func (cli *CLI) getBalance(address string) {
 }
 
 // 打印全部区块链数据
-func (cli *CLI) printAllBlockchain() {
-	bc := b.NewBlockchain("")
+func (cli *CLI) printAllBlockChain() {
+	bc := b.NewBlockChain("")
 	defer bc.Db.Close()
 
 	bci := bc.Iterator()
@@ -83,7 +83,7 @@ func (cli *CLI) printAllBlockchain() {
 
 // 交易货币
 func (cli *CLI) send(from string, to string, amount int) {
-	bc := b.NewBlockchain(from)
+	bc := b.NewBlockChain(from)
 	defer bc.Db.Close()
 
 	t := b.NewUTXOTransaction(from, to, amount, bc)
@@ -98,12 +98,12 @@ func (cli *CLI) Run() {
 	// 命令行方法
 	getBalanceCmd := flag.NewFlagSet("balance", flag.ExitOnError)
 	getAllCmd := flag.NewFlagSet("all", flag.ExitOnError)
-	blockchainCmd := flag.NewFlagSet("blockchain", flag.ExitOnError)
+	blockChainCmd := flag.NewFlagSet("blockchain", flag.ExitOnError)
 	sendCmd := flag.NewFlagSet("send", flag.ExitOnError)
 
 	// 参数
 	balanceAddressParam := getBalanceCmd.String("address", "", "The address to get balance for")
-	blockchainAddressParam := blockchainCmd.String("address", "", "The address to send genesis block reward to")
+	blockChainAddressParam := blockChainCmd.String("address", "", "The address to send genesis block reward to")
 	sendFromParam := sendCmd.String("from", "", "Source wallet address")
 	sendToParam := sendCmd.String("to", "", "Destination wallet address")
 	sendAmountParam := sendCmd.Int("amount", 0, "Amount to send")
@@ -122,7 +122,7 @@ func (cli *CLI) Run() {
 		}
 
 	case "blockchain":
-		err := blockchainCmd.Parse(os.Args[2:])
+		err := blockChainCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Panic(err)
 		}
@@ -148,16 +148,16 @@ func (cli *CLI) Run() {
 	}
 
 	if getAllCmd.Parsed() {
-		cli.printAllBlockchain()
+		cli.printAllBlockChain()
 	}
 
-	if blockchainCmd.Parsed() {
-		if *blockchainAddressParam == "" {
-			blockchainCmd.Usage()
+	if blockChainCmd.Parsed() {
+		if *blockChainAddressParam == "" {
+			blockChainCmd.Usage()
 			os.Exit(1)
 		}
 
-		cli.createBlockchain(*blockchainAddressParam)
+		cli.createBlockChain(*blockChainAddressParam)
 	}
 
 	if sendCmd.Parsed() {

@@ -28,7 +28,7 @@ type TOutput struct {
 	ScriptPubKey string
 }
 
-func (t Transaction) IsCoinbase() bool {
+func (t Transaction) IsCoinBase() bool {
 	return len(t.In) == 1 && len(t.In[0].Id) == 0 && t.In[0].Out == -1
 }
 
@@ -56,7 +56,7 @@ func (out TOutput) CanBeUnlockWith(data string) bool {
 	return out.ScriptPubKey == data
 }
 
-func NewCoinbase(to string, data string) *Transaction {
+func NewCoinBase(to string, data string) *Transaction {
 	if data == "" {
 		data = fmt.Sprintf("Reward to '%s'", to)
 	}
@@ -70,7 +70,7 @@ func NewCoinbase(to string, data string) *Transaction {
 	return &t
 }
 
-func NewUTXOTransaction(from string, to string, amount int, bc *Blockchain) *Transaction {
+func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Transaction {
 	var inputs []TInput
 	var outputs []TOutput
 

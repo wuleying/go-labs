@@ -19,22 +19,22 @@ const lastHashKey = "lastHash"
 const blockBucket = "blocks"
 
 // 创世币数据
-const genesisCoinbaseData = "hello luoliang"
+const genesisCoinBaseData = "hello luoliang"
 
 // 区块链结构体
-type Blockchain struct {
+type BlockChain struct {
 	Tip []byte
 	Db  *bolt.DB
 }
 
 // 区块链迭代器结构体
-type BlockchainIterator struct {
+type BlockChainIterator struct {
 	currentHash []byte
 	db          *bolt.DB
 }
 
 // 挖矿
-func (bc *Blockchain) MineBlock(transactions []*Transaction) {
+func (bc *BlockChain) MineBlock(transactions []*Transaction) {
 	var lastHash []byte
 	var lastBlock *Block
 
@@ -72,7 +72,7 @@ func (bc *Blockchain) MineBlock(transactions []*Transaction) {
 }
 
 // 添加区块
-func (bc *Blockchain) AddBlock(transactions []*Transaction) {
+func (bc *BlockChain) AddBlock(transactions []*Transaction) {
 	var lastHash []byte
 	var lastBlock *Block
 
@@ -111,7 +111,7 @@ func (bc *Blockchain) AddBlock(transactions []*Transaction) {
 }
 
 // 根据id获取区块信息
-func (bc *Blockchain) GetBlock(id int64) (*Block, error) {
+func (bc *BlockChain) GetBlock(id int64) (*Block, error) {
 	bci := bc.Iterator()
 
 	for {
@@ -126,14 +126,14 @@ func (bc *Blockchain) GetBlock(id int64) (*Block, error) {
 }
 
 // 区块链迭代器
-func (bc *Blockchain) Iterator() *BlockchainIterator {
-	bci := &BlockchainIterator{bc.Tip, bc.Db}
+func (bc *BlockChain) Iterator() *BlockChainIterator {
+	bci := &BlockChainIterator{bc.Tip, bc.Db}
 
 	return bci
 }
 
 // 迭代区获取区块信息
-func (i *BlockchainIterator) Next() *Block {
+func (i *BlockChainIterator) Next() *Block {
 	var block *Block
 
 	err := i.db.View(func(tx *bolt.Tx) error {
@@ -153,7 +153,7 @@ func (i *BlockchainIterator) Next() *Block {
 	return block
 }
 
-func (bc *Blockchain) FindUTXO(address string) []TOutput {
+func (bc *BlockChain) FindUTXO(address string) []TOutput {
 	var UTXO []TOutput
 
 	unspentTransactions := bc.FineUnspentTransactions(address)
@@ -169,7 +169,7 @@ func (bc *Blockchain) FindUTXO(address string) []TOutput {
 	return UTXO
 }
 
-func (bc *Blockchain) FineUnspentTransactions(address string) []Transaction {
+func (bc *BlockChain) FineUnspentTransactions(address string) []Transaction {
 	var unspentT []Transaction
 	spentTXO := make(map[string][]int)
 
@@ -196,7 +196,7 @@ func (bc *Blockchain) FineUnspentTransactions(address string) []Transaction {
 				}
 			}
 
-			if t.IsCoinbase() == false {
+			if t.IsCoinBase() == false {
 				for _, in := range t.In {
 					if in.CanUnlockOutputWith(address) {
 						inTId := hex.EncodeToString(in.Id)
@@ -224,7 +224,7 @@ func dbExists() bool {
 }
 
 // 创建新区块链
-func NewBlockchain(address string) *Blockchain {
+func NewBlockChain(address string) *BlockChain {
 	if dbExists() == false {
 		fmt.Println("No existing blockchain found. Create one first.")
 		os.Exit(1)
@@ -249,13 +249,13 @@ func NewBlockchain(address string) *Blockchain {
 		log.Panic(err)
 	}
 
-	bc := Blockchain{tip, db}
+	bc := BlockChain{tip, db}
 
 	return &bc
 }
 
 // 创建区块链
-func CreateBlockchain(address string) *Blockchain {
+func CreateBlockChain(address string) *BlockChain {
 	if dbExists() {
 		fmt.Println("Blockchain already exists.")
 		os.Exit(1)
@@ -270,7 +270,7 @@ func CreateBlockchain(address string) *Blockchain {
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		cbt := NewCoinbase(address, genesisCoinbaseData)
+		cbt := NewCoinBase(address, genesisCoinBaseData)
 		genesisBlock := NewGenesisBlock(cbt)
 
 		b, err := tx.CreateBucket([]byte(blockBucket))
@@ -297,7 +297,7 @@ func CreateBlockchain(address string) *Blockchain {
 		log.Panic(err)
 	}
 
-	bc := Blockchain{tip, db}
+	bc := BlockChain{tip, db}
 
 	return &bc
 }

@@ -46,6 +46,7 @@ func DeserializeBlock(d []byte) *Block {
 	return &block
 }
 
+// 交易哈希
 func (b *Block) HashTransaction() []byte {
 	var tHashes [][]byte
 	var tHash [32]byte
@@ -72,6 +73,6 @@ func NewBlock(transactions []*Transaction, prevId int64, prevBlockHash []byte) *
 }
 
 // 创建创世区块
-func NewGenesisBlock(coinbase *Transaction) *Block {
-	return NewBlock([]*Transaction{coinbase}, 0, []byte{})
+func NewGenesisBlock(coinBase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinBase}, 0, []byte{})
 }
