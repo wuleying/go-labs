@@ -256,8 +256,8 @@ func NewBlockchain(address string) *Blockchain {
 
 // 创建区块链
 func CreateBlockchain(address string) *Blockchain {
-	if dbExists() == false {
-		fmt.Println("No existing blockchain found. Create one first.")
+	if dbExists() {
+		fmt.Println("Blockchain already exists.")
 		os.Exit(1)
 	}
 

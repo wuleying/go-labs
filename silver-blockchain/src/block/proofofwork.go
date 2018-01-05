@@ -50,7 +50,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	nonce := 0
 	startTime := time.Now()
 
-	fmt.Printf("Mining the block containing [#%d %s]\n", pow.block.Id, pow.block.HashTransaction())
+	fmt.Printf("Mining the block containing [#%d]\n", pow.block.Id)
 
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)
@@ -61,7 +61,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 
 		if hashInt.Cmp(pow.target) == -1 {
 			fmt.Println()
-			fmt.Printf("Mining time: [#%d %s] %s", pow.block.Id, pow.block.HashTransaction(), time.Since(startTime))
+			fmt.Printf("Mining time: [#%d] %s", pow.block.Id, time.Since(startTime))
 			break
 		} else {
 			nonce++

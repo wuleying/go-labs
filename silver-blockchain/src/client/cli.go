@@ -9,14 +9,16 @@ import (
 	"strconv"
 )
 
+// CLI结构体
 type CLI struct{}
 
 // 打印命令行使用说明
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
-	fmt.Println("  add -d [BLOCK_DATA] \t Add a block to the blockchain.")
-	fmt.Println("  get -i [BLOCK_ID] \t Get a block inf by id.")
-	fmt.Println("  print \t\t Print all the blocks of the blockchain.")
+	fmt.Println("  balance -address ADDRESS - Get balance of ADDRESS")
+	fmt.Println("  blockchain -address ADDRESS - Create a blockchain and send genesis block reward to ADDRESS")
+	fmt.Println("  all - Print all the blocks of the blockchain")
+	fmt.Println("  send -from FROM -to TO -amount AMOUNT - Send AMOUNT of coins from FROM address to TO")
 }
 
 // 校验命令行参数
@@ -27,10 +29,10 @@ func (cli *CLI) validateArgs() {
 	}
 }
 
+// 打印区块信息
 func (cli *CLI) printBlockInfo(block *b.Block) {
 	fmt.Printf("Id: #%d\n", block.Id)
 	fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
-	fmt.Printf("HashTransaction: %s\n", block.HashTransaction())
 	fmt.Printf("Hash: %x\n", block.Hash)
 
 	pow := b.NewProofOfWork(block)
@@ -58,7 +60,7 @@ func (cli *CLI) getBalance(address string) {
 		balance += out.Value
 	}
 
-	fmt.Printf("Balance of %s: %d", address, balance)
+	fmt.Printf("Balance of %s: %d\n", address, balance)
 }
 
 // 打印全部区块链数据
@@ -79,6 +81,7 @@ func (cli *CLI) printAllBlockchain() {
 	}
 }
 
+// 交易货币
 func (cli *CLI) send(from string, to string, amount int) {
 	bc := b.NewBlockchain(from)
 	defer bc.Db.Close()
@@ -95,12 +98,12 @@ func (cli *CLI) Run() {
 	// 命令行方法
 	getBalanceCmd := flag.NewFlagSet("balance", flag.ExitOnError)
 	getAllCmd := flag.NewFlagSet("all", flag.ExitOnError)
-	createBlockchainCmd := flag.NewFlagSet("create", flag.ExitOnError)
+	blockchainCmd := flag.NewFlagSet("blockchain", flag.ExitOnError)
 	sendCmd := flag.NewFlagSet("send", flag.ExitOnError)
 
 	// 参数
 	balanceAddressParam := getBalanceCmd.String("address", "", "The address to get balance for")
-	blockchainAddressParam := createBlockchainCmd.String("address", "", "The address to send genesis block reward to")
+	blockchainAddressParam := blockchainCmd.String("address", "", "The address to send genesis block reward to")
 	sendFromParam := sendCmd.String("from", "", "Source wallet address")
 	sendToParam := sendCmd.String("to", "", "Destination wallet address")
 	sendAmountParam := sendCmd.Int("amount", 0, "Amount to send")
@@ -118,8 +121,8 @@ func (cli *CLI) Run() {
 			log.Panic(err)
 		}
 
-	case "create":
-		err := createBlockchainCmd.Parse(os.Args[2:])
+	case "blockchain":
+		err := blockchainCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Panic(err)
 		}
@@ -148,9 +151,9 @@ func (cli *CLI) Run() {
 		cli.printAllBlockchain()
 	}
 
-	if createBlockchainCmd.Parsed() {
+	if blockchainCmd.Parsed() {
 		if *blockchainAddressParam == "" {
-			createBlockchainCmd.Usage()
+			blockchainCmd.Usage()
 			os.Exit(1)
 		}
 
