@@ -12,6 +12,9 @@ import (
 // 数据库路径
 const dbFile = "db/silver-blockchain.db"
 
+// Last hash key
+const lastHashKey = "lastHash"
+
 // Bucket名称
 const blockBucket = "blocks"
 
@@ -30,13 +33,14 @@ type BlockchainIterator struct {
 	db          *bolt.DB
 }
 
-func (bc *Blockchain) AddBlock(transaction []*Transaction) {
+// 挖矿
+func (bc *Blockchain) MineBlock(transactions []*Transaction) {
 	var lastHash []byte
 	var lastBlock *Block
 
 	err := bc.Db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
-		lastHash = b.Get([]byte("lastHash"))
+		lastHash = b.Get([]byte(lastHashKey))
 		lastBlock = DeserializeBlock(b.Get(lastHash))
 
 		return nil
@@ -46,7 +50,45 @@ func (bc *Blockchain) AddBlock(transaction []*Transaction) {
 		log.Panic(err)
 	}
 
-	newBlock := NewBlock(transaction, lastBlock.Id, lastBlock.Hash)
+	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
+
+	err = bc.Db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blockBucket))
+
+		err := b.Put(newBlock.Hash, newBlock.Serialize())
+		if err != nil {
+			log.Panic(err)
+		}
+
+		err = b.Put([]byte(lastHashKey), newBlock.Hash)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		bc.Tip = newBlock.Hash
+
+		return nil
+	})
+}
+
+// 添加区块
+func (bc *Blockchain) AddBlock(transactions []*Transaction) {
+	var lastHash []byte
+	var lastBlock *Block
+
+	err := bc.Db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blockBucket))
+		lastHash = b.Get([]byte(lastHashKey))
+		lastBlock = DeserializeBlock(b.Get(lastHash))
+
+		return nil
+	})
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
 
 	err = bc.Db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
@@ -56,7 +98,7 @@ func (bc *Blockchain) AddBlock(transaction []*Transaction) {
 			log.Panic(err)
 		}
 
-		err = b.Put([]byte("lastHash"), newBlock.Hash)
+		err = b.Put([]byte(lastHashKey), newBlock.Hash)
 
 		if err != nil {
 			log.Panic(err)
@@ -198,7 +240,7 @@ func NewBlockchain(address string) *Blockchain {
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
-		tip = b.Get([]byte("lastHash"))
+		tip = b.Get([]byte(lastHashKey))
 
 		return nil
 	})
@@ -212,6 +254,7 @@ func NewBlockchain(address string) *Blockchain {
 	return &bc
 }
 
+// 创建区块链
 func CreateBlockchain(address string) *Blockchain {
 	if dbExists() == false {
 		fmt.Println("No existing blockchain found. Create one first.")
@@ -240,7 +283,7 @@ func CreateBlockchain(address string) *Blockchain {
 			log.Panic(err)
 		}
 
-		err = b.Put([]byte("lastHash"), genesisBlock.Hash)
+		err = b.Put([]byte(lastHashKey), genesisBlock.Hash)
 		if err != nil {
 			log.Panic(err)
 		}

@@ -59,9 +59,9 @@ func (b *Block) HashTransaction() []byte {
 }
 
 // 创建新区块
-func NewBlock(transaction []*Transaction, prevId int64, prevBlockHash []byte) *Block {
+func NewBlock(transactions []*Transaction, prevId int64, prevBlockHash []byte) *Block {
 	id := prevId + 1
-	block := &Block{id, time.Now().Unix(), transaction, prevBlockHash, []byte{}, 0}
+	block := &Block{id, time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
 

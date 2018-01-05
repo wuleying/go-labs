@@ -61,6 +61,15 @@ func (cli *CLI) getBalance(address string) {
 	fmt.Printf("Balance of %s: %d", address, balance)
 }
 
+func (cli *CLI) send(from string, to string, amout int) {
+	bc := b.NewBlockchain(from)
+	defer bc.Db.Close()
+
+	t := b.NewUTXOTransaction(from, to, amout, bc)
+	bc.MineBlock([]*b.Transaction{t})
+	fmt.Println("Send success!")
+}
+
 // 运行命令行
 func (cli *CLI) Run() {
 	cli.validateArgs()
