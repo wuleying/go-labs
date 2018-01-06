@@ -169,6 +169,31 @@ func (bc *BlockChain) FindUTXO(address string) []TOutput {
 	return UTXO
 }
 
+func (bc *BlockChain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
+	accountMulated := 0
+	unspentOutputs := make(map[string][]int)
+	unspentT := bc.FineUnspentTransactions(address)
+
+Work:
+	for _, t := range unspentT {
+		tId := hex.EncodeToString(t.Id)
+
+		for outIdx, out := range t.Out {
+			if out.CanBeUnlockWith(address) && accountMulated < amount {
+				accountMulated += out.Value
+
+				unspentOutputs[tId] = append(unspentOutputs[tId], outIdx)
+
+				if accountMulated >= amount {
+					break Work
+				}
+			}
+		}
+	}
+
+	return accountMulated, unspentOutputs
+}
+
 func (bc *BlockChain) FineUnspentTransactions(address string) []Transaction {
 	var unspentT []Transaction
 	spentTXO := make(map[string][]int)

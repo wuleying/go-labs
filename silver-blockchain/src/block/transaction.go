@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
+	"encoding/hex"
 	"fmt"
 	"log"
 )
@@ -74,7 +75,28 @@ func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Tra
 	var inputs []TInput
 	var outputs []TOutput
 
-	// todo
+	account, vaildOutputs := bc.FindSpendableOutputs(from, amount)
+
+	if account < amount {
+		log.Panic("Error: Not enough funds")
+	}
+
+	for id, outs := range vaildOutputs {
+		tId, err := hex.DecodeString(id)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		for _, out := range outs {
+			inputs = append(inputs, TInput{tId, out, from})
+		}
+	}
+
+	outputs = append(outputs, TOutput{amount, to})
+
+	if account > amount {
+		outputs = append(outputs, TOutput{account - amount, from})
+	}
 
 	t := Transaction{nil, inputs, outputs}
 	t.SetId()
