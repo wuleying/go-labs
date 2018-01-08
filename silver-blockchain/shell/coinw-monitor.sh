@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Author: eaglewudi@gmail.com
+# Date: 2018-01-08
 
 symbols="ETH#14#<7000 EOS#29#<50"
 cookie="xxx"
