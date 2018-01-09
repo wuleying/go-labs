@@ -13,8 +13,11 @@ ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 # pid目录
 ENV_PID_DIR="$ENV_ROOT_DIR"/pids
+# config目录
+ENV_CONFIG_DIR="$ENV_ROOT_DIR"/config
 # shell目录
 ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
+
 
 # 编译参数缺省值 dev/test/prod
 BUILD_MODE="prod"
