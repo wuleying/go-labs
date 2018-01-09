@@ -2,12 +2,10 @@ package model
 
 import (
 	"fmt"
-	"log"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-
-	"go-labs/silver-monitor/src/util"
+	"go-labs/silver-president/src/util"
+	"log"
 )
 
 // 初始化数据库配置项

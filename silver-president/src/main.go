@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"go-labs/silver-president/src/model"
 	"go-labs/silver-president/src/util"
 	"log"
 	"time"
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	// 初始化模型
-	//db = model.Init(config)
+	db = model.Init(config)
 
 	getData()
 }
