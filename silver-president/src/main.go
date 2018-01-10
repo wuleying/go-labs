@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"go-labs/silver-president/src/model"
 	"go-labs/silver-president/src/util"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -45,5 +48,22 @@ func getData() {
 	// 抓取目标页
 	var target_url string = fmt.Sprintf(config.Setting["target_url"], time.Now().Local().Format("20060102"))
 
-	util.Notification(target_url)
+	resp, err := http.Get(target_url)
+
+	if err != nil {
+		log.Fatal("Init config failed: ", err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	var jsonDatas []JsonData
+
+	err = json.Unmarshal(body, &jsonDatas)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	util.Notification(jsonDatas[0].Title)
 }
