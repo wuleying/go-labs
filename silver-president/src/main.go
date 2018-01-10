@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron"
 	"go-labs/silver-president/src/model"
 	"go-labs/silver-president/src/util"
 	"io/ioutil"
@@ -21,7 +22,7 @@ var timeNow = time.Now().Local()
 
 func main() {
 	// 保存pid
-	util.FileSavePid("silver-monitor-server.pid")
+	util.FileSavePid("silver-president.pid")
 
 	config, _ = util.ConfigInit()
 	if err != nil {
@@ -31,7 +32,15 @@ func main() {
 	// 初始化模型
 	db = model.Init(config)
 
-	getData()
+	crontab := cron.New()
+
+	crontab.AddFunc(config.Setting["schedule"], func() {
+		getData()
+	})
+
+	crontab.Start()
+
+	select {}
 }
 
 // 获取数据
@@ -86,9 +95,8 @@ func getData() {
 		}
 
 		insertId := model.CalendarSaveData(db, value)
-		log.Printf("Insert id [%d]", insertId)
+		log.Printf("Insert id: [%d], title: [%s]", insertId, value.Title)
 
 		util.Notification(fmt.Sprintf("%s  [%s]", value.Title, value.InputDate))
-
 	}
 }
