@@ -58,12 +58,12 @@ func getData() {
 
 	body, err := ioutil.ReadAll(resp.Body)
 
-	var jsonDatas []JsonData
+	var jsonDataList []JsonData
 
-	err = json.Unmarshal(body, &jsonDatas)
+	err = json.Unmarshal(body, &jsonDataList)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
 
-	util.Notification(jsonDatas[0].Title)
+	util.Notification(fmt.Sprintf("%s [%s]", jsonDataList[0].Title, jsonDataList[0].InputDate))
 }
