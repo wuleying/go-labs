@@ -38,8 +38,8 @@ func execCommand(commandName string, params []string) bool {
 	return true
 }
 
-func Notification(message string) {
+func Notification(title string) {
 	command := "osascript"
-	params := []string{"-e", fmt.Sprintf("display notification \"%s\" with title \"Silver president\"", message)}
+	params := []string{"-e", fmt.Sprintf("display notification \"%s\" with title \"Silver president\" sound name \"Glass\"", title)}
 	execCommand(command, params)
 }
