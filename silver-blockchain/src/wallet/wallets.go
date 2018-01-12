@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/elliptic"
 	"encoding/gob"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -22,6 +23,29 @@ func NewWallets() (Wallets, error) {
 	err := wallets.LoadFromFile()
 
 	return &wallets, err
+}
+
+func (ws *Wallets) CreateWallet() string {
+	wallet := NewWallet()
+	address := fmt.Sprintf("%s", wallet.GetAddress())
+
+	ws.Wallets[address] = wallet
+
+	return address
+}
+
+func (ws *Wallets) GetAddress() []string {
+	var addresses []string
+
+	for address := range ws.Wallets {
+		addresses = append(addresses, address)
+	}
+
+	return addresses
+}
+
+func (ws *Wallets) GetWallet(address string) Wallet {
+	return ws.Wallets[address]
 }
 
 func (ws *Wallets) LoadFromFile() error {
@@ -47,4 +71,22 @@ func (ws *Wallets) LoadFromFile() error {
 	ws.Wallets = wallets.Wallets
 
 	return nil
+}
+
+func (ws *Wallets) SaveToFile() {
+	var content bytes.Buffer
+
+	gob.Register(elliptic.P256())
+
+	encoder := gob.NewEncoder(&content)
+
+	err := encoder.Encode(ws)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = ioutil.WriteFile(walletFile, content.Bytes(), 0644)
+	if err != nil {
+		log.Panic(err)
+	}
 }
