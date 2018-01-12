@@ -16,7 +16,7 @@ type Wallets struct {
 	Wallets map[string]*Wallet
 }
 
-func NewWallets() (Wallets, error) {
+func NewWallets() (*Wallets, error) {
 	wallets := Wallets{}
 	wallets.Wallets = make(map[string]*Wallet)
 
@@ -45,7 +45,7 @@ func (ws *Wallets) GetAddresses() []string {
 }
 
 func (ws *Wallets) GetWallet(address string) Wallet {
-	return ws.Wallets[address]
+	return *ws.Wallets[address]
 }
 
 func (ws *Wallets) LoadFromFile() error {
