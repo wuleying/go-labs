@@ -34,7 +34,7 @@ func (ws *Wallets) CreateWallet() string {
 	return address
 }
 
-func (ws *Wallets) GetAddress() []string {
+func (ws *Wallets) GetAddresses() []string {
 	var addresses []string
 
 	for address := range ws.Wallets {
