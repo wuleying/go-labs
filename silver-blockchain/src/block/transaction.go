@@ -18,17 +18,6 @@ type Transaction struct {
 	Out []TOutput
 }
 
-type TInput struct {
-	Id        []byte
-	Out       int
-	ScriptSig string
-}
-
-type TOutput struct {
-	Value        int
-	ScriptPubKey string
-}
-
 func (t Transaction) IsCoinBase() bool {
 	return len(t.In) == 1 && len(t.In[0].Id) == 0 && t.In[0].Out == -1
 }
@@ -49,6 +38,7 @@ func (t Transaction) SetId() {
 	t.Id = hash[:]
 }
 
+/*
 func (in TInput) CanUnlockOutputWith(data string) bool {
 	return in.ScriptSig == data
 }
@@ -56,6 +46,7 @@ func (in TInput) CanUnlockOutputWith(data string) bool {
 func (out TOutput) CanBeUnlockWith(data string) bool {
 	return out.ScriptPubKey == data
 }
+*/
 
 func NewCoinBase(to string, data string) *Transaction {
 	if data == "" {
