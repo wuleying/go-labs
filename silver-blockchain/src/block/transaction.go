@@ -6,6 +6,7 @@ import (
 	"encoding/gob"
 	"encoding/hex"
 	"fmt"
+	"go-labs/silver-blockchain/src/wallet"
 	"log"
 )
 
@@ -20,6 +21,29 @@ type Transaction struct {
 
 func (t Transaction) IsCoinBase() bool {
 	return len(t.In) == 1 && len(t.In[0].Id) == 0 && t.In[0].Out == -1
+}
+
+func (t Transaction) Serialize() []byte {
+	var encoded bytes.Buffer
+
+	encoder := gob.NewEncoder(&encoded)
+	err := encoder.Encode(t)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return encoded.Bytes()
+}
+
+func (t *Transaction) Hash() []byte {
+	var hash [32]byte
+
+	tCopy := *t
+	tCopy.Id = []byte{}
+
+	hash = sha256.Sum256(tCopy.Serialize())
+
+	return hash[:]
 }
 
 func (t Transaction) SetId() {
@@ -38,26 +62,16 @@ func (t Transaction) SetId() {
 	t.Id = hash[:]
 }
 
-/*
-func (in TInput) CanUnlockOutputWith(data string) bool {
-	return in.ScriptSig == data
-}
-
-func (out TOutput) CanBeUnlockWith(data string) bool {
-	return out.ScriptPubKey == data
-}
-*/
-
 func NewCoinBase(to string, data string) *Transaction {
 	if data == "" {
 		data = fmt.Sprintf("Reward to '%s'", to)
 	}
 
-	tIn := TInput{[]byte{}, -1, data}
-	tOut := TOutput{subsidy, to}
+	tIn := TInput{[]byte{}, -1, nil, []byte(data)}
+	tOut := NewTOutput(subsidy, to)
 
-	t := Transaction{nil, []TInput{tIn}, []TOutput{tOut}}
-	t.SetId()
+	t := Transaction{nil, []TInput{tIn}, []TOutput{*tOut}}
+	t.Id = t.Hash()
 
 	return &t
 }
@@ -66,7 +80,13 @@ func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Tra
 	var inputs []TInput
 	var outputs []TOutput
 
-	account, vaildOutputs := bc.FindSpendableOutputs(from, amount)
+	wallets, err := wallet.NewWallets()
+	if err != nil {
+		log.Panic(err)
+	}
+	walletFrom := wallets.GetWallet(from)
+	publicKeyHash := wallet.HashPublicKey(walletFrom.PublicKey)
+	account, vaildOutputs := bc.FindSpendableOutputs(publicKeyHash, amount)
 
 	if account < amount {
 		log.Panic("Error: Not enough funds")
@@ -79,14 +99,14 @@ func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Tra
 		}
 
 		for _, out := range outs {
-			inputs = append(inputs, TInput{tId, out, from})
+			inputs = append(inputs, TInput{tId, out, nil, walletFrom.PublicKey})
 		}
 	}
 
-	outputs = append(outputs, TOutput{amount, to})
+	outputs = append(outputs, *NewTOutput(amount, to))
 
 	if account > amount {
-		outputs = append(outputs, TOutput{account - amount, from})
+		outputs = append(outputs, *NewTOutput(account-amount, from))
 	}
 
 	t := Transaction{nil, inputs, outputs}

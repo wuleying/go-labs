@@ -153,14 +153,13 @@ func (i *BlockChainIterator) Next() *Block {
 	return block
 }
 
-func (bc *BlockChain) FindUTXO(address string) []TOutput {
+func (bc *BlockChain) FindUTXO(publicKeyHash []byte) []TOutput {
 	var UTXO []TOutput
-
-	unspentTransactions := bc.FineUnspentTransactions(address)
+	unspentTransactions := bc.FindUnspentTransactions(publicKeyHash)
 
 	for _, t := range unspentTransactions {
 		for _, out := range t.Out {
-			if out.CanBeUnlockWith(address) {
+			if out.IsLockedWithKey(publicKeyHash) {
 				UTXO = append(UTXO, out)
 			}
 		}
@@ -169,17 +168,17 @@ func (bc *BlockChain) FindUTXO(address string) []TOutput {
 	return UTXO
 }
 
-func (bc *BlockChain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
+func (bc *BlockChain) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, map[string][]int) {
 	accountMulated := 0
 	unspentOutputs := make(map[string][]int)
-	unspentT := bc.FineUnspentTransactions(address)
+	unspentT := bc.FindUnspentTransactions(publicKeyHash)
 
 Work:
 	for _, t := range unspentT {
 		tId := hex.EncodeToString(t.Id)
 
 		for outIdx, out := range t.Out {
-			if out.CanBeUnlockWith(address) && accountMulated < amount {
+			if out.IsLockedWithKey(publicKeyHash) && accountMulated < amount {
 				accountMulated += out.Value
 
 				unspentOutputs[tId] = append(unspentOutputs[tId], outIdx)
@@ -194,7 +193,7 @@ Work:
 	return accountMulated, unspentOutputs
 }
 
-func (bc *BlockChain) FineUnspentTransactions(address string) []Transaction {
+func (bc *BlockChain) FindUnspentTransactions(publicKeyHash []byte) []Transaction {
 	var unspentT []Transaction
 	spentTXO := make(map[string][]int)
 
@@ -216,14 +215,14 @@ func (bc *BlockChain) FineUnspentTransactions(address string) []Transaction {
 					}
 				}
 
-				if out.CanBeUnlockWith(address) {
+				if out.IsLockedWithKey(publicKeyHash) {
 					unspentT = append(unspentT, *t)
 				}
 			}
 
 			if t.IsCoinBase() == false {
 				for _, in := range t.In {
-					if in.CanUnlockOutputWith(address) {
+					if in.UsesKey(publicKeyHash) {
 						inTId := hex.EncodeToString(in.Id)
 						spentTXO[inTId] = append(spentTXO[inTId], in.Out)
 					}
