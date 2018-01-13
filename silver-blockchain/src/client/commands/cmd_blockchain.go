@@ -1,4 +1,4 @@
-package client
+package commands
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 // 创建区块链
-func (cli *CLI) createBlockChain(address string) {
+func createBlockChain(address string) {
 	if !wallet.ValidateAddress(address) {
 		log.Panic("Error: Address is not valid.")
 	}
@@ -20,7 +20,7 @@ func (cli *CLI) createBlockChain(address string) {
 }
 
 // 打印全部区块链数据
-func (cli *CLI) printBlockChain() {
+func printBlockChain() {
 	bc := b.NewBlockChain("")
 	defer bc.Db.Close()
 
@@ -29,7 +29,7 @@ func (cli *CLI) printBlockChain() {
 	for {
 		block := bci.Next()
 
-		cli.printBlockInfo(block)
+		formatBlockInfo(block)
 
 		if len(block.PrevBlockHash) == 0 {
 			break
@@ -37,8 +37,8 @@ func (cli *CLI) printBlockChain() {
 	}
 }
 
-// 打印区块信息
-func (cli *CLI) printBlockInfo(block *b.Block) {
+// 格式化输出区块信息
+func formatBlockInfo(block *b.Block) {
 	fmt.Printf("Id: #%d\n", block.Id)
 	fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
 	fmt.Printf("Hash: %x\n", block.Hash)

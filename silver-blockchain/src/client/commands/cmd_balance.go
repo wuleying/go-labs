@@ -1,4 +1,4 @@
-package client
+package commands
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 // 获取账户余额
-func (cli *CLI) getBalance(address string) {
+func getBalance(address string) {
 	if !wallet.ValidateAddress(address) {
 		log.Panic("Error: Address is not valid.")
 	}

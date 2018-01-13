@@ -1,4 +1,4 @@
-package client
+package commands
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 // 创建钱包
-func (cli *CLI) createWallet() {
+func createWallet() {
 	wallets, err := wallet.NewWallets()
 	if err != nil {
 		log.Panic(err)
@@ -20,7 +20,7 @@ func (cli *CLI) createWallet() {
 }
 
 // 获取钱包地址列表
-func (cli *CLI) getWalletAddresses() {
+func getWalletAddresses() {
 	wallets, err := wallet.NewWallets()
 	if err != nil {
 		log.Panic(err)
