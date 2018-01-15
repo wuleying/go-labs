@@ -27,12 +27,12 @@ func getWalletAddresses() {
 	addresses := wallets.GetAddresses()
 
 	for _, address := range addresses {
-		fmt.Println(address)
+		fmt.Printf("Address: %s, Balance: %d\n", address, balance(address))
 	}
 }
 
 // 获取钱包余额
-func balance(address string) {
+func balance(address string) int {
 	if !wallet.ValidateAddress(address) {
 		log.Panic("Error: Address is not valid.")
 	}
@@ -50,5 +50,5 @@ func balance(address string) {
 		balance += out.Value
 	}
 
-	fmt.Printf("Balance of %s: %d\n", address, balance)
+	return balance
 }

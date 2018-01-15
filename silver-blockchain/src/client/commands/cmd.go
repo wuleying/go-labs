@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/urfave/cli"
 )
 
@@ -107,7 +108,7 @@ var Commands = []cli.Command{
 						return cli.ShowAppHelp(c)
 					}
 
-					balance(c.String("address"))
+					fmt.Printf("Address: %s, Balance: %d\n", c.String("address"), balance(c.String("address")))
 					return nil
 				},
 			},
