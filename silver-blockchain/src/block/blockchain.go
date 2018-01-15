@@ -27,12 +27,6 @@ type BlockChain struct {
 	Db  *bolt.DB
 }
 
-// 区块链迭代器结构体
-type BlockChainIterator struct {
-	currentHash []byte
-	db          *bolt.DB
-}
-
 // 挖矿
 func (bc *BlockChain) MineBlock(transactions []*Transaction) {
 	var lastHash []byte
@@ -125,34 +119,6 @@ func (bc *BlockChain) GetBlock(id int64) (*Block, error) {
 	return nil, errors.New("Block is not exist.")
 }
 
-// 区块链迭代器
-func (bc *BlockChain) Iterator() *BlockChainIterator {
-	bci := &BlockChainIterator{bc.Tip, bc.Db}
-
-	return bci
-}
-
-// 迭代区获取区块信息
-func (i *BlockChainIterator) Next() *Block {
-	var block *Block
-
-	err := i.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blockBucket))
-		encodedBlock := b.Get(i.currentHash)
-		block = DeserializeBlock(encodedBlock)
-
-		return nil
-	})
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	i.currentHash = block.PrevBlockHash
-
-	return block
-}
-
 func (bc *BlockChain) FindUTXO(publicKeyHash []byte) []TOutput {
 	var UTXO []TOutput
 	unspentTransactions := bc.FindUnspentTransactions(publicKeyHash)
@@ -238,15 +204,6 @@ func (bc *BlockChain) FindUnspentTransactions(publicKeyHash []byte) []Transactio
 	return unspentT
 }
 
-// 检查数据库文件是否存在
-func dbExists() bool {
-	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
-		return false
-	}
-
-	return true
-}
-
 // 创建新区块链
 func NewBlockChain(address string) *BlockChain {
 	if dbExists() == false {
@@ -324,4 +281,13 @@ func CreateBlockChain(address string) *BlockChain {
 	bc := BlockChain{tip, db}
 
 	return &bc
+}
+
+// 检查数据库文件是否存在
+func dbExists() bool {
+	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }
