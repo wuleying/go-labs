@@ -1,3 +1,4 @@
 bin/silver-blockchain
 db/silver-blockchain.db
+db/wallet.dat
 nohup.out

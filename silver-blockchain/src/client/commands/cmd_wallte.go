@@ -8,11 +8,7 @@ import (
 
 // 创建钱包
 func createWallet() {
-	wallets, err := wallet.NewWallets()
-	if err != nil {
-		log.Panic(err)
-	}
-
+	wallets, _ := wallet.NewWallets()
 	address := wallets.CreateWallet()
 	wallets.SaveToFile()
 

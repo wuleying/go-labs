@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-const walletFile = "wallet_%s.dat"
+const walletFile = "db/wallet.dat"
 
 type Wallets struct {
 	Wallets map[string]*Wallet
