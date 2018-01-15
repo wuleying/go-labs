@@ -8,9 +8,10 @@ import (
 
 /*
  * e.g.
- * ./silver-blockchain balance get -address=ADDRESS             Get balance info of address
- * ./silver-blockchain blockchain create -address=ADDRESS       Create a blockchain and send genesis block reward to address
- * ./silver-blockchain blockchain print                         Print all blockchain info
+ * ./silver-blockchain balance get -address=ADDRESS                                 Get balance info of address
+ * ./silver-blockchain blockchain create -address=ADDRESS                           Create a blockchain and send genesis block reward to address
+ * ./silver-blockchain blockchain print                                             Print all blockchain info
+ * ./silver-blockchain transaction send -from=ADDRESS -to=ADDRESS -amount=AMOUNT    Send AMOUNT of coins from FROM address A to address B
  */
 
 // 运行命令行

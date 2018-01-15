@@ -6,7 +6,7 @@ import (
 )
 
 // 交易货币
-func send(from string, to string, amount int) {
+func sendCoin(from string, to string, amount int) {
 	bc := b.NewBlockChain(from)
 	defer bc.Db.Close()
 
