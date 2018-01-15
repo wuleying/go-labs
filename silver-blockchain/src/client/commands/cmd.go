@@ -111,7 +111,7 @@ var Commands = []cli.Command{
 			},
 			{
 				Name:    "get",
-				Aliases: []string{"c"},
+				Aliases: []string{"g"},
 				Usage:   "Get all wallets address",
 				Action: func(c *cli.Context) error {
 					getWalletAddresses()
