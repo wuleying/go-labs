@@ -287,6 +287,9 @@ func CreateBlockChain(address string) *BlockChain {
 
 	var tip []byte
 
+	cbt := NewCoinBase(address, genesisCoinBaseData)
+	genesisBlock := NewGenesisBlock(cbt)
+
 	db, err := bolt.Open(dbFile, 0600, nil)
 
 	if err != nil {
@@ -294,9 +297,6 @@ func CreateBlockChain(address string) *BlockChain {
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		cbt := NewCoinBase(address, genesisCoinBaseData)
-		genesisBlock := NewGenesisBlock(cbt)
-
 		b, err := tx.CreateBucket([]byte(blockBucket))
 		if err != nil {
 			log.Panic(err)

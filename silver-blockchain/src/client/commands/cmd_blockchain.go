@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	b "go-labs/silver-blockchain/src/block"
+
 	"go-labs/silver-blockchain/src/wallet"
 	"log"
 	"strconv"
@@ -16,11 +17,12 @@ func createBlockChain(address string) {
 
 	bc := b.CreateBlockChain(address)
 	bc.Db.Close()
+
 	fmt.Println("Create blockchain success.")
 }
 
 // 打印全部区块链数据
-func printBlockChain() {
+func GetBlockChain() {
 	bc := b.NewBlockChain("")
 	defer bc.Db.Close()
 
