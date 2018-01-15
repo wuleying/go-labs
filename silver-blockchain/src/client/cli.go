@@ -8,6 +8,7 @@ import (
 
 /*
  * e.g.
+ *
  * ./silver-blockchain blockchain create -address=ADDRESS                           Create a blockchain and send genesis block reward to address
  * ./silver-blockchain blockchain get                                               Get all blockchain info
  * ./silver-blockchain transaction send -from=ADDRESS -to=ADDRESS -amount=AMOUNT    Send AMOUNT of coins from address A to address B
