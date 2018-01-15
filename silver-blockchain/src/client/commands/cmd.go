@@ -47,7 +47,7 @@ var Commands = []cli.Command{
 			{
 				Name:    "send",
 				Aliases: []string{"s"},
-				Usage:   "Send AMOUNT of coins from FROM address A to address B",
+				Usage:   "Send AMOUNT of coins from address A to address B",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name: "from",

@@ -10,7 +10,7 @@ import (
  * e.g.
  * ./silver-blockchain blockchain create -address=ADDRESS                           Create a blockchain and send genesis block reward to address
  * ./silver-blockchain blockchain get                                               Get all blockchain info
- * ./silver-blockchain transaction send -from=ADDRESS -to=ADDRESS -amount=AMOUNT    Send AMOUNT of coins from FROM address A to address B
+ * ./silver-blockchain transaction send -from=ADDRESS -to=ADDRESS -amount=AMOUNT    Send AMOUNT of coins from address A to address B
  * ./silver-blockchain wallet create                                                Create a new wallet
  * ./silver-blockchain wallet get                                                   Get all wallets address
  * ./silver-blockchain wallet balance -address=ADDRESS                              Get wallet balance info of address
