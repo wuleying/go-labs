@@ -6,11 +6,18 @@ import (
 	"os"
 )
 
+/*
+ * e.g.
+ * ./silver-blockchain balance get -address=ADDRESS             Get balance info of address
+ * ./silver-blockchain blockchain create -address=ADDRESS       Create a blockchain and send genesis block reward to address
+ * ./silver-blockchain blockchain print                         Print all blockchain info
+ */
+
 // 运行命令行
 func Run() {
 	app := cli.NewApp()
-	app.Name = "Silver blockchain"
-	app.Usage = "client tools"
+	app.Name = "Silver"
+	app.Usage = "Blockchain client tools"
 	app.Version = "0.0.1"
 	app.Authors = []cli.Author{
 		cli.Author{
