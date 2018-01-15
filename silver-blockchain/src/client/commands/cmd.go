@@ -95,4 +95,29 @@ var Commands = []cli.Command{
 			},
 		},
 	},
+	{
+		Name:    "wallet",
+		Aliases: []string{"w"},
+		Usage:   "Wallet opertaions",
+		Subcommands: []cli.Command{
+			{
+				Name:    "create",
+				Aliases: []string{"c"},
+				Usage:   "Create a new wallet",
+				Action: func(c *cli.Context) error {
+					createWallet()
+					return nil
+				},
+			},
+			{
+				Name:    "get",
+				Aliases: []string{"c"},
+				Usage:   "Get all wallets address",
+				Action: func(c *cli.Context) error {
+					getWalletAddresses()
+					return nil
+				},
+			},
+		},
+	},
 }
