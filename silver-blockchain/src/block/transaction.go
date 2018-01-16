@@ -107,7 +107,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 	}
 
 	for _, in := range t.In {
-		if prevTs[hex.DecodeString(in.Id)].Id == nil {
+		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
 			log.Panic("Error: previous transaction is not correct")
 		}
 	}
