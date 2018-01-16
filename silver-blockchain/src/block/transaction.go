@@ -3,6 +3,7 @@ package block
 import (
 	"bytes"
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/gob"
@@ -10,6 +11,7 @@ import (
 	"fmt"
 	"go-labs/silver-blockchain/src/wallet"
 	"log"
+	"math/big"
 )
 
 // 挖出新块的奖励金
@@ -45,13 +47,13 @@ func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Tra
 	}
 	walletFrom := wallets.GetWallet(from)
 	publicKeyHash := wallet.HashPublicKey(walletFrom.PublicKey)
-	account, vaildOutputs := bc.FindSpendableOutputs(publicKeyHash, amount)
+	account, validOutputs := bc.FindSpendableOutputs(publicKeyHash, amount)
 
 	if account < amount {
 		log.Panic("Error: Not enough funds")
 	}
 
-	for id, outs := range vaildOutputs {
+	for id, outs := range validOutputs {
 		tId, err := hex.DecodeString(id)
 		if err != nil {
 			log.Panic(err)
@@ -69,7 +71,8 @@ func NewUTXOTransaction(from string, to string, amount int, bc *BlockChain) *Tra
 	}
 
 	t := Transaction{nil, inputs, outputs}
-	t.SetId()
+	t.Id = t.Hash()
+	bc.SignTransaction(&t, walletFrom.PrivateKey)
 
 	return &t
 }
@@ -129,6 +132,48 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 		t.In[inIdx].Signature = signature
 	}
+}
+
+func (t *Transaction) Verify(prevTs map[string]Transaction) bool {
+	if t.IsCoinBase() {
+		return true
+	}
+
+	for _, in := range t.In {
+		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
+			log.Panic("Error: previous transaction is not correct")
+		}
+	}
+
+	tCopy := t.TrimmedCopy()
+	curve := elliptic.P256()
+
+	for inIdx, in := range t.In {
+		prevT := prevTs[hex.EncodeToString(in.Id)]
+		tCopy.In[inIdx].Signature = nil
+		tCopy.In[inIdx].PublicKey = prevT.Out[in.Out].PublicKeyHash
+		tCopy.Id = tCopy.Hash()
+		tCopy.In[inIdx].PublicKey = nil
+
+		r := big.Int{}
+		s := big.Int{}
+		signLen := len(in.Signature)
+		r.SetBytes(in.Signature[:(signLen / 2)])
+		s.SetBytes(in.Signature[(signLen / 2):])
+
+		x := big.Int{}
+		y := big.Int{}
+		keyLen := len(in.PublicKey)
+		x.SetBytes(in.PublicKey[:(keyLen / 2)])
+		y.SetBytes(in.PublicKey[(keyLen / 2):])
+
+		rawPublicKey := ecdsa.PublicKey{curve, &x, &y}
+		if ecdsa.Verify(&rawPublicKey, tCopy.Id, &r, &s) == false {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (t *Transaction) TrimmedCopy() Transaction {

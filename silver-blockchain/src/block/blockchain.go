@@ -320,6 +320,21 @@ func (bc *BlockChain) SignTransaction(t *Transaction, privateKey ecdsa.PrivateKe
 	t.Sign(privateKey, prevTs)
 }
 
+func (bc *BlockChain) VerifyTransaction(t *Transaction) bool {
+	prevTs := make(map[string]Transaction)
+
+	for _, in := range t.In {
+		prevT, err := bc.FindTransaction(in.Id)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		prevTs[hex.EncodeToString(prevT.Id)] = prevT
+	}
+
+	return t.Verify(prevTs)
+}
+
 // 区块链迭代器
 func (bc *BlockChain) Iterator() *BlockChainIterator {
 	bci := &BlockChainIterator{bc.Tip, bc.Db}
