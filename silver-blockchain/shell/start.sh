@@ -9,7 +9,7 @@ start() {
 
     # 执行
     #nohup \
-    "$ENV_BIN_DIR"/"$PROJECT_NAME" add -d test
+    "$ENV_BIN_DIR"/"$PROJECT_NAME" w c
 
     _info "silver-blockchain started."
 }

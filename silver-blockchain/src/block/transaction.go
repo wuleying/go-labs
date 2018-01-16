@@ -111,7 +111,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			log.Panic("Error: previous transaction is not correct")
+			log.Panic("Error: Previous transaction is not correct")
 		}
 	}
 
@@ -141,7 +141,7 @@ func (t *Transaction) Verify(prevTs map[string]Transaction) bool {
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			log.Panic("Error: previous transaction is not correct")
+			log.Panic("Error: Previous transaction is not correct")
 		}
 	}
 
