@@ -11,13 +11,6 @@ type BlockChainIterator struct {
 	db          *bolt.DB
 }
 
-// 区块链迭代器
-func (bc *BlockChain) Iterator() *BlockChainIterator {
-	bci := &BlockChainIterator{bc.Tip, bc.Db}
-
-	return bci
-}
-
 // 迭代区获取区块信息
 func (i *BlockChainIterator) Next() *Block {
 	var block *Block

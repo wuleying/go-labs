@@ -3,7 +3,6 @@ package commands
 import (
 	"fmt"
 	b "go-labs/silver-blockchain/src/block"
-
 	"go-labs/silver-blockchain/src/wallet"
 	"log"
 	"strconv"

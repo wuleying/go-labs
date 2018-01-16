@@ -18,6 +18,37 @@ type Block struct {
 	Nonce         int
 }
 
+// 创建新区块
+func NewBlock(transactions []*Transaction, prevId int64, prevBlockHash []byte) *Block {
+	id := prevId + 1
+	block := &Block{id, time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
+	pow := NewProofOfWork(block)
+	nonce, hash := pow.Run()
+
+	block.Hash = hash[:]
+	block.Nonce = nonce
+
+	return block
+}
+
+// 创建创世区块
+func NewGenesisBlock(coinBase *Transaction) *Block {
+	return NewBlock([]*Transaction{coinBase}, 0, []byte{})
+}
+
+// 交易哈希
+func (b *Block) HashTransaction() []byte {
+	var tHashes [][]byte
+	var tHash [32]byte
+
+	for _, t := range b.Transactions {
+		tHashes = append(tHashes, t.Id)
+	}
+	tHash = sha256.Sum256(bytes.Join(tHashes, []byte{}))
+
+	return tHash[:]
+}
+
 // 序列化区块对象
 func (b *Block) Serialize() []byte {
 	var result bytes.Buffer
@@ -44,35 +75,4 @@ func DeserializeBlock(d []byte) *Block {
 	}
 
 	return &block
-}
-
-// 交易哈希
-func (b *Block) HashTransaction() []byte {
-	var tHashes [][]byte
-	var tHash [32]byte
-
-	for _, t := range b.Transactions {
-		tHashes = append(tHashes, t.Id)
-	}
-	tHash = sha256.Sum256(bytes.Join(tHashes, []byte{}))
-
-	return tHash[:]
-}
-
-// 创建新区块
-func NewBlock(transactions []*Transaction, prevId int64, prevBlockHash []byte) *Block {
-	id := prevId + 1
-	block := &Block{id, time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
-	pow := NewProofOfWork(block)
-	nonce, hash := pow.Run()
-
-	block.Hash = hash[:]
-	block.Nonce = nonce
-
-	return block
-}
-
-// 创建创世区块
-func NewGenesisBlock(coinBase *Transaction) *Block {
-	return NewBlock([]*Transaction{coinBase}, 0, []byte{})
 }
