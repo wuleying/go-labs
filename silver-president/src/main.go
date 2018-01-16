@@ -26,7 +26,7 @@ func main() {
 
 	config, _ = util.ConfigInit()
 	if err != nil {
-		log.Fatal("Init config failed: ", err.Error())
+		log.Panic("Init config failed: ", err.Error())
 	}
 
 	// 初始化模型
@@ -51,7 +51,7 @@ func getData() {
 	resp, err := http.Get(target_url)
 
 	if err != nil {
-		log.Fatal("Get target url context failed: ", err.Error())
+		log.Panic("Get target url context failed: ", err.Error())
 	}
 
 	defer resp.Body.Close()
@@ -59,14 +59,14 @@ func getData() {
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		log.Fatal("Read context failed: ", err.Error())
+		log.Panic("Read context failed: ", err.Error())
 	}
 
 	var jsonDataList []util.JsonData
 
 	err = json.Unmarshal(body, &jsonDataList)
 	if err != nil {
-		log.Fatal("Josn decode failed: ", err.Error())
+		log.Panic("Josn decode failed: ", err.Error())
 	}
 
 	// 获取返回的数据数量
