@@ -109,7 +109,7 @@ func NewBlockChain(address string) *BlockChain {
 }
 
 // 挖矿
-func (bc *BlockChain) MineBlock(transactions []*Transaction) {
+func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	var lastHash []byte
 	var lastBlock *Block
 
@@ -144,6 +144,12 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) {
 
 		return nil
 	})
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return newBlock
 }
 
 // 添加区块

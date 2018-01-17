@@ -18,9 +18,14 @@ func sendCoin(from string, to string, amount int) {
 	}
 
 	bc := b.NewBlockChain(from)
+	UTXOSet := b.UTXOSet{bc}
 	defer bc.Db.Close()
 
-	t := b.NewUTXOTransaction(from, to, amount, bc)
-	bc.MineBlock([]*b.Transaction{t})
+	t := b.NewUTXOTransaction(from, to, amount, &UTXOSet)
+	coinBaseT := b.NewCoinBase(from, "")
+	ts := []*b.Transaction{coinBaseT, t}
+
+	newBlock := bc.MineBlock(ts)
+	UTXOSet.Update(newBlock)
 	fmt.Println("Send success!")
 }
