@@ -11,9 +11,8 @@ start() {
     "$ENV_SHELL_DIR"/build.sh
 
     # 执行
-    nohup \
-    "$ENV_BIN_DIR"/"$PROJECT_NAME" \
-    --config="$ENV_CONFIG_DIR"/config-dev.ini &
+    # nohup \
+    "$ENV_BIN_DIR"/"$PROJECT_NAME"
 
     _info "$PROJECT_NAME started."
 }

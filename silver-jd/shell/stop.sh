@@ -14,7 +14,7 @@ kill_process(){
         # 删除pid文件
         rm "$PID_FILE_PATH"
 
-        _info "$PROJECT_NAME-$PID_FILE_PATH stopped."
+        _info "$PROJECT_NAME stopped."
     fi
 }
 
