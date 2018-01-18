@@ -2,9 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/go-clog/clog"
 	"go-labs/silver-jd/src/jd"
-	"log"
+	"os"
 	"time"
 )
 
@@ -19,7 +20,20 @@ var (
 	order  = flag.Bool("order", false, "submit the order to JingDong when get the Goods.")
 )
 
+func init() {
+	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
+		Level:      clog.INFO,
+		BufferSize: 100},
+	); err != nil {
+		fmt.Printf("init console log failed. error %+v.", err)
+		os.Exit(1)
+	}
+}
+
 func main() {
+	flag.Parse()
+	defer clog.Shutdown()
+
 	jd := jd.NewJingDong(jd.JDConfig{
 		Period:     time.Millisecond * time.Duration(*period),
 		ShipArea:   *area,
@@ -27,11 +41,8 @@ func main() {
 		AutoSubmit: *order,
 	})
 
-	clog.Info("hehe")
-
 	defer jd.Release()
 	if err := jd.Login(); err == nil {
 		// 登录成功
-		log.Println("Success.")
 	}
 }
