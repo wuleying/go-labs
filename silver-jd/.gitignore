@@ -1,0 +1,4 @@
+config/config-dev.ini
+bin/silver-jd
+*.pid
+nohup.out
