@@ -1,4 +1,4 @@
 config/config-dev.ini
-bin/
+bin/silver-president
 *.pid
 nohup.out

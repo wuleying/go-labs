@@ -1,4 +1,5 @@
 config/config-dev.ini
-bin/
+bin/silver-monitor-manager
+bin/silver-monitor-server
 *.pid
 nohup.out
