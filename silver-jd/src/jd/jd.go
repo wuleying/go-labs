@@ -152,7 +152,6 @@ func (jd *JingDong) Login(args ...interface{}) error {
 		return err
 	}
 
-	//http.Post()
 	return nil
 }
 

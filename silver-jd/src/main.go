@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/go-clog/clog"
 	"go-labs/silver-jd/src/jd"
 	"log"
 	"time"
@@ -25,6 +26,8 @@ func main() {
 		AutoRush:   *rush,
 		AutoSubmit: *order,
 	})
+
+	clog.Info("hehe")
 
 	defer jd.Release()
 	if err := jd.Login(); err == nil {
