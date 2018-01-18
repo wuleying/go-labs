@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/go-clog/clog"
 	"go-labs/silver-jd/src/jd"
+	"log"
 	"time"
 )
 
@@ -29,6 +29,6 @@ func main() {
 	defer jd.Release()
 	if err := jd.Login(); err == nil {
 		// 登录成功
-		clog.Info("Login success.")
+		log.Println("Success.")
 	}
 }

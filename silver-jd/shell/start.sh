@@ -4,9 +4,6 @@
 source ./shell/common.sh
 
 start() {
-    # 杀死原进程
-    "$ENV_SHELL_DIR"/stop.sh
-
     # 编译
     "$ENV_SHELL_DIR"/build.sh
 

@@ -51,8 +51,8 @@ var (
 	}
 
 	maxNameLen   = 40
-	cookieFile   = "jd.cookies"
-	qrCodeFile   = "jd.qr"
+	cookieFile   = "cookies/jd.cookies"
+	qrCodeFile   = "cookies/jd.qr"
 	strSeperater = strings.Repeat("+", 60)
 )
 

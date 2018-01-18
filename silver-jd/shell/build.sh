@@ -9,7 +9,6 @@ init(){
     _info "ENV_ROOT_DIR:    $ENV_ROOT_DIR"
     _info "ENV_SRC_DIR:     $ENV_SRC_DIR"
     _info "ENV_BIN_DIR:     $ENV_BIN_DIR"
-    _info "ENV_PID_DIR:     $ENV_PID_DIR"
 }
 
 # 清理工作
@@ -34,12 +33,6 @@ mdir(){
     if [[ ! -d "$ENV_BIN_DIR" ]]; then
         _info "mkdir $ENV_BIN_DIR"
         mkdir "$ENV_BIN_DIR"
-    fi
-
-    # 生成PID文件目录
-    if [[ ! -d "$ENV_PID_DIR" ]]; then
-        _info "mkdir $ENV_PID_DIR"
-        mkdir "$ENV_PID_DIR"
     fi
 
     _info "end..."
