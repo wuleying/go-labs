@@ -6,9 +6,9 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"github.com/go-clog/clog"
 	"go-labs/silver-blockchain/src/utils"
 	"golang.org/x/crypto/ripemd160"
-	"log"
 )
 
 const version = byte(0x00)
@@ -46,7 +46,7 @@ func HashPublicKey(publicKey []byte) []byte {
 
 	_, err := ripemd160Hasher.Write(publicSha256[:])
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	publicRipemd160 := ripemd160Hasher.Sum(nil)
@@ -68,7 +68,7 @@ func newKeyPair() (ecdsa.PrivateKey, []byte) {
 	curve := elliptic.P256()
 	private, err := ecdsa.GenerateKey(curve, rand.Reader)
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	public := append(private.PublicKey.X.Bytes(), private.PublicKey.Y.Bytes()...)

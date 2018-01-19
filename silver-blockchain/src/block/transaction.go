@@ -9,8 +9,8 @@ import (
 	"encoding/gob"
 	"encoding/hex"
 	"fmt"
+	"github.com/go-clog/clog"
 	"go-labs/silver-blockchain/src/wallet"
-	"log"
 	"math/big"
 )
 
@@ -43,20 +43,20 @@ func NewUTXOTransaction(from string, to string, amount int, UTXOSet *UTXOSet) *T
 
 	wallets, err := wallet.NewWallets()
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 	walletFrom := wallets.GetWallet(from)
 	publicKeyHash := wallet.HashPublicKey(walletFrom.PublicKey)
 	account, validOutputs := UTXOSet.FindSpendableOutputs(publicKeyHash, amount)
 
 	if account < amount {
-		log.Panic("Error: Not enough funds")
+		clog.Error(1, "Not enough funds")
 	}
 
 	for id, outs := range validOutputs {
 		tId, err := hex.DecodeString(id)
 		if err != nil {
-			log.Panic(err)
+			clog.Error(1, err.Error())
 		}
 
 		for _, out := range outs {
@@ -87,7 +87,7 @@ func (t Transaction) Serialize() []byte {
 	encoder := gob.NewEncoder(&encoded)
 	err := encoder.Encode(t)
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	return encoded.Bytes()
@@ -111,7 +111,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			log.Panic("Error: Previous transaction is not correct")
+			clog.Error(1, "Previous transaction is not correct")
 		}
 	}
 
@@ -126,7 +126,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 		r, s, err := ecdsa.Sign(rand.Reader, &privateKey, tCopy.Id)
 		if err != nil {
-			log.Panic(err)
+			clog.Error(1, err.Error())
 		}
 		signature := append(r.Bytes(), s.Bytes()...)
 
@@ -141,7 +141,7 @@ func (t *Transaction) Verify(prevTs map[string]Transaction) bool {
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			log.Panic("Error: Previous transaction is not correct")
+			clog.Error(1, "Previous transaction is not correct.")
 		}
 	}
 
@@ -201,7 +201,7 @@ func (t Transaction) SetId() {
 
 	err := encoder.Encode(t)
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	hash = sha256.Sum256(encoded.Bytes())

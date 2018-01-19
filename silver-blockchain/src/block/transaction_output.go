@@ -3,8 +3,8 @@ package block
 import (
 	"bytes"
 	"encoding/gob"
+	"github.com/go-clog/clog"
 	"go-labs/silver-blockchain/src/utils"
-	"log"
 )
 
 type TOutput struct {
@@ -32,7 +32,7 @@ func (outs TOutputs) Serialize() []byte {
 	encoder := gob.NewEncoder(&buff)
 	err := encoder.Encode(outs)
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	return buff.Bytes()
@@ -51,7 +51,7 @@ func DeserializeOutputs(data []byte) TOutputs {
 	decoder := gob.NewDecoder(bytes.NewBuffer(data))
 	err := decoder.Decode(&outputs)
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	return outputs

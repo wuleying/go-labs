@@ -2,7 +2,7 @@ package block
 
 import (
 	"github.com/boltdb/bolt"
-	"log"
+	"github.com/go-clog/clog"
 )
 
 // 区块链迭代器结构体
@@ -24,7 +24,7 @@ func (i *BlockChainIterator) Next() *Block {
 	})
 
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	i.currentHash = block.PrevBlockHash

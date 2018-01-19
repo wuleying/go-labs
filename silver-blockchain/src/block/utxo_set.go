@@ -3,7 +3,7 @@ package block
 import (
 	"encoding/hex"
 	"github.com/boltdb/bolt"
-	"log"
+	"github.com/go-clog/clog"
 )
 
 const UTXOBucket = "chainstate"
@@ -37,7 +37,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	})
 
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 
 	return accmulated, unspentOutputs
@@ -65,12 +65,12 @@ func (u UTXOSet) Update(block *Block) {
 					if len(updateOuts.Outputs) == 0 {
 						err := b.Delete(in.Id)
 						if err != nil {
-							log.Panic(err)
+							clog.Error(1, err.Error())
 						}
 					} else {
 						err := b.Put(in.Id, updateOuts.Serialize())
 						if err != nil {
-							log.Panic(err)
+							clog.Error(1, err.Error())
 						}
 					}
 				}
@@ -83,7 +83,7 @@ func (u UTXOSet) Update(block *Block) {
 
 			err := b.Put(tx.Id, newOutputs.Serialize())
 			if err != nil {
-				log.Panic(err)
+				clog.Error(1, err.Error())
 			}
 		}
 
@@ -91,6 +91,6 @@ func (u UTXOSet) Update(block *Block) {
 	})
 
 	if err != nil {
-		log.Panic(err)
+		clog.Error(1, err.Error())
 	}
 }
