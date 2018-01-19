@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"github.com/robfig/cron"
 	"go-labs/silver-president/src/model"
 	"go-labs/silver-president/src/util"
@@ -16,7 +15,6 @@ import (
 // 全局配置
 var config util.Config
 var err error
-var db *sqlx.DB
 
 var timeNow = time.Now().Local()
 
@@ -28,9 +26,6 @@ func main() {
 	if err != nil {
 		log.Panic("Init config failed: ", err.Error())
 	}
-
-	// 初始化模型
-	db = model.Init(config)
 
 	crontab := cron.New()
 
@@ -76,20 +71,24 @@ func getData() {
 		return
 	}
 
+	// 初始化模型
+	db := model.Init(config)
+	defer db.Close()
+
 	// 获取当天已写入的数据
 	dataList := model.CalendarGetAll(db, timeNow.Format("2006-01-02"))
 
 	// 获取当天已写入的数据数量
 	dataListLen := len(dataList)
 
-	if jsonDataListLen == dataListLen {
+	if jsonDataListLen <= dataListLen {
 		return
 	}
 
 	for _, value := range jsonDataList {
 		for _, v := range dataList {
 			// 过滤已入库数据
-			if value.Title == v.Title && value.InputDate == v.InputDate {
+			if value.Title == v.Title {
 				continue
 			}
 		}
