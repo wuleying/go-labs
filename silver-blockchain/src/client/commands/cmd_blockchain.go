@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
 	"go-labs/silver-blockchain/src/wallet"
@@ -40,11 +39,9 @@ func GetBlockChain() {
 
 // 格式化输出区块信息
 func formatBlockInfo(block *b.Block) {
-	fmt.Printf("Id: #%d\n", block.Id)
-	fmt.Printf("PrevBlockHash: %x\n", block.PrevBlockHash)
-	fmt.Printf("Hash: %x\n", block.Hash)
-
+	clog.Info("Id: #%d\n", block.Id)
+	clog.Info("PrevBlockHash: %x\n", block.PrevBlockHash)
+	clog.Info("Hash: %x\n", block.Hash)
 	pow := b.NewProofOfWork(block)
-	fmt.Printf("Pow: %s\n", strconv.FormatBool(pow.Validate()))
-	fmt.Println()
+	clog.Info("Pow: %s\n", strconv.FormatBool(pow.Validate()))
 }
