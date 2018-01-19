@@ -1,22 +1,10 @@
 package client
 
 import (
-	"fmt"
-	"github.com/go-clog/clog"
 	"github.com/urfave/cli"
 	"go-labs/silver-blockchain/src/client/commands"
 	"os"
 )
-
-func init() {
-	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
-		Level:      clog.INFO,
-		BufferSize: 100},
-	); err != nil {
-		fmt.Printf("init console log failed. error %+v.", err)
-		os.Exit(1)
-	}
-}
 
 /*
  * e.g.
@@ -30,8 +18,6 @@ func init() {
  */
 // 运行命令行
 func Run() {
-	defer clog.Shutdown()
-
 	app := cli.NewApp()
 	app.Name = "Silver Blockchain"
 	app.Usage = "Client tools"

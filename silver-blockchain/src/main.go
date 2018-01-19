@@ -1,7 +1,23 @@
 package main
 
-import "go-labs/silver-blockchain/src/client"
+import (
+	"fmt"
+	"github.com/go-clog/clog"
+	"go-labs/silver-blockchain/src/client"
+	"os"
+)
+
+func init() {
+	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
+		Level:      clog.INFO,
+		BufferSize: 100},
+	); err != nil {
+		fmt.Printf("Init console log failed. error %+v.", err)
+		os.Exit(1)
+	}
+}
 
 func main() {
+	defer clog.Shutdown()
 	client.Run()
 }

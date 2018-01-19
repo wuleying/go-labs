@@ -9,11 +9,11 @@ import (
 // 交易货币
 func sendCoin(from string, to string, amount int) {
 	if !wallet.ValidateAddress(from) {
-		clog.Error(1, "Sender address [%s] is not valid.", from)
+		clog.Error(0, "Sender address [%s] is not valid.", from)
 	}
 
 	if !wallet.ValidateAddress(to) {
-		clog.Error(1, "Recipient address is not valid.", to)
+		clog.Error(0, "Recipient address is not valid.", to)
 	}
 
 	bc := b.NewBlockChain(from)
