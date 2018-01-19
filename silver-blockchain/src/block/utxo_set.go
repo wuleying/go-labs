@@ -14,7 +14,7 @@ type UTXOSet struct {
 
 func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, map[string][]int) {
 	unspentOutputs := make(map[string][]int)
-	accmulated := 0
+	accumulated := 0
 	db := u.BlockChain.Db
 
 	err := db.View(func(tx *bolt.Tx) error {
@@ -26,8 +26,8 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 			outs := DeserializeOutputs(v)
 
 			for outIdx, out := range outs.Outputs {
-				if out.IsLockedWithKey(publicKeyHash) && accmulated < amount {
-					accmulated += out.Value
+				if out.IsLockedWithKey(publicKeyHash) && accumulated < amount {
+					accumulated += out.Value
 					unspentOutputs[tId] = append(unspentOutputs[tId], outIdx)
 				}
 			}
@@ -40,7 +40,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 		clog.Fatal(2, err.Error())
 	}
 
-	return accmulated, unspentOutputs
+	return accumulated, unspentOutputs
 }
 
 func (u UTXOSet) Update(block *Block) {
