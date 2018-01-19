@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/elliptic"
 	"encoding/gob"
-	"fmt"
 	"github.com/go-clog/clog"
 	"io/ioutil"
 	"os"
@@ -27,7 +26,7 @@ func NewWallets() (*Wallets, error) {
 
 func (ws *Wallets) CreateWallet() string {
 	wallet := NewWallet()
-	address := fmt.Sprintf("%s", wallet.GetAddress())
+	address := string(wallet.GetAddress()[:])
 
 	ws.Wallets[address] = wallet
 
