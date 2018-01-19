@@ -31,7 +31,7 @@ const (
 	URLCartInfo    = "https://cart.jd.com/cart.action"
 	URLOrderInfo   = "http://trade.jd.com/shopping/order/getOrderInfo.action"
 	URLSubmitOrder = "http://trade.jd.com/shopping/order/submitOrder.action"
-	URLSignIn      = "https://vip.jd.com/common/signin.html?token=%s"
+	URLSignIn      = "https://vip.jd.com/common/signin.html"
 )
 
 var (
@@ -428,16 +428,19 @@ func (jd *JingDong) validateQRToken(URL string) error {
 	return nil
 }
 
+// 签到
 func (jd *JingDong) VipSignIn() error {
 	u, _ := url.Parse(URLSignIn)
 	q := u.Query()
-	q.Set("t", jd.token)
+	q.Set("token", jd.token)
 	u.RawQuery = q.Encode()
 
 	if _, err := http.NewRequest("GET", u.String(), nil); err != nil {
 		clog.Info("签到（%+v）失败: %+v", URLSignIn, err)
 		return err
 	}
+
+	clog.Info("签到成功.")
 
 	return nil
 }
