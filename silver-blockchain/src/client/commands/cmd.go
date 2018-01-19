@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"github.com/go-clog/clog"
 	"github.com/urfave/cli"
 )
 
@@ -108,7 +108,7 @@ var Commands = []cli.Command{
 						return cli.ShowAppHelp(c)
 					}
 
-					fmt.Printf("Address: %s, Balance: %d\n", c.String("address"), balance(c.String("address")))
+					clog.Info("Address: %s, Balance: %d", c.String("address"), balance(c.String("address")))
 					return nil
 				},
 			},

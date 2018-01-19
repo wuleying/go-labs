@@ -39,9 +39,9 @@ func GetBlockChain() {
 
 // 格式化输出区块信息
 func formatBlockInfo(block *b.Block) {
-	clog.Info("Id: #%d\n", block.Id)
-	clog.Info("PrevBlockHash: %x\n", block.PrevBlockHash)
-	clog.Info("Hash: %x\n", block.Hash)
+	clog.Info("############################## Block #%d ##############################", block.Id)
+	clog.Info("PrevBlockHash: %x", block.PrevBlockHash)
+	clog.Info("Hash: %x", block.Hash)
 	pow := b.NewProofOfWork(block)
 	clog.Info("Pow: %s\n", strconv.FormatBool(pow.Validate()))
 }

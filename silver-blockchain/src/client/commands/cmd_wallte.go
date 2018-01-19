@@ -26,14 +26,14 @@ func getWalletAddresses() {
 	addresses := wallets.GetAddresses()
 
 	for _, address := range addresses {
-		clog.Info("Address: %s, Balance: %d\n", address, balance(address))
+		clog.Info("Address: %s, Balance: %d", address, balance(address))
 	}
 }
 
 // 获取钱包余额
 func balance(address string) int {
 	if !wallet.ValidateAddress(address) {
-		clog.Fatal(2, "Address [%s] is not valid.", address)
+		clog.Fatal(2, "Address %s is not valid.", address)
 	}
 
 	bc := b.NewBlockChain(address)
