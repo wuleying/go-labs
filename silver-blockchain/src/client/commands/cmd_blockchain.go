@@ -2,22 +2,22 @@ package commands
 
 import (
 	"fmt"
+	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
 	"go-labs/silver-blockchain/src/wallet"
-	"log"
 	"strconv"
 )
 
 // 创建区块链
 func createBlockChain(address string) {
 	if !wallet.ValidateAddress(address) {
-		log.Panic("Error: Address is not valid.")
+		clog.Error(1, "Address [%s] is not valid.", address)
 	}
 
 	bc := b.CreateBlockChain(address)
 	bc.Db.Close()
 
-	fmt.Println("Create blockchain success.")
+	clog.Info("Create blockchain success.")
 }
 
 // 打印全部区块链数据
