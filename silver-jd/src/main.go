@@ -44,5 +44,6 @@ func main() {
 	defer jd.Release()
 	if err := jd.Login(); err == nil {
 		// 登录成功
+		jd.VipSignIn()
 	}
 }
