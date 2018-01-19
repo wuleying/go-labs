@@ -37,7 +37,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	})
 
 	if err != nil {
-		clog.Fatal(0, err.Error())
+		clog.Fatal(2, err.Error())
 	}
 
 	return accmulated, unspentOutputs
@@ -65,12 +65,12 @@ func (u UTXOSet) Update(block *Block) {
 					if len(updateOuts.Outputs) == 0 {
 						err := b.Delete(in.Id)
 						if err != nil {
-							clog.Fatal(0, err.Error())
+							clog.Fatal(2, err.Error())
 						}
 					} else {
 						err := b.Put(in.Id, updateOuts.Serialize())
 						if err != nil {
-							clog.Fatal(0, err.Error())
+							clog.Fatal(2, err.Error())
 						}
 					}
 				}
@@ -83,7 +83,7 @@ func (u UTXOSet) Update(block *Block) {
 
 			err := b.Put(tx.Id, newOutputs.Serialize())
 			if err != nil {
-				clog.Fatal(0, err.Error())
+				clog.Fatal(2, err.Error())
 			}
 		}
 
@@ -91,6 +91,6 @@ func (u UTXOSet) Update(block *Block) {
 	})
 
 	if err != nil {
-		clog.Fatal(0, err.Error())
+		clog.Fatal(2, err.Error())
 	}
 }
