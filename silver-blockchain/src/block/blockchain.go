@@ -40,7 +40,6 @@ func CreateBlockChain(address string) *BlockChain {
 	genesisBlock := NewGenesisBlock(cbt)
 
 	db, err := bolt.Open(dbFile, 0600, nil)
-
 	if err != nil {
 		clog.Fatal(2, err.Error())
 	}

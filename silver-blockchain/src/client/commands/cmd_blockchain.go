@@ -20,7 +20,7 @@ func createBlockChain(address string) {
 }
 
 // 打印全部区块链数据
-func GetBlockChain() {
+func getBlockChain() {
 	bc := b.NewBlockChain("")
 	defer bc.Db.Close()
 

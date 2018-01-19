@@ -45,11 +45,13 @@ func NewUTXOTransaction(from string, to string, amount int, UTXOSet *UTXOSet) *T
 	if err != nil {
 		clog.Fatal(2, err.Error())
 	}
+
 	walletFrom := wallets.GetWallet(from)
 	publicKeyHash := wallet.HashPublicKey(walletFrom.PublicKey)
-	account, validOutputs := UTXOSet.FindSpendableOutputs(publicKeyHash, amount)
 
-	if account < amount {
+	accumulated, validOutputs := UTXOSet.FindSpendableOutputs(publicKeyHash, amount)
+
+	if accumulated < amount {
 		clog.Fatal(2, "Not enough funds")
 	}
 
@@ -66,8 +68,8 @@ func NewUTXOTransaction(from string, to string, amount int, UTXOSet *UTXOSet) *T
 
 	outputs = append(outputs, *NewTOutput(amount, to))
 
-	if account > amount {
-		outputs = append(outputs, *NewTOutput(account-amount, from))
+	if accumulated > amount {
+		outputs = append(outputs, *NewTOutput(accumulated-amount, from))
 	}
 
 	t := Transaction{nil, inputs, outputs}

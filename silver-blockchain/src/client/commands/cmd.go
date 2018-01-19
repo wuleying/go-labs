@@ -34,7 +34,7 @@ var Commands = []cli.Command{
 				Aliases: []string{"g"},
 				Usage:   "Get all blockchain info",
 				Action: func(c *cli.Context) error {
-					GetBlockChain()
+					getBlockChain()
 					return nil
 				},
 			},
