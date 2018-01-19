@@ -11,7 +11,7 @@ import (
 // 创建区块链
 func createBlockChain(address string) {
 	if !wallet.ValidateAddress(address) {
-		clog.Error(0, "Address [%s] is not valid.", address)
+		clog.Fatal(0, "Address [%s] is not valid.", address)
 	}
 
 	bc := b.CreateBlockChain(address)

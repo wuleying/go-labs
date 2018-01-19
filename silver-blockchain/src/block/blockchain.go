@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"encoding/hex"
-	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
 	"github.com/juju/errors"
@@ -32,8 +31,7 @@ type BlockChain struct {
 // 创建区块链
 func CreateBlockChain(address string) *BlockChain {
 	if dbExists() {
-		clog.Error(0, "Blockchain already exists.")
-
+		clog.Fatal(0, "Blockchain already exists.")
 	}
 
 	var tip []byte
@@ -44,23 +42,23 @@ func CreateBlockChain(address string) *BlockChain {
 	db, err := bolt.Open(dbFile, 0600, nil)
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte(blockBucket))
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		err = b.Put(genesisBlock.Hash, genesisBlock.Serialize())
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		err = b.Put([]byte(lastHashKey), genesisBlock.Hash)
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		tip = genesisBlock.Hash
@@ -69,7 +67,7 @@ func CreateBlockChain(address string) *BlockChain {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	bc := BlockChain{tip, db}
@@ -80,7 +78,7 @@ func CreateBlockChain(address string) *BlockChain {
 // 创建新区块链
 func NewBlockChain(address string) *BlockChain {
 	if dbExists() == false {
-		clog.Error(0, "No existing blockchain found. Create one first.")
+		clog.Fatal(0, "No existing blockchain found. Create one first.")
 	}
 
 	var tip []byte
@@ -88,7 +86,7 @@ func NewBlockChain(address string) *BlockChain {
 	db, err := bolt.Open(dbFile, 0600, nil)
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
@@ -99,7 +97,7 @@ func NewBlockChain(address string) *BlockChain {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	bc := BlockChain{tip, db}
@@ -121,7 +119,7 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
@@ -131,12 +129,12 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 
 		err := b.Put(newBlock.Hash, newBlock.Serialize())
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		err = b.Put([]byte(lastHashKey), newBlock.Hash)
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		bc.Tip = newBlock.Hash
@@ -145,7 +143,7 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	return newBlock
@@ -165,7 +163,7 @@ func (bc *BlockChain) AddBlock(transactions []*Transaction) {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
@@ -175,13 +173,13 @@ func (bc *BlockChain) AddBlock(transactions []*Transaction) {
 		err := b.Put(newBlock.Hash, newBlock.Serialize())
 
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		err = b.Put([]byte(lastHashKey), newBlock.Hash)
 
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		bc.Tip = newBlock.Hash
@@ -316,7 +314,7 @@ func (bc *BlockChain) SignTransaction(t *Transaction, privateKey ecdsa.PrivateKe
 	for _, in := range t.In {
 		prevT, err := bc.FindTransaction(in.Id)
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		prevTs[hex.EncodeToString(prevT.Id)] = prevT
@@ -331,7 +329,7 @@ func (bc *BlockChain) VerifyTransaction(t *Transaction) bool {
 	for _, in := range t.In {
 		prevT, err := bc.FindTransaction(in.Id)
 		if err != nil {
-			clog.Error(0, err.Error())
+			clog.Fatal(0, err.Error())
 		}
 
 		prevTs[hex.EncodeToString(prevT.Id)] = prevT

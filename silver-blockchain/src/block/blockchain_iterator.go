@@ -24,7 +24,7 @@ func (i *BlockChainIterator) Next() *Block {
 	})
 
 	if err != nil {
-		clog.Error(0, err.Error())
+		clog.Fatal(0, err.Error())
 	}
 
 	i.currentHash = block.PrevBlockHash
