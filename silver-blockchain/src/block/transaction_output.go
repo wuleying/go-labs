@@ -17,9 +17,9 @@ type TOutputs struct {
 }
 
 func (out *TOutput) Lock(address []byte) {
-	publicHash := utils.Base58Decode(address)
-	publicHash = publicHash[1 : len(publicHash)-4]
-	out.PublicKeyHash = publicHash
+	publicKeyHash := utils.Base58Decode(address)
+	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-4]
+	out.PublicKeyHash = publicKeyHash
 }
 
 func (out *TOutput) IsLockedWithKey(publicKeyHash []byte) bool {
