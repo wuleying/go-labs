@@ -36,7 +36,7 @@ func balance(address string) int {
 		clog.Fatal(2, "Address %s is not valid.", address)
 	}
 
-	bc := b.NewBlockChain(address)
+	bc := b.NewBlockChain()
 	defer bc.Db.Close()
 
 	UTXOSet := b.UTXOSet{bc}

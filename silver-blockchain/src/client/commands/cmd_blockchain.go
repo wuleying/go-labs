@@ -24,7 +24,7 @@ func createBlockChain(address string) {
 
 // 打印全部区块链数据
 func getBlockChain() {
-	bc := b.NewBlockChain("")
+	bc := b.NewBlockChain()
 	defer bc.Db.Close()
 
 	bci := bc.Iterator()

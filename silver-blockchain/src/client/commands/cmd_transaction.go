@@ -16,7 +16,7 @@ func sendCoin(from string, to string, amount int) {
 		clog.Fatal(2, "Recipient address is not valid.", to)
 	}
 
-	bc := b.NewBlockChain(from)
+	bc := b.NewBlockChain()
 	UTXOSet := b.UTXOSet{bc}
 	defer bc.Db.Close()
 

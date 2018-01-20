@@ -75,7 +75,7 @@ func CreateBlockChain(address string) *BlockChain {
 }
 
 // 创建新区块链
-func NewBlockChain(address string) *BlockChain {
+func NewBlockChain() *BlockChain {
 	if dbExists() == false {
 		clog.Fatal(2, "No existing blockchain found. Create one first.")
 	}
