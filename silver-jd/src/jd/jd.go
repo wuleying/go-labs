@@ -5,8 +5,6 @@ import (
 	"go-labs/silver-jd/src/util"
 	"log"
 	"net/http"
-	"os/exec"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -102,29 +100,4 @@ func (jd *JingDong) Release() {
 			log.Panic("Failed to persist cookiejar. error %+v.", err)
 		}
 	}
-}
-
-func (jd *JingDong) runCommand(strCmd string) error {
-	var err error
-	var cmd *exec.Cmd
-
-	// for different platform
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", strCmd)
-	case "linux":
-		cmd = exec.Command("eog", strCmd)
-	default:
-		cmd = exec.Command("open", strCmd)
-	}
-
-	// just start, do not wait it complete
-	if err = cmd.Start(); err != nil {
-		if runtime.GOOS == "linux" {
-			cmd = exec.Command("gnome-open", strCmd)
-			return cmd.Start()
-		}
-		return err
-	}
-	return nil
 }
