@@ -119,7 +119,7 @@ func (jd *JingDong) Login(args ...interface{}) error {
 	clog.Info(strSeperater)
 
 	if jd.validateLogin(URLForQR[4]) {
-		clog.Info("无需重新登录")
+		clog.Info("Not need to login again")
 		return nil
 	}
 
@@ -437,18 +437,18 @@ func (jd *JingDong) VipSignIn() error {
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		clog.Info("签到（%+v）失败: %+v", URLSignIn, err.Error())
+		clog.Info("Sign in（%+v）failed: %+v", URLSignIn, err.Error())
 		return err
 	}
 
 	resp, err := jd.client.Do(req)
 	if err != nil {
-		clog.Info("签到（%+v）失败: %+v", URLSignIn, err.Error())
+		clog.Info("Sign in（%+v）failed: %+v", URLSignIn, err.Error())
 		return err
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		clog.Info("Sign in success.")
+		clog.Info("Sign in（%+v) success.", URLSignIn)
 	}
 
 	return nil
@@ -472,7 +472,6 @@ func responseData(resp *http.Response) []byte {
 	var reader io.Reader
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
-		//clog.Trace("Encoding: %+v", resp.Header.Get("Content-Encoding"))
 		reader, _ = gzip.NewReader(resp.Body)
 	default:
 		reader = resp.Body
