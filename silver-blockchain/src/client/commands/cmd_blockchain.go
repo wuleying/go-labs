@@ -14,7 +14,7 @@ func createBlockChain(address string) {
 	}
 
 	bc := b.CreateBlockChain(address)
-	bc.Db.Close()
+	defer bc.Db.Close()
 
 	UTXOSet := b.UTXOSet{bc}
 	UTXOSet.Reindex()
