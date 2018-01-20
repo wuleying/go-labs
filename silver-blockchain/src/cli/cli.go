@@ -1,8 +1,8 @@
-package client
+package cli
 
 import (
-	"github.com/urfave/cli"
-	"go-labs/silver-blockchain/src/client/commands"
+	ucli "github.com/urfave/cli"
+	"go-labs/silver-blockchain/src/cli/commands"
 	"os"
 )
 
@@ -19,13 +19,13 @@ import (
  */
 // 运行命令行
 func Run() {
-	app := cli.NewApp()
+	app := ucli.NewApp()
 	app.Name = "Silver Blockchain"
-	app.Usage = "Client tools"
+	app.Usage = "CLI tools"
 	app.Version = "0.0.1"
-	app.Authors = []cli.Author{
-		cli.Author{
-			Name:  "Liang Luo",
+	app.Authors = []ucli.Author{
+		ucli.Author{
+			Name:  "Luo",
 			Email: "lolooo@live.com",
 		},
 	}

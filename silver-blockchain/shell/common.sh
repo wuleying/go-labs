@@ -11,6 +11,8 @@ ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
 ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 # bin目录
 ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
+# db目录
+ENV_DB_DIR="$ENV_ROOT_DIR"/db
 # shell目录
 ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
 

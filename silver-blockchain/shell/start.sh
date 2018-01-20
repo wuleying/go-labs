@@ -8,14 +8,25 @@ start() {
     "$ENV_SHELL_DIR"/build.sh
 
     # 执行
-    #nohup \
+    "$ENV_BIN_DIR"/"$PROJECT_NAME" w c
     "$ENV_BIN_DIR"/"$PROJECT_NAME" w c
 
     _info "silver-blockchain started."
 }
 
+clean_db() {
+    if [[ -f "$ENV_DB_DIR"/silver-blockchain.db ]]; then
+        rm "$ENV_DB_DIR"/silver-blockchain.db
+    fi
+
+    if [[ -f "$ENV_DB_DIR"/wallet.dat ]]; then
+        rm "$ENV_DB_DIR"/wallet.dat
+    fi
+}
+
 main(){
-    start "$@"
+    clean_db "$@"
+    start
 }
 
 main "$@"

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/client"
+	"go-labs/silver-blockchain/src/cli"
 	"os"
 )
 
@@ -19,5 +19,5 @@ func init() {
 
 func main() {
 	defer clog.Shutdown()
-	client.Run()
+	cli.Run()
 }
