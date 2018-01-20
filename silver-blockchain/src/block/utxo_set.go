@@ -18,8 +18,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	db := u.BlockChain.Db
 
 	err := db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(UTXOBucket))
-		c := b.Cursor()
+		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			tId := hex.EncodeToString(k)
@@ -41,6 +40,101 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	}
 
 	return accumulated, unspentOutputs
+}
+
+func (u UTXOSet) FindUTXO(publicKeyHash []byte) []TOutput {
+	var UTXOs []TOutput
+	db := u.BlockChain.Db
+
+	err := db.View(func(tx *bolt.Tx) error {
+		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
+
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			outs := DeserializeOutputs(v)
+
+			for _, out := range outs.Outputs {
+				if out.IsLockedWithKey(publicKeyHash) {
+					UTXOs = append(UTXOs, out)
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	return UTXOs
+}
+
+func (u UTXOSet) CountTransactions() int {
+	counter := 0
+	db := u.BlockChain.Db
+
+	err := db.View(func(tx *bolt.Tx) error {
+		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
+
+		for k, _ := c.First(); k != nil; k, _ = c.Next() {
+			counter++
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	return counter
+}
+
+func (u UTXOSet) Reindex() {
+	db := u.BlockChain.Db
+	bucketName := []byte(UTXOBucket)
+
+	err := db.Update(func(tx *bolt.Tx) error {
+		err := tx.DeleteBucket(bucketName)
+		if err != nil && err != bolt.ErrBucketNotFound {
+			clog.Fatal(2, err.Error())
+		}
+
+		_, err = tx.CreateBucket(bucketName)
+		if err != nil {
+			clog.Fatal(2, err.Error())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	UTXO := u.BlockChain.FindUTXO()
+
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketName)
+
+		for tId, outs := range UTXO {
+			key, err := hex.DecodeString(tId)
+			if err != nil {
+				clog.Fatal(2, err.Error())
+			}
+
+			err = b.Put(key, outs.Serialize())
+			if err != nil {
+				clog.Fatal(2, err.Error())
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
 }
 
 func (u UTXOSet) Update(block *Block) {

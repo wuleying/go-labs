@@ -114,4 +114,29 @@ var Commands = []cli.Command{
 			},
 		},
 	},
+	{
+		Name:    "utxo",
+		Aliases: []string{"u"},
+		Usage:   "UTXO opertaions",
+		Subcommands: []cli.Command{
+			{
+				Name:    "reindex",
+				Aliases: []string{"r"},
+				Usage:   "Reindex the UTXO set",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name: "address",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					if len(c.String("address")) < 1 {
+						return cli.ShowAppHelp(c)
+					}
+
+					reindexUTXO(c.String("address"))
+					return nil
+				},
+			},
+		},
+	},
 }

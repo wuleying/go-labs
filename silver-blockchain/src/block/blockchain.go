@@ -202,15 +202,42 @@ func (bc *BlockChain) GetBlock(id int64) (*Block, error) {
 	return nil, errors.New("Block is not exist.")
 }
 
-func (bc *BlockChain) FindUTXO(publicKeyHash []byte) []TOutput {
-	var UTXO []TOutput
-	unspentTransactions := bc.FindUnspentTransactions(publicKeyHash)
+func (bc *BlockChain) FindUTXO() map[string]TOutputs {
+	UTXO := make(map[string]TOutputs)
+	spentUTXOs := make(map[string][]int)
+	bci := bc.Iterator()
 
-	for _, t := range unspentTransactions {
-		for _, out := range t.Out {
-			if out.IsLockedWithKey(publicKeyHash) {
-				UTXO = append(UTXO, out)
+	for {
+		block := bci.Next()
+
+		for _, t := range block.Transactions {
+			tId := hex.EncodeToString(t.Id)
+
+		Outputs:
+			for outIdx, out := range t.Out {
+				if spentUTXOs[tId] != nil {
+					for _, spentOutIdx := range spentUTXOs[tId] {
+						if spentOutIdx == outIdx {
+							continue Outputs
+						}
+					}
+				}
+
+				outs := UTXO[tId]
+				outs.Outputs = append(outs.Outputs, out)
+				UTXO[tId] = outs
 			}
+
+			if t.IsCoinBase() == false {
+				for _, in := range t.In {
+					inId := hex.EncodeToString(in.Id)
+					spentUTXOs[inId] = append(spentUTXOs[inId], in.Out)
+				}
+			}
+		}
+
+		if len(block.PrevBlockHash) == 0 {
+			break
 		}
 	}
 

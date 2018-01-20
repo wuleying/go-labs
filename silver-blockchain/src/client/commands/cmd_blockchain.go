@@ -16,6 +16,9 @@ func createBlockChain(address string) {
 	bc := b.CreateBlockChain(address)
 	bc.Db.Close()
 
+	UTXOSet := b.UTXOSet{bc}
+	UTXOSet.Reindex()
+
 	clog.Info("Create blockchain success.")
 }
 

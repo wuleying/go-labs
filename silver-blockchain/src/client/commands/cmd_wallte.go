@@ -3,7 +3,6 @@ package commands
 import (
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
-	"go-labs/silver-blockchain/src/utils"
 	"go-labs/silver-blockchain/src/wallet"
 )
 
@@ -40,14 +39,17 @@ func balance(address string) int {
 	defer bc.Db.Close()
 
 	balance := 0
-	publicKeyHash := utils.Base58Decode([]byte(address))
-	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-4]
+	/*
+		publicKeyHash := utils.Base58Decode([]byte(address))
+		publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-4]
 
-	UTXO := bc.FindUTXO(publicKeyHash)
 
-	for _, out := range UTXO {
-		balance += out.Value
-	}
+		UTXO := bc.FindUTXO(publicKeyHash)
+
+		for _, out := range UTXO {
+			balance += out.Value
+		}
+	*/
 
 	return balance
 }
