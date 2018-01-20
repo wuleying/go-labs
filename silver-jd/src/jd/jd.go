@@ -435,12 +435,21 @@ func (jd *JingDong) VipSignIn() error {
 	q.Set("token", jd.token)
 	u.RawQuery = q.Encode()
 
-	if _, err := http.NewRequest("GET", u.String(), nil); err != nil {
-		clog.Info("签到（%+v）失败: %+v", URLSignIn, err)
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		clog.Info("签到（%+v）失败: %+v", URLSignIn, err.Error())
 		return err
 	}
 
-	clog.Info("签到成功.")
+	resp, err := jd.client.Do(req)
+	if err != nil {
+		clog.Info("签到（%+v）失败: %+v", URLSignIn, err.Error())
+		return err
+	}
+
+	if resp.StatusCode == http.StatusOK {
+		clog.Info("Sign in success.")
+	}
 
 	return nil
 }
