@@ -25,7 +25,13 @@ type Transaction struct {
 
 func NewCoinBase(to string, data string) *Transaction {
 	if data == "" {
-		data = fmt.Sprintf("Reward to '%s'", to)
+		randData := make([]byte, 20)
+		_, err := rand.Read(randData)
+		if err != nil {
+			clog.Fatal(2, err.Error())
+		}
+
+		data = fmt.Sprintf("%x", randData)
 	}
 
 	tIn := TInput{[]byte{}, -1, nil, []byte(data)}

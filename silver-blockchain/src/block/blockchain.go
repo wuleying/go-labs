@@ -36,8 +36,8 @@ func CreateBlockChain(address string) *BlockChain {
 
 	var tip []byte
 
-	cbt := NewCoinBase(address, genesisCoinBaseData)
-	genesisBlock := NewGenesisBlock(cbt)
+	coinBase := NewCoinBase(address, genesisCoinBaseData)
+	genesisBlock := NewGenesisBlock(coinBase)
 
 	db, err := bolt.Open(dbFile, 0600, nil)
 	if err != nil {
