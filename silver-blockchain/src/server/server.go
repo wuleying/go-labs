@@ -95,9 +95,49 @@ func sendAddress(address string) {
 	sendData(address, request)
 }
 
+func sendBlock(address string, b *b.Block) {
+	data := block{nodeAddress, b.Serialize()}
+	payload := utils.GobEncode(data)
+	request := append(commandToBytes("block"), payload...)
+
+	sendData(address, request)
+}
+
+func sendInv(address string, kind string, items [][]byte) {
+	inventory := inv{nodeAddress, kind, items}
+
+	payload := utils.GobEncode(inventory)
+	request := append(commandToBytes("inv"), payload...)
+
+	sendData(address, request)
+}
+
 func sendGetBlocks(address string) {
 	payload := utils.GobEncode(getBlocks{nodeAddress})
 	request := append(commandToBytes("getblocks"), payload...)
+
+	sendData(address, request)
+}
+
+func sendGetData(address string, kind string, id []byte) {
+	payload := utils.GobEncode(getData{nodeAddress, kind, id})
+	request := append(commandToBytes("getdata"), payload...)
+
+	sendData(address, request)
+}
+
+func sendTx(address string, transaction *b.Transaction) {
+	data := tx{nodeAddress, transaction.Serialize()}
+	payload := utils.GobEncode(data)
+	request := append(commandToBytes("tx"), payload...)
+
+	sendData(address, request)
+}
+
+func sendVersion(address string, bc *b.BlockChain) {
+	bestHeight := bc.GetBestHeight()
+	payload := utils.GobEncode(version{nodeVersion, bestHeight, nodeAddress})
+	request := append(commandToBytes("version"), payload...)
 
 	sendData(address, request)
 }

@@ -16,12 +16,13 @@ type Block struct {
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
+	Height        int
 }
 
 // 创建新区块
 func NewBlock(transactions []*Transaction, prevId int64, prevBlockHash []byte) *Block {
 	id := prevId + 1
-	block := &Block{id, time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0}
+	block := &Block{id, time.Now().Unix(), transactions, prevBlockHash, []byte{}, 0, 1}
 	pow := NewProofOfWork(block)
 	nonce, hash := pow.Run()
 

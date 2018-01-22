@@ -371,6 +371,25 @@ func (bc *BlockChain) Iterator() *BlockChainIterator {
 	return bci
 }
 
+func (bc *BlockChain) GetBestHeight() int {
+	var lastBlock Block
+
+	err := bc.Db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blockBucket))
+		lastHash := b.Get([]byte(lastHashKey))
+		blockData := b.Get(lastHash)
+		lastBlock = *DeserializeBlock(blockData)
+
+		return nil
+	})
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	return lastBlock.Height
+}
+
 // 检查数据库文件是否存在
 func dbExists() bool {
 	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
