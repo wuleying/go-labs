@@ -7,7 +7,7 @@ import (
 )
 
 // 交易货币
-func sendCoin(from string, to string, amount int) {
+func sendCoin(from string, to string, amount int, nodeId string, mineNow bool) {
 	if !wallet.ValidateAddress(from) {
 		clog.Fatal(2, "Sender address [%s] is not valid.", from)
 	}
@@ -16,7 +16,7 @@ func sendCoin(from string, to string, amount int) {
 		clog.Fatal(2, "Recipient address is not valid.", to)
 	}
 
-	bc := b.NewBlockChain()
+	bc := b.NewBlockChain(nodeId)
 	UTXOSet := b.UTXOSet{bc}
 	defer bc.Db.Close()
 

@@ -17,7 +17,7 @@ func createWallet() {
 }
 
 // 获取钱包地址列表
-func getWalletAddresses() {
+func getWalletAddresses(nodeId string) {
 	wallets, err := wallet.NewWallets()
 	if err != nil {
 		clog.Fatal(2, err.Error())
@@ -26,17 +26,17 @@ func getWalletAddresses() {
 	addresses := wallets.GetAddresses()
 
 	for _, address := range addresses {
-		clog.Info("Address: %s, Balance: %d", address, balance(address))
+		clog.Info("Address: %s, Balance: %d", address, balance(address, nodeId))
 	}
 }
 
 // 获取钱包余额
-func balance(address string) int {
+func balance(address string, nodeId string) int {
 	if !wallet.ValidateAddress(address) {
 		clog.Fatal(2, "Address %s is not valid.", address)
 	}
 
-	bc := b.NewBlockChain()
+	bc := b.NewBlockChain(nodeId)
 	defer bc.Db.Close()
 
 	UTXOSet := b.UTXOSet{bc}

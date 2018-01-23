@@ -5,8 +5,8 @@ import (
 	"go-labs/silver-blockchain/src/block"
 )
 
-func reindexUTXO() {
-	bc := block.NewBlockChain()
+func reindexUTXO(nodeId string) {
+	bc := block.NewBlockChain(nodeId)
 	UTXOSet := block.UTXOSet{bc}
 	UTXOSet.Reindex()
 

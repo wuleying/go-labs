@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/go-clog/clog"
 	ucli "github.com/urfave/cli"
+	"os"
 )
 
 var Commands = []ucli.Command{
@@ -25,7 +26,7 @@ var Commands = []ucli.Command{
 						return ucli.ShowAppHelp(c)
 					}
 
-					createBlockChain(c.String("address"))
+					createBlockChain(c.String("address"), os.Getenv("NODE_ID"))
 					return nil
 				},
 			},
@@ -34,7 +35,7 @@ var Commands = []ucli.Command{
 				Aliases: []string{"g"},
 				Usage:   "Get all blockchain info",
 				Action: func(c *ucli.Context) error {
-					getBlockChain()
+					getBlockChain(os.Getenv("NODE_ID"))
 					return nil
 				},
 			},
@@ -65,7 +66,7 @@ var Commands = []ucli.Command{
 						return ucli.ShowAppHelp(c)
 					}
 
-					sendCoin(c.String("from"), c.String("to"), c.Int("amount"))
+					sendCoin(c.String("from"), c.String("to"), c.Int("amount"), os.Getenv("NODE_ID"), false)
 					return nil
 				},
 			},
@@ -90,7 +91,7 @@ var Commands = []ucli.Command{
 				Aliases: []string{"g"},
 				Usage:   "Get all wallets address",
 				Action: func(c *ucli.Context) error {
-					getWalletAddresses()
+					getWalletAddresses(os.Getenv("NODE_ID"))
 					return nil
 				},
 			},
@@ -108,7 +109,7 @@ var Commands = []ucli.Command{
 						return ucli.ShowAppHelp(c)
 					}
 
-					clog.Info("Address: %s, Balance: %d", c.String("address"), balance(c.String("address")))
+					clog.Info("Address: %s, Balance: %d", c.String("address"), balance(c.String("address"), os.Getenv("NODE_ID")))
 					return nil
 				},
 			},
@@ -124,7 +125,7 @@ var Commands = []ucli.Command{
 				Aliases: []string{"r"},
 				Usage:   "Reindex the UTXO set",
 				Action: func(c *ucli.Context) error {
-					reindexUTXO()
+					reindexUTXO(os.Getenv("NODE_ID"))
 					return nil
 				},
 			},

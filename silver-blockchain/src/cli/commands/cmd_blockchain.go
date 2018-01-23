@@ -8,12 +8,12 @@ import (
 )
 
 // 创建区块链
-func createBlockChain(address string) {
+func createBlockChain(address string, nodeId string) {
 	if !wallet.ValidateAddress(address) {
 		clog.Fatal(2, "Address [%s] is not valid.", address)
 	}
 
-	bc := b.CreateBlockChain(address)
+	bc := b.CreateBlockChain(address, nodeId)
 	defer bc.Db.Close()
 
 	UTXOSet := b.UTXOSet{bc}
@@ -23,8 +23,8 @@ func createBlockChain(address string) {
 }
 
 // 打印全部区块链数据
-func getBlockChain() {
-	bc := b.NewBlockChain()
+func getBlockChain(nodeId string) {
+	bc := b.NewBlockChain(nodeId)
 	defer bc.Db.Close()
 
 	bci := bc.Iterator()

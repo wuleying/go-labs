@@ -8,6 +8,7 @@ import (
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
 	"go-labs/silver-blockchain/src/utils"
+	"io/ioutil"
 	"net"
 )
 
@@ -247,7 +248,7 @@ func handleInv(request []byte, bc *b.BlockChain) {
 	}
 }
 
-func handleGetBlock(request []byte, bc *b.BlockChain) {
+func handleGetBlocks(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload getBlocks
 
@@ -351,5 +352,96 @@ func handleTx(request []byte, bc *b.BlockChain) {
 				goto MineTransactions
 			}
 		}
+	}
+}
+
+func handleVersion(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload version
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	myBestHeight := bc.GetBestHeight()
+	foreignerBestHeight := payload.BestHeight
+
+	if myBestHeight < foreignerBestHeight {
+		sendGetBlocks(payload.AddressFrom)
+	} else if myBestHeight > foreignerBestHeight {
+		sendVersion(payload.AddressFrom, bc)
+	}
+
+	if !nodeIsKnown(payload.AddressFrom) {
+		knowNodes = append(knowNodes, payload.AddressFrom)
+	}
+}
+
+func handleConnection(conn net.Conn, bc *b.BlockChain) {
+	request, err := ioutil.ReadAll(conn)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	command := bytesToCommand(request[:commandLength])
+	clog.Info("Received %s command", command)
+
+	switch command {
+	case "address":
+		handleAddress(request)
+	case "block":
+		handleBlock(request, bc)
+	case "inv":
+		handleInv(request, bc)
+	case "getblocks":
+		handleGetBlocks(request, bc)
+	case "getdata":
+		handleGetData(request, bc)
+	case "tx":
+		handleTx(request, bc)
+	case "version":
+		handleVersion(request, bc)
+	default:
+		clog.Info("Unknown command.")
+	}
+
+	conn.Close()
+}
+
+func nodeIsKnown(address string) bool {
+	for _, node := range knowNodes {
+		if node == address {
+			return true
+		}
+	}
+
+	return false
+}
+
+func StartServer(nodeId string, minerAddress string) {
+	nodeAddress = fmt.Sprintf("localhost:%s", nodeId)
+	miningAddress = minerAddress
+	ln, err := net.Listen(protocol, nodeAddress)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+	defer ln.Close()
+
+	bc := b.NewBlockChain(nodeId)
+
+	if nodeAddress != knowNodes[0] {
+		sendVersion(knowNodes[0], bc)
+	}
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			clog.Fatal(2, err.Error())
+		}
+
+		go handleConnection(conn, bc)
 	}
 }

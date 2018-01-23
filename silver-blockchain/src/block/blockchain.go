@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
 	"github.com/juju/errors"
@@ -11,7 +12,7 @@ import (
 )
 
 // 数据库路径
-const dbFile = "db/silver-blockchain.db"
+const dbFileTemp = "db/silver-blockchain-%s.db"
 
 // Last hash key
 const lastHashKey = "lastHash"
@@ -29,8 +30,9 @@ type BlockChain struct {
 }
 
 // 创建区块链
-func CreateBlockChain(address string) *BlockChain {
-	if dbExists() {
+func CreateBlockChain(address string, nodeId string) *BlockChain {
+	dbFile := fmt.Sprintf(dbFileTemp, nodeId)
+	if dbExists(dbFile) {
 		clog.Fatal(2, "Blockchain already exists.")
 	}
 
@@ -75,8 +77,9 @@ func CreateBlockChain(address string) *BlockChain {
 }
 
 // 创建新区块链
-func NewBlockChain() *BlockChain {
-	if dbExists() == false {
+func NewBlockChain(nodeId string) *BlockChain {
+	dbFile := fmt.Sprintf(dbFileTemp, nodeId)
+	if dbExists(dbFile) == false {
 		clog.Fatal(2, "No existing blockchain found. Create one first.")
 	}
 
@@ -416,7 +419,7 @@ func (bc *BlockChain) GetBestHeight() int {
 }
 
 // 检查数据库文件是否存在
-func dbExists() bool {
+func dbExists(dbFile string) bool {
 	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
 		return false
 	}
