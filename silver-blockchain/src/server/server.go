@@ -1,6 +1,9 @@
 package server
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/hex"
 	"fmt"
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
@@ -156,9 +159,197 @@ func sendData(address string, data []byte) {
 		}
 
 		knowNodes = updateNodes
-
 		return
 	}
 
 	defer conn.Close()
+}
+
+func handleAddress(request []byte) {
+	var buff bytes.Buffer
+	var payload addr
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	knowNodes = append(knowNodes, payload.AddressList...)
+	clog.Info("There are %d known nodes now!", len(knowNodes))
+	requestBlocks()
+}
+
+func handleBlock(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload block
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	blockData := payload.Block
+	blockInfo := b.DeserializeBlock(blockData)
+	clog.Info("Recevied a new block!")
+
+	bc.AddBlock(blockInfo)
+	clog.Info("Added block %x", blockInfo.Hash)
+
+	if len(blocksInTransit) > 0 {
+		blockHash := blocksInTransit[0]
+		sendGetData(payload.AddressFrom, "block", blockHash)
+
+		blocksInTransit = blocksInTransit[1:]
+	} else {
+		UTXOSet := b.UTXOSet{bc}
+		UTXOSet.Reindex()
+	}
+}
+
+func handleInv(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload inv
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	clog.Info("Recevied inventory with %d %s", len(payload.Items), payload.Type)
+
+	if payload.Type == "block" {
+		blocksInTransit = payload.Items
+
+		blockHash := payload.Items[0]
+		sendGetData(payload.AddressFrom, "block", blockHash)
+
+		newInTransit := [][]byte{}
+		for _, b := range blocksInTransit {
+			if bytes.Compare(b, blockHash) != 0 {
+				newInTransit = append(newInTransit, b)
+			}
+		}
+		blocksInTransit = newInTransit
+	}
+
+	if payload.Type == "tx" {
+		tId := payload.Items[0]
+
+		if mempool[hex.EncodeToString(tId)].Id == nil {
+			sendGetData(payload.AddressFrom, "tx", tId)
+		}
+	}
+}
+
+func handleGetBlock(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload getBlocks
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	blocks := bc.GetBlockHashes()
+	sendInv(payload.AddressFrom, "block", blocks)
+}
+
+func handleGetData(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload getData
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	if payload.Type == "block" {
+		block, err := bc.GetBlock([]byte(payload.Id))
+		if err != nil {
+			clog.Fatal(2, err.Error())
+		}
+
+		sendBlock(payload.AddressFrom, &block)
+	}
+
+	if payload.Type == "tx" {
+		tId := hex.EncodeToString(payload.Id)
+		tx := mempool[tId]
+
+		sendTx(payload.AddressFrom, &tx)
+	}
+}
+
+func handleTx(request []byte, bc *b.BlockChain) {
+	var buff bytes.Buffer
+	var payload tx
+
+	buff.Write(request[commandLength:])
+	decoder := gob.NewDecoder(&buff)
+	err := decoder.Decode(&payload)
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	txData := payload.Transaction
+	tx := b.DeserializeTransaction(txData)
+	mempool[hex.EncodeToString(tx.Id)] = tx
+
+	if nodeAddress == knowNodes[0] {
+		for _, node := range knowNodes {
+			if node != nodeAddress && node != payload.AddressFrom {
+				sendInv(node, "tx", [][]byte(tx.Id))
+			}
+		}
+	} else {
+		if len(mempool) >= 2 && len(miningAddress) > 0 {
+		MineTransactions:
+			var txs []*b.Transaction
+
+			for id := range mempool {
+				tx := mempool[id]
+				if bc.VerifyTransaction(&tx) {
+					txs = append(txs, &tx)
+				}
+			}
+
+			if len(txs) == 0 {
+				clog.Info("All transactions are invalid! Waiting for new ones.")
+				return
+			}
+
+			cbTx := b.NewCoinBase(miningAddress, "")
+			txs = append(txs, cbTx)
+
+			newBlock := bc.MineBlock(txs)
+			UTXOSet := b.UTXOSet{bc}
+			UTXOSet.Reindex()
+			clog.Info("New block is mined.")
+
+			for _, tx := range txs {
+				txId := hex.EncodeToString(tx.Id)
+				delete(mempool, txId)
+			}
+
+			for _, node := range knowNodes {
+				if node != nodeAddress {
+					sendInv(node, "block", [][]byte(newBlock.Hash))
+				}
+			}
+
+			if len(mempool) > 0 {
+				goto MineTransactions
+			}
+		}
+	}
 }

@@ -104,6 +104,23 @@ func NewBlockChain() *BlockChain {
 	return &bc
 }
 
+func (bc *BlockChain) GetBlockHashes() [][]byte {
+	var blocks [][]byte
+	bci := bc.Iterator()
+
+	for {
+		block := bci.Next()
+
+		blocks = append(blocks, block.Hash)
+
+		if len(block.PrevBlockHash) == 0 {
+			break
+		}
+	}
+
+	return blocks
+}
+
 // 挖矿
 func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	var lastHash []byte
@@ -187,19 +204,27 @@ func (bc *BlockChain) AddBlock(transactions []*Transaction) {
 	})
 }
 
-// 根据id获取区块信息
-func (bc *BlockChain) GetBlock(id int64) (*Block, error) {
-	bci := bc.Iterator()
+// 根据hash获取区块信息
+func (bc *BlockChain) GetBlock(blockHash []byte) (Block, error) {
+	var block Block
 
-	for {
-		block := bci.Next()
+	err := bc.Db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(blockBucket))
 
-		if block.Id == id {
-			return block, nil
+		blockData := b.Get(blockHash)
+		if blockData == nil {
+			return errors.New("Block is not found.")
 		}
+
+		block = *DeserializeBlock(blockData)
+		return nil
+	})
+
+	if err != nil {
+		return block, err
 	}
 
-	return nil, errors.New("Block is not exist.")
+	return block, nil
 }
 
 func (bc *BlockChain) FindUTXO() map[string]TOutputs {
