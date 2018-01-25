@@ -24,7 +24,7 @@ func (jd *JingDong) Login(args ...interface{}) error {
 	clog.Info(strSeperater)
 
 	if jd.validateLogin(URLForQR[4]) {
-		clog.Info("Not need to login again")
+		clog.Info("无需重复登录。")
 		return nil
 	}
 
@@ -33,7 +33,7 @@ func (jd *JingDong) Login(args ...interface{}) error {
 		qrImg string
 	)
 
-	clog.Info("请打开京东手机客户端，准备扫码登陆:")
+	clog.Info("请打开京东手机客户端，准备扫码登录:")
 	jd.jar.Clean()
 
 	if err = jd.loginPage(URLForQR[0]); err != nil {
