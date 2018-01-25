@@ -10,7 +10,7 @@ SERVER_NAME=server
 MANAGER_NAME=manager
 
 # 根目录
-ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
 # src目录
 ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 # bin目录
@@ -19,8 +19,6 @@ ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 ENV_PID_DIR="$ENV_ROOT_DIR"/pids
 # config目录
 ENV_CONFIG_DIR="$ENV_ROOT_DIR"/config
-# shell目录
-ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
 
 # 服务端pid文件名称
 FILE_NAME_SERVER_PID="silver-monitor-server.pid"

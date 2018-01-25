@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+# 根目录
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
+
 # shellcheck disable=SC1091
-source ./shell/common.sh
+source "$ENV_ROOT_DIR"/shell/common.sh
 
 kill_process(){
     if [[ "$BUILD_MODE" == "server" ]]; then

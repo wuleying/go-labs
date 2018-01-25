@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
+# 根目录
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
+
 # shellcheck disable=SC1091
-source ./shell/common.sh
+source "$ENV_ROOT_DIR"/shell/common.sh
 
 start() {
     # 杀死原进程
-    "$ENV_SHELL_DIR"/kill.sh manager
+    "$ENV_ROOT_DIR"/shell/kill.sh manager
 
     # 编译
-    "$ENV_SHELL_DIR"/build.sh manager
+    "$ENV_ROOT_DIR"/shell/build.sh manager
 
     # 执行
     nohup \
