@@ -149,7 +149,7 @@ func sendVersion(address string, bc *b.BlockChain) {
 func sendData(address string, data []byte) {
 	conn, err := net.Dial(protocol, address)
 	if err != nil {
-		clog.Info("% is not vaailable", address)
+		clog.Info("%s is not available", address)
 
 		var updateNodes []string
 
