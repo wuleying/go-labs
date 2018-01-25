@@ -131,4 +131,25 @@ var Commands = []ucli.Command{
 			},
 		},
 	},
+	{
+		Name:    "node",
+		Aliases: []string{"n"},
+		Usage:   "Node opertaions",
+		Subcommands: []ucli.Command{
+			{
+				Name:    "start",
+				Aliases: []string{"s"},
+				Usage:   "Start the node",
+				Flags: []ucli.Flag{
+					ucli.StringFlag{
+						Name: "miner",
+					},
+				},
+				Action: func(c *ucli.Context) error {
+					startNode(os.Getenv("NODE_ID"), c.String("miner"))
+					return nil
+				},
+			},
+		},
+	},
 }

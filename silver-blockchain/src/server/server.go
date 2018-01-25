@@ -309,7 +309,7 @@ func handleTx(request []byte, bc *b.BlockChain) {
 	if nodeAddress == knowNodes[0] {
 		for _, node := range knowNodes {
 			if node != nodeAddress && node != payload.AddressFrom {
-				sendInv(node, "tx", [][]byte(tx.Id))
+				sendInv(node, "tx", [][]byte{tx.Id})
 			}
 		}
 	} else {
@@ -344,7 +344,7 @@ func handleTx(request []byte, bc *b.BlockChain) {
 
 			for _, node := range knowNodes {
 				if node != nodeAddress {
-					sendInv(node, "block", [][]byte(newBlock.Hash))
+					sendInv(node, "block", [][]byte{newBlock.Hash})
 				}
 			}
 

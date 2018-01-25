@@ -169,14 +169,32 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 }
 
 // 添加区块
-func (bc *BlockChain) AddBlock(transactions []*Transaction) {
-	var lastHash []byte
-	var lastBlock *Block
-
-	err := bc.Db.View(func(tx *bolt.Tx) error {
+func (bc *BlockChain) AddBlock(block *Block) {
+	err := bc.Db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blockBucket))
-		lastHash = b.Get([]byte(lastHashKey))
-		lastBlock = DeserializeBlock(b.Get(lastHash))
+		blockInDB := b.Get(block.Hash)
+
+		if blockInDB != nil {
+			return nil
+		}
+
+		blockData := block.Serialize()
+		err := b.Put(block.Hash, blockData)
+		if err != nil {
+			clog.Fatal(2, err.Error())
+		}
+
+		lastHash := b.Get([]byte(lastHashKey))
+		lastBlockData := b.Get(lastHash)
+		lastBlock := DeserializeBlock(lastBlockData)
+
+		if block.Height > lastBlock.Height {
+			err = b.Put([]byte(lastHashKey), block.Hash)
+			if err != nil {
+				clog.Fatal(2, err.Error())
+			}
+			bc.Tip = block.Hash
+		}
 
 		return nil
 	})
@@ -184,27 +202,6 @@ func (bc *BlockChain) AddBlock(transactions []*Transaction) {
 	if err != nil {
 		clog.Fatal(2, err.Error())
 	}
-
-	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
-
-	err = bc.Db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blockBucket))
-		err := b.Put(newBlock.Hash, newBlock.Serialize())
-
-		if err != nil {
-			clog.Fatal(2, err.Error())
-		}
-
-		err = b.Put([]byte(lastHashKey), newBlock.Hash)
-
-		if err != nil {
-			clog.Fatal(2, err.Error())
-		}
-
-		bc.Tip = newBlock.Hash
-
-		return nil
-	})
 }
 
 // 根据hash获取区块信息

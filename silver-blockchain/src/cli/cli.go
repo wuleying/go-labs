@@ -16,6 +16,7 @@ import (
  * ./silver-blockchain wallet get                                                   Get all wallets address
  * ./silver-blockchain wallet balance -address=ADDRESS                              Get wallet balance info of address
  * ./silver-blockchain utxo reindex -address=ADDRESS                                Reindex the UTXO set
+ * ./silver-blockchain node start -miner=ADDRESS                                    Start the node
  */
 // 运行命令行
 func Run() {
