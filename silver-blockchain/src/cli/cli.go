@@ -20,6 +20,10 @@ import (
  */
 // 运行命令行
 func Run() {
+	if len(os.Getenv("NODE_ID")) < 1 {
+		os.Setenv("NODE_ID", "13000")
+	}
+
 	app := ucli.NewApp()
 	app.Name = "Silver Blockchain"
 	app.Usage = "CLI tools"
