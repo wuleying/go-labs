@@ -1,6 +1,7 @@
 package jd
 
 import (
+	"fmt"
 	"github.com/go-clog/clog"
 	"go-labs/silver-jd/src/util"
 	"log"
@@ -39,8 +40,8 @@ var (
 	}
 
 	maxNameLen   = 40
-	cookieFile   = "cookies/jd.cookies"
-	qrCodeFile   = "cookies/jd.qr"
+	cookieFile   = fmt.Sprintf("%s/%s", util.ROOT_DIR, "cookies/jd.cookies")
+	qrCodeFile   = fmt.Sprintf("%s/%s", util.ROOT_DIR, "cookies/jd.qr")
 	strSeperater = strings.Repeat("+", 60)
 )
 
