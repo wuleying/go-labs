@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
+# 根目录
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
+# shell目录
+ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
+
 # shellcheck disable=SC1091
-source common.sh
+source "$ENV_SHELL_DIR"/common.sh
 
 start() {
     # 杀死原进程

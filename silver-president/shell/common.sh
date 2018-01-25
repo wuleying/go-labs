@@ -6,7 +6,7 @@
 PROJECT_NAME="silver-president"
 
 # 根目录
-ENV_ROOT_DIR=$(cd ../"$(dirname "$1")" || exit; pwd)
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
 # src目录
 ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 # bin目录
@@ -15,9 +15,6 @@ ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 ENV_PID_DIR="$ENV_ROOT_DIR"/pids
 # config目录
 ENV_CONFIG_DIR="$ENV_ROOT_DIR"/config
-# shell目录
-ENV_SHELL_DIR="$ENV_ROOT_DIR"/shell
-
 
 # 编译参数缺省值 dev/test/prod
 BUILD_MODE="prod"
