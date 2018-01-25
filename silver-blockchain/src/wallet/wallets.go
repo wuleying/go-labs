@@ -6,11 +6,12 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/go-clog/clog"
+	"go-labs/silver-blockchain/src/utils"
 	"io/ioutil"
 	"os"
 )
 
-const walletFile = "db/wallet.dat"
+var walletFile = fmt.Sprintf("%s/%s", utils.ROOT_DIR, "db/wallet.dat")
 
 type Wallets struct {
 	Wallets map[string]*Wallet

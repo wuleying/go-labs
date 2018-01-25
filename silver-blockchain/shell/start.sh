@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-
 # shellcheck disable=SC1091
-source ./shell/common.sh
+
+# 根目录
+ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
+source "$ENV_ROOT_DIR"/shell/common.sh
 
 start() {
     # 编译
-    "$ENV_SHELL_DIR"/build.sh
+    "$ENV_ROOT_DIR"/shell/build.sh
 
     # 执行
     "$ENV_BIN_DIR"/"$PROJECT_NAME" w c
