@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
 # 根目录
 ENV_ROOT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
-
-# shellcheck disable=SC1091
 source "$ENV_ROOT_DIR"/shell/common.sh
 
 # 初始化
