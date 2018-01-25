@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck disable=SC1091
-source ./shell/common.sh
+source common.sh
 
 kill_process(){
     PID_FILE_PATH="$ENV_PID_DIR"/"$PROJECT_NAME".pid

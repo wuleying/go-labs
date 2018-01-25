@@ -6,7 +6,7 @@
 PROJECT_NAME="silver-president"
 
 # 根目录
-ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
+ENV_ROOT_DIR=$(cd ../"$(dirname "$1")" || exit; pwd)
 # src目录
 ENV_SRC_DIR="$ENV_ROOT_DIR"/src
 # bin目录

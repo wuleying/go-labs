@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2009
 # shellcheck disable=SC1091
-source ./shell/common.sh
+source common.sh
 
 silver_ps(){
     ps -ef | grep "$PROJECT_NAME" | grep -v grep
