@@ -41,7 +41,7 @@ var (
 
 	maxNameLen   = 40
 	cookieFile   = fmt.Sprintf("%s/%s", util.ROOT_DIR, "cookies/jd.cookies")
-	qrCodeFile   = fmt.Sprintf("%s/%s", util.ROOT_DIR, "cookies/jd.qr")
+	qrCodeFile   = "cookies/jd.qr"
 	strSeperater = strings.Repeat("+", 60)
 )
 
