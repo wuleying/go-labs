@@ -35,7 +35,7 @@ func main() {
 	db = model.Init(config)
 
 	http.HandleFunc("/", HomeHandler)
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("src/static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(fmt.Sprintf("%s/%s", util.ROOT_DIR, "src/static")))))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", config.Manager["port"]), nil)
 	if err != nil {
