@@ -3,6 +3,7 @@ package block
 import (
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
+	"go-labs/silver-blockchain/src/util"
 )
 
 // 区块链迭代器结构体
@@ -16,7 +17,7 @@ func (i *BlockChainIterator) Next() *Block {
 	var block *Block
 
 	err := i.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blockBucket))
+		b := tx.Bucket([]byte(util.BLOCK_BUCKET_NAME))
 		encodedBlock := b.Get(i.currentHash)
 		block = DeserializeBlock(encodedBlock)
 

@@ -3,7 +3,7 @@ package commands
 import (
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
-	"go-labs/silver-blockchain/src/utils"
+	"go-labs/silver-blockchain/src/util"
 	"go-labs/silver-blockchain/src/wallet"
 )
 
@@ -42,8 +42,8 @@ func balance(address string, nodeId string) int {
 	UTXOSet := b.UTXOSet{bc}
 
 	balance := 0
-	publicKeyHash := utils.Base58Decode([]byte(address))
-	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-4]
+	publicKeyHash := util.Base58Decode([]byte(address))
+	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-util.ADDRESS_CHECKSUM_LEN]
 
 	UTXOs := UTXOSet.FindUTXO(publicKeyHash)
 

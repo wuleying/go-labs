@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/utils"
+	"go-labs/silver-blockchain/src/util"
 )
 
 type TOutput struct {
@@ -17,8 +17,8 @@ type TOutputs struct {
 }
 
 func (out *TOutput) Lock(address []byte) {
-	publicKeyHash := utils.Base58Decode(address)
-	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-4]
+	publicKeyHash := util.Base58Decode(address)
+	publicKeyHash = publicKeyHash[1 : len(publicKeyHash)-util.ADDRESS_CHECKSUM_LEN]
 	out.PublicKeyHash = publicKeyHash
 }
 

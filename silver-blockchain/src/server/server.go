@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
-	"go-labs/silver-blockchain/src/utils"
+	"go-labs/silver-blockchain/src/util"
 	"io/ioutil"
 	"net"
 )
@@ -93,7 +93,7 @@ func requestBlocks() {
 func sendAddress(address string) {
 	nodes := addr{knowNodes}
 	nodes.AddressList = append(nodes.AddressList, nodeAddress)
-	payload := utils.GobEncode(nodes)
+	payload := util.GobEncode(nodes)
 	request := append(commandToBytes("address"), payload...)
 
 	sendData(address, request)
@@ -101,7 +101,7 @@ func sendAddress(address string) {
 
 func sendBlock(address string, b *b.Block) {
 	data := block{nodeAddress, b.Serialize()}
-	payload := utils.GobEncode(data)
+	payload := util.GobEncode(data)
 	request := append(commandToBytes("block"), payload...)
 
 	sendData(address, request)
@@ -110,21 +110,21 @@ func sendBlock(address string, b *b.Block) {
 func sendInv(address string, kind string, items [][]byte) {
 	inventory := inv{nodeAddress, kind, items}
 
-	payload := utils.GobEncode(inventory)
+	payload := util.GobEncode(inventory)
 	request := append(commandToBytes("inv"), payload...)
 
 	sendData(address, request)
 }
 
 func sendGetBlocks(address string) {
-	payload := utils.GobEncode(getBlocks{nodeAddress})
+	payload := util.GobEncode(getBlocks{nodeAddress})
 	request := append(commandToBytes("getblocks"), payload...)
 
 	sendData(address, request)
 }
 
 func sendGetData(address string, kind string, id []byte) {
-	payload := utils.GobEncode(getData{nodeAddress, kind, id})
+	payload := util.GobEncode(getData{nodeAddress, kind, id})
 	request := append(commandToBytes("getdata"), payload...)
 
 	sendData(address, request)
@@ -132,7 +132,7 @@ func sendGetData(address string, kind string, id []byte) {
 
 func sendTx(address string, transaction *b.Transaction) {
 	data := tx{nodeAddress, transaction.Serialize()}
-	payload := utils.GobEncode(data)
+	payload := util.GobEncode(data)
 	request := append(commandToBytes("tx"), payload...)
 
 	sendData(address, request)
@@ -140,7 +140,7 @@ func sendTx(address string, transaction *b.Transaction) {
 
 func sendVersion(address string, bc *b.BlockChain) {
 	bestHeight := bc.GetBestHeight()
-	payload := utils.GobEncode(version{nodeVersion, bestHeight, nodeAddress})
+	payload := util.GobEncode(version{nodeVersion, bestHeight, nodeAddress})
 	request := append(commandToBytes("version"), payload...)
 
 	sendData(address, request)

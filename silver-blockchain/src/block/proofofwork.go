@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"go-labs/silver-blockchain/src/utils"
+	"go-labs/silver-blockchain/src/util"
 	"math"
 	"math/big"
 	"time"
@@ -36,9 +36,9 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 		[][]byte{
 			pow.block.PrevBlockHash,
 			pow.block.HashTransaction(),
-			utils.IntToHex(int64(pow.block.Timestamp)),
-			utils.IntToHex(int64(targetBits)),
-			utils.IntToHex(int64(nonce)),
+			util.IntToHex(int64(pow.block.Timestamp)),
+			util.IntToHex(int64(targetBits)),
+			util.IntToHex(int64(nonce)),
 		}, []byte{})
 
 	return data
