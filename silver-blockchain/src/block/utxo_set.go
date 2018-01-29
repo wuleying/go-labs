@@ -4,9 +4,8 @@ import (
 	"encoding/hex"
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
+	"go-labs/silver-blockchain/src/util"
 )
-
-const UTXOBucket = "chainstate"
 
 type UTXOSet struct {
 	BlockChain *BlockChain
@@ -18,7 +17,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	db := u.BlockChain.Db
 
 	err := db.View(func(tx *bolt.Tx) error {
-		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
+		c := tx.Bucket([]byte(util.UTXO_BUCKET_NAME)).Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			tId := hex.EncodeToString(k)
@@ -47,7 +46,7 @@ func (u UTXOSet) FindUTXO(publicKeyHash []byte) []TOutput {
 	db := u.BlockChain.Db
 
 	err := db.View(func(tx *bolt.Tx) error {
-		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
+		c := tx.Bucket([]byte(util.UTXO_BUCKET_NAME)).Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			outs := DeserializeOutputs(v)
@@ -74,7 +73,7 @@ func (u UTXOSet) CountTransactions() int {
 	db := u.BlockChain.Db
 
 	err := db.View(func(tx *bolt.Tx) error {
-		c := tx.Bucket([]byte(UTXOBucket)).Cursor()
+		c := tx.Bucket([]byte(util.UTXO_BUCKET_NAME)).Cursor()
 
 		for k, _ := c.First(); k != nil; k, _ = c.Next() {
 			counter++
@@ -92,7 +91,7 @@ func (u UTXOSet) CountTransactions() int {
 
 func (u UTXOSet) Reindex() {
 	db := u.BlockChain.Db
-	bucketName := []byte(UTXOBucket)
+	bucketName := []byte(util.UTXO_BUCKET_NAME)
 
 	err := db.Update(func(tx *bolt.Tx) error {
 		err := tx.DeleteBucket(bucketName)
@@ -141,7 +140,7 @@ func (u UTXOSet) Update(block *Block) {
 	db := u.BlockChain.Db
 
 	err := db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(UTXOBucket))
+		b := tx.Bucket([]byte(util.UTXO_BUCKET_NAME))
 
 		for _, tx := range block.Transactions {
 			if tx.IsCoinBase() == false {

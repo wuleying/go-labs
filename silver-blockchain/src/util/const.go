@@ -16,6 +16,9 @@ const (
 	LAST_HASH_KEY = "lastHash"
 	// Bucket名称
 	BLOCK_BUCKET_NAME = "blocks"
+	// UTXO Bucket名称
+	UTXO_BUCKET_NAME = ""
+
 	// 创世币数据
 	GENESIS_COIN_BASEDATA = "hello luoliang"
 
