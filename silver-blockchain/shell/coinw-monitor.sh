@@ -8,7 +8,7 @@ cookie="xxx"
 while true
 do
     message=""
-    for item in $symbols;
+    for item in "${symbols}";
     do
         symbol=`echo "${item}" | awk -F '#' '{print $1}'`
         symbolNum=`echo "${item}" | awk -F '#' '{print $2}'`
