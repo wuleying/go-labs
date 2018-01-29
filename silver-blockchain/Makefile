@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # Go parameters
 GO_CMD=go
 GO_BUILD=$(GO_CMD) build
@@ -18,8 +20,8 @@ build:
 clean:
 	$(GO_CLEAN)
 	rm $(BIN_DIR)/$(PROJECT_NAME)
-	rm $(DB_DIR)/$(PROJECT_NAME)-*.db
 	rm $(DB_DIR)/wallet.dat
+	rm $(DB_DIR)/$(PROJECT_NAME)-*.db
 	@echo "Clean completed"
 
 test:
