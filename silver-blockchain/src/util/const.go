@@ -17,7 +17,7 @@ const (
 	// Bucket名称
 	BLOCK_BUCKET_NAME = "blocks"
 	// UTXO Bucket名称
-	UTXO_BUCKET_NAME = ""
+	UTXO_BUCKET_NAME = "chainState"
 
 	// 创世币数据
 	GENESIS_COIN_BASEDATA = "hello luoliang"
