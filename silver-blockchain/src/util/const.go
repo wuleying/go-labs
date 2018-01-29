@@ -38,6 +38,8 @@ const (
 
 // 全局变量
 var (
-	ROOT_DIR     = FileGetParentDirectory(FileGetCurrentDirectory()) // 根目录
-	CURRENT_TIME = time.Now().String()                               // 当前时间
+	// 根目录
+	ROOT_DIR = FileGetParentDirectory(FileGetCurrentDirectory())
+	// 当前时间
+	CURRENT_TIME = time.Now().String()
 )
