@@ -12,7 +12,7 @@ func GobEncode(data interface{}) []byte {
 	encoder := gob.NewEncoder(&buff)
 	err := encoder.Encode(data)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return buff.Bytes()

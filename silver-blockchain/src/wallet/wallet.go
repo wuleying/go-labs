@@ -43,7 +43,7 @@ func HashPublicKey(publicKey []byte) []byte {
 
 	_, err := ripemd160Hasher.Write(publicSha256[:])
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	publicRipemd160 := ripemd160Hasher.Sum(nil)
@@ -65,7 +65,7 @@ func newKeyPair() (ecdsa.PrivateKey, []byte) {
 	curve := elliptic.P256()
 	private, err := ecdsa.GenerateKey(curve, rand.Reader)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	public := append(private.PublicKey.X.Bytes(), private.PublicKey.Y.Bytes()...)

@@ -32,7 +32,7 @@ func (t Transaction) Serialize() []byte {
 	encoder := gob.NewEncoder(&encoded)
 	err := encoder.Encode(t)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return encoded.Bytes()
@@ -56,7 +56,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			clog.Fatal(2, "Previous transaction is not correct")
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Previous transaction is not correct")
 		}
 	}
 
@@ -71,7 +71,7 @@ func (t *Transaction) Sign(privateKey ecdsa.PrivateKey, prevTs map[string]Transa
 
 		r, s, err := ecdsa.Sign(rand.Reader, &privateKey, tCopy.Id)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		signature := append(r.Bytes(), s.Bytes()...)
@@ -126,7 +126,7 @@ func (t *Transaction) Verify(prevTs map[string]Transaction) bool {
 
 	for _, in := range t.In {
 		if prevTs[hex.EncodeToString(in.Id)].Id == nil {
-			clog.Fatal(2, "Previous transaction is not correct.")
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Previous transaction is not correct.")
 		}
 	}
 
@@ -166,7 +166,7 @@ func NewCoinBase(to string, data string) *Transaction {
 		randData := make([]byte, 20)
 		_, err := rand.Read(randData)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		data = fmt.Sprintf("%x", randData)
@@ -187,7 +187,7 @@ func NewUTXOTransaction(from string, to string, amount int, UTXOSet *UTXOSet) *T
 
 	wallets, err := wallet.NewWallets()
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	walletFrom := wallets.GetWallet(from)
@@ -196,13 +196,13 @@ func NewUTXOTransaction(from string, to string, amount int, UTXOSet *UTXOSet) *T
 	accumulated, validOutputs := UTXOSet.FindSpendableOutputs(publicKeyHash, amount)
 
 	if accumulated < amount {
-		clog.Fatal(2, "Not enough funds")
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Not enough funds")
 	}
 
 	for id, outs := range validOutputs {
 		tId, err := hex.DecodeString(id)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		for _, out := range outs {
@@ -229,7 +229,7 @@ func DeserializeTransaction(data []byte) Transaction {
 	decoder := gob.NewDecoder(bytes.NewReader(data))
 	err := decoder.Decode(&transaction)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return transaction

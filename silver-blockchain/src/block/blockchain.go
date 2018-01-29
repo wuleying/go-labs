@@ -22,7 +22,7 @@ type BlockChain struct {
 func CreateBlockChain(address string, nodeId string) *BlockChain {
 	dbFile := fmt.Sprintf(util.DB_FILE_PATH, nodeId)
 	if dbExists(dbFile) {
-		clog.Fatal(2, "Blockchain already exists.")
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Blockchain already exists.")
 	}
 
 	var tip []byte
@@ -32,23 +32,23 @@ func CreateBlockChain(address string, nodeId string) *BlockChain {
 
 	db, err := bolt.Open(dbFile, 0600, nil)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte(util.BLOCK_BUCKET_NAME))
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		err = b.Put(genesisBlock.Hash, genesisBlock.Serialize())
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		err = b.Put([]byte(util.LAST_HASH_KEY), genesisBlock.Hash)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		tip = genesisBlock.Hash
@@ -57,7 +57,7 @@ func CreateBlockChain(address string, nodeId string) *BlockChain {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	bc := BlockChain{tip, db}
@@ -69,7 +69,7 @@ func CreateBlockChain(address string, nodeId string) *BlockChain {
 func NewBlockChain(nodeId string) *BlockChain {
 	dbFile := fmt.Sprintf(util.DB_FILE_PATH, nodeId)
 	if dbExists(dbFile) == false {
-		clog.Fatal(2, "No existing blockchain found. Create one first.")
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "No existing blockchain found. Create one first.")
 	}
 
 	var tip []byte
@@ -77,7 +77,7 @@ func NewBlockChain(nodeId string) *BlockChain {
 	db, err := bolt.Open(dbFile, 0600, nil)
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
@@ -88,7 +88,7 @@ func NewBlockChain(nodeId string) *BlockChain {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	bc := BlockChain{tip, db}
@@ -127,7 +127,7 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	newBlock := NewBlock(transactions, lastBlock.Id, lastBlock.Hash)
@@ -137,12 +137,12 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 
 		err := b.Put(newBlock.Hash, newBlock.Serialize())
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		err = b.Put([]byte(util.LAST_HASH_KEY), newBlock.Hash)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		bc.Tip = newBlock.Hash
@@ -151,7 +151,7 @@ func (bc *BlockChain) MineBlock(transactions []*Transaction) *Block {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return newBlock
@@ -170,7 +170,7 @@ func (bc *BlockChain) AddBlock(block *Block) {
 		blockData := block.Serialize()
 		err := b.Put(block.Hash, blockData)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		lastHash := b.Get([]byte(util.LAST_HASH_KEY))
@@ -180,7 +180,7 @@ func (bc *BlockChain) AddBlock(block *Block) {
 		if block.Height > lastBlock.Height {
 			err = b.Put([]byte(util.LAST_HASH_KEY), block.Hash)
 			if err != nil {
-				clog.Fatal(2, err.Error())
+				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 			}
 			bc.Tip = block.Hash
 		}
@@ -189,7 +189,7 @@ func (bc *BlockChain) AddBlock(block *Block) {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 }
 
@@ -354,7 +354,7 @@ func (bc *BlockChain) SignTransaction(t *Transaction, privateKey ecdsa.PrivateKe
 	for _, in := range t.In {
 		prevT, err := bc.FindTransaction(in.Id)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		prevTs[hex.EncodeToString(prevT.Id)] = prevT
@@ -369,7 +369,7 @@ func (bc *BlockChain) VerifyTransaction(t *Transaction) bool {
 	for _, in := range t.In {
 		prevT, err := bc.FindTransaction(in.Id)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		prevTs[hex.EncodeToString(prevT.Id)] = prevT
@@ -398,7 +398,7 @@ func (bc *BlockChain) GetBestHeight() int {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return lastBlock.Height

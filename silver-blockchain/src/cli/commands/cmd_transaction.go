@@ -3,17 +3,18 @@ package commands
 import (
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
+	"go-labs/silver-blockchain/src/util"
 	"go-labs/silver-blockchain/src/wallet"
 )
 
 // 交易货币
 func sendCoin(from string, to string, amount int, nodeId string, mineNow bool) {
 	if !wallet.ValidateAddress(from) {
-		clog.Fatal(2, "Sender address [%s] is not valid.", from)
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Sender address [%s] is not valid.", from)
 	}
 
 	if !wallet.ValidateAddress(to) {
-		clog.Fatal(2, "Recipient address is not valid.", to)
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Recipient address is not valid.", to)
 	}
 
 	bc := b.NewBlockChain(nodeId)

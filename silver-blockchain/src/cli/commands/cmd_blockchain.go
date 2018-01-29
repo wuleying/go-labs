@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/go-clog/clog"
 	b "go-labs/silver-blockchain/src/block"
+	"go-labs/silver-blockchain/src/util"
 	"go-labs/silver-blockchain/src/wallet"
 	"strconv"
 )
@@ -10,7 +11,7 @@ import (
 // 创建区块链
 func createBlockChain(address string, nodeId string) {
 	if !wallet.ValidateAddress(address) {
-		clog.Fatal(2, "Address [%s] is not valid.", address)
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Address [%s] is not valid.", address)
 	}
 
 	bc := b.CreateBlockChain(address, nodeId)

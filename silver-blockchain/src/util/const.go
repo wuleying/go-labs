@@ -34,6 +34,10 @@ const (
 	FILE_WRITE_MODE = 0666
 	DIR_READ_MODE   = 0755
 	DIR_WRITE_MODE  = 0777
+
+	// clog skip级别
+	CLOG_SKIP_DEFAULT      = 0
+	CLOG_SKIP_DISPLAY_INFO = 2
 )
 
 // 全局变量

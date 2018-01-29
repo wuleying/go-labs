@@ -11,7 +11,7 @@ func IntToHex(num int64) []byte {
 	buff := new(bytes.Buffer)
 	err := binary.Write(buff, binary.BigEndian, num)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return buff.Bytes()

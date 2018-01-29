@@ -20,7 +20,7 @@ func createWallet() {
 func getWalletAddresses(nodeId string) {
 	wallets, err := wallet.NewWallets()
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	addresses := wallets.GetAddresses()
@@ -33,7 +33,7 @@ func getWalletAddresses(nodeId string) {
 // 获取钱包余额
 func balance(address string, nodeId string) int {
 	if !wallet.ValidateAddress(address) {
-		clog.Fatal(2, "Address %s is not valid.", address)
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, "Address %s is not valid.", address)
 	}
 
 	bc := b.NewBlockChain(nodeId)

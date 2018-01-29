@@ -32,7 +32,7 @@ func (outs TOutputs) Serialize() []byte {
 	encoder := gob.NewEncoder(&buff)
 	err := encoder.Encode(outs)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return buff.Bytes()
@@ -51,7 +51,7 @@ func DeserializeOutputs(data []byte) TOutputs {
 	decoder := gob.NewDecoder(bytes.NewBuffer(data))
 	err := decoder.Decode(&outputs)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return outputs

@@ -18,11 +18,13 @@ const (
 	COMMAND_LENGTH = 12
 )
 
-var nodeAddress string
-var miningAddress string
-var knowNodes = []string{"localhost:13000"}
-var blocksInTransit = [][]byte{}
-var mempool = make(map[string]b.Transaction)
+var (
+	nodeAddress     string
+	miningAddress   string
+	knowNodes       = []string{"localhost:13000"}
+	blocksInTransit = [][]byte{}
+	mempool         = make(map[string]b.Transaction)
+)
 
 type addr struct {
 	AddressList []string
@@ -176,7 +178,7 @@ func handleAddress(request []byte) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	knowNodes = append(knowNodes, payload.AddressList...)
@@ -192,7 +194,7 @@ func handleBlock(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	blockData := payload.Block
@@ -221,7 +223,7 @@ func handleInv(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	clog.Info("Recevied inventory with %d %s", len(payload.Items), payload.Type)
@@ -258,7 +260,7 @@ func handleGetBlocks(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	blocks := bc.GetBlockHashes()
@@ -273,13 +275,13 @@ func handleGetData(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	if payload.Type == "block" {
 		block, err := bc.GetBlock([]byte(payload.Id))
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		sendBlock(payload.AddressFrom, &block)
@@ -301,7 +303,7 @@ func handleTx(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	txData := payload.Transaction
@@ -365,7 +367,7 @@ func handleVersion(request []byte, bc *b.BlockChain) {
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	myBestHeight := bc.GetBestHeight()
@@ -385,7 +387,7 @@ func handleVersion(request []byte, bc *b.BlockChain) {
 func handleConnection(conn net.Conn, bc *b.BlockChain) {
 	request, err := ioutil.ReadAll(conn)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	command := bytesToCommand(request[:COMMAND_LENGTH])
@@ -428,7 +430,7 @@ func StartServer(nodeId string, minerAddress string) {
 	miningAddress = minerAddress
 	ln, err := net.Listen(PROTOCOL, nodeAddress)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 	defer ln.Close()
 
@@ -441,7 +443,7 @@ func StartServer(nodeId string, minerAddress string) {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		go handleConnection(conn, bc)

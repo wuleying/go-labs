@@ -56,7 +56,7 @@ func (ws *Wallets) LoadFromFile() error {
 
 	fileContent, err := ioutil.ReadFile(walletFile)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	var wallets Wallets
@@ -66,7 +66,7 @@ func (ws *Wallets) LoadFromFile() error {
 
 	err = decoder.Decode(&wallets)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	ws.Wallets = wallets.Wallets
@@ -83,11 +83,11 @@ func (ws *Wallets) SaveToFile() {
 
 	err := encoder.Encode(ws)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	err = ioutil.WriteFile(walletFile, content.Bytes(), 0644)
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 }

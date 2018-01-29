@@ -35,7 +35,7 @@ func (u UTXOSet) FindSpendableOutputs(publicKeyHash []byte, amount int) (int, ma
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return accumulated, unspentOutputs
@@ -62,7 +62,7 @@ func (u UTXOSet) FindUTXO(publicKeyHash []byte) []TOutput {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return UTXOs
@@ -83,7 +83,7 @@ func (u UTXOSet) CountTransactions() int {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return counter
@@ -96,19 +96,19 @@ func (u UTXOSet) Reindex() {
 	err := db.Update(func(tx *bolt.Tx) error {
 		err := tx.DeleteBucket(bucketName)
 		if err != nil && err != bolt.ErrBucketNotFound {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		_, err = tx.CreateBucket(bucketName)
 		if err != nil {
-			clog.Fatal(2, err.Error())
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	UTXO := u.BlockChain.FindUTXO()
@@ -119,12 +119,12 @@ func (u UTXOSet) Reindex() {
 		for tId, outs := range UTXO {
 			key, err := hex.DecodeString(tId)
 			if err != nil {
-				clog.Fatal(2, err.Error())
+				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 			}
 
 			err = b.Put(key, outs.Serialize())
 			if err != nil {
-				clog.Fatal(2, err.Error())
+				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 			}
 		}
 
@@ -132,7 +132,7 @@ func (u UTXOSet) Reindex() {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 }
 
@@ -158,12 +158,12 @@ func (u UTXOSet) Update(block *Block) {
 					if len(updateOuts.Outputs) == 0 {
 						err := b.Delete(in.Id)
 						if err != nil {
-							clog.Fatal(2, err.Error())
+							clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 						}
 					} else {
 						err := b.Put(in.Id, updateOuts.Serialize())
 						if err != nil {
-							clog.Fatal(2, err.Error())
+							clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 						}
 					}
 				}
@@ -176,7 +176,7 @@ func (u UTXOSet) Update(block *Block) {
 
 			err := b.Put(tx.Id, newOutputs.Serialize())
 			if err != nil {
-				clog.Fatal(2, err.Error())
+				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 			}
 		}
 
@@ -184,6 +184,6 @@ func (u UTXOSet) Update(block *Block) {
 	})
 
 	if err != nil {
-		clog.Fatal(2, err.Error())
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 }
