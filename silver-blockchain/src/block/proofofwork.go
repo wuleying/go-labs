@@ -5,15 +5,9 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"go-labs/silver-blockchain/src/util"
-	"math"
 	"math/big"
 	"time"
 )
-
-const targetBits = 18
-
-// Number once最大值
-var maxNonce = math.MaxInt64
 
 // 工作量证明结构体
 type ProofOfWork struct {
@@ -24,7 +18,7 @@ type ProofOfWork struct {
 func NewProofOfWork(b *Block) *ProofOfWork {
 	target := big.NewInt(1)
 
-	target.Lsh(target, uint(256-targetBits))
+	target.Lsh(target, uint(256-util.MINE_TARGET_BITS))
 
 	pow := &ProofOfWork{b, target}
 
@@ -37,7 +31,7 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 			pow.block.PrevBlockHash,
 			pow.block.HashTransaction(),
 			util.IntToHex(int64(pow.block.Timestamp)),
-			util.IntToHex(int64(targetBits)),
+			util.IntToHex(int64(util.MINE_TARGET_BITS)),
 			util.IntToHex(int64(nonce)),
 		}, []byte{})
 
@@ -52,7 +46,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 
 	fmt.Printf("Mining the block containing [#%d]\n", pow.block.Id)
 
-	for nonce < maxNonce {
+	for nonce < util.MAX_NONCE {
 		data := pow.prepareData(nonce)
 
 		hash = sha256.Sum256(data)

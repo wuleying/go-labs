@@ -10,13 +10,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/go-clog/clog"
+	"go-labs/silver-blockchain/src/util"
 	"go-labs/silver-blockchain/src/wallet"
 	"math/big"
 	"strings"
 )
-
-// 挖出新块的奖励金
-const subsidy = 10
 
 type Transaction struct {
 	Id  []byte
@@ -175,7 +173,7 @@ func NewCoinBase(to string, data string) *Transaction {
 	}
 
 	tIn := TInput{[]byte{}, -1, nil, []byte(data)}
-	tOut := NewTOutput(subsidy, to)
+	tOut := NewTOutput(util.MINE_SUBSIDY, to)
 
 	t := Transaction{nil, []TInput{tIn}, []TOutput{*tOut}}
 	t.Id = t.Hash()

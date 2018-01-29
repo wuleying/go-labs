@@ -1,6 +1,7 @@
 package util
 
 import (
+	"math"
 	"time"
 )
 
@@ -17,6 +18,13 @@ const (
 	BLOCK_BUCKET_NAME = "blocks"
 	// 创世币数据
 	GENESIS_COIN_BASEDATA = "hello luoliang"
+
+	// 挖矿难度
+	MINE_TARGET_BITS = 18
+	// 挖矿奖励
+	MINE_SUBSIDY = 10
+	// Number once最大值
+	MAX_NONCE = math.MaxInt64
 
 	// 权限
 	FILE_READ_MODE  = 0644
