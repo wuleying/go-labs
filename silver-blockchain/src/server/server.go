@@ -12,9 +12,11 @@ import (
 	"net"
 )
 
-const protocol = "tcp"
-const nodeVersion = 1
-const commandLength = 12
+const (
+	PROTOCOL       = "tcp"
+	NODE_VERSION   = 1
+	COMMAND_LENGTH = 12
+)
 
 var nodeAddress string
 var miningAddress string
@@ -59,7 +61,7 @@ type version struct {
 }
 
 func commandToBytes(command string) []byte {
-	var bytes [commandLength]byte
+	var bytes [COMMAND_LENGTH]byte
 
 	for i, c := range command {
 		bytes[i] = byte(c)
@@ -81,7 +83,7 @@ func bytesToCommand(bytes []byte) string {
 }
 
 func extractCommand(request []byte) []byte {
-	return request[:commandLength]
+	return request[:COMMAND_LENGTH]
 }
 
 func requestBlocks() {
@@ -140,14 +142,14 @@ func sendTx(address string, transaction *b.Transaction) {
 
 func sendVersion(address string, bc *b.BlockChain) {
 	bestHeight := bc.GetBestHeight()
-	payload := util.GobEncode(version{nodeVersion, bestHeight, nodeAddress})
+	payload := util.GobEncode(version{NODE_VERSION, bestHeight, nodeAddress})
 	request := append(commandToBytes("version"), payload...)
 
 	sendData(address, request)
 }
 
 func sendData(address string, data []byte) {
-	conn, err := net.Dial(protocol, address)
+	conn, err := net.Dial(PROTOCOL, address)
 	if err != nil {
 		clog.Info("%s is not available", address)
 
@@ -170,7 +172,7 @@ func handleAddress(request []byte) {
 	var buff bytes.Buffer
 	var payload addr
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -186,7 +188,7 @@ func handleBlock(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload block
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -215,7 +217,7 @@ func handleInv(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload inv
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -252,7 +254,7 @@ func handleGetBlocks(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload getBlocks
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -267,7 +269,7 @@ func handleGetData(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload getData
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -295,7 +297,7 @@ func handleTx(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload tx
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -359,7 +361,7 @@ func handleVersion(request []byte, bc *b.BlockChain) {
 	var buff bytes.Buffer
 	var payload version
 
-	buff.Write(request[commandLength:])
+	buff.Write(request[COMMAND_LENGTH:])
 	decoder := gob.NewDecoder(&buff)
 	err := decoder.Decode(&payload)
 	if err != nil {
@@ -386,7 +388,7 @@ func handleConnection(conn net.Conn, bc *b.BlockChain) {
 		clog.Fatal(2, err.Error())
 	}
 
-	command := bytesToCommand(request[:commandLength])
+	command := bytesToCommand(request[:COMMAND_LENGTH])
 	clog.Info("Received %s command", command)
 
 	switch command {
@@ -424,7 +426,7 @@ func nodeIsKnown(address string) bool {
 func StartServer(nodeId string, minerAddress string) {
 	nodeAddress = fmt.Sprintf("localhost:%s", nodeId)
 	miningAddress = minerAddress
-	ln, err := net.Listen(protocol, nodeAddress)
+	ln, err := net.Listen(PROTOCOL, nodeAddress)
 	if err != nil {
 		clog.Fatal(2, err.Error())
 	}
