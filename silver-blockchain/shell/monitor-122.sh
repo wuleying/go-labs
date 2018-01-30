@@ -9,7 +9,7 @@ do
     echo ${result} - ${result:3:1} ${result:4:1} ${result:5:1}
     date
 
-    if [ "${result:3:1}" == "${result:4:1}" -a "${result:4:1}" == "${result:5:1}" ]; then
+    if [ "${result}" !=  "" -a "${result:3:1}" == "${result:4:1}" -a "${result:4:1}" == "${result:5:1}" ]; then
         osascript -e "display notification \"豹子号段出现: ${result}\" with title \"122 Monitor\""
     fi
     sleep 300
