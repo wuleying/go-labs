@@ -6,7 +6,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
 	"io/ioutil"
 	"os"
 )

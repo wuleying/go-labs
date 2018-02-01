@@ -8,7 +8,7 @@ import (
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
 	"github.com/juju/errors"
-	"go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
 	"os"
 )
 

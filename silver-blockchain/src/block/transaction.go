@@ -10,8 +10,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/util"
-	"go-labs/silver-blockchain/src/wallet"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/wallet"
 	"math/big"
 	"strings"
 )

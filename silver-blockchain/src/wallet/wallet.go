@@ -7,7 +7,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
 	"golang.org/x/crypto/ripemd160"
 )
 

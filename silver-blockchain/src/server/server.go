@@ -6,8 +6,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/go-clog/clog"
-	b "go-labs/silver-blockchain/src/block"
-	"go-labs/silver-blockchain/src/util"
+	b "github.com/wuleying/go-labs/silver-blockchain/src/block"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
 	"io/ioutil"
 	"net"
 )

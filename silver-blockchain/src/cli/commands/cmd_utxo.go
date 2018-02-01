@@ -2,7 +2,7 @@ package commands
 
 import (
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/block"
+	"github.com/wuleying/go-labs/silver-blockchain/src/block"
 )
 
 func reindexUTXO(nodeId string) {

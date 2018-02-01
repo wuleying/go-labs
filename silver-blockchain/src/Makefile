@@ -1,5 +1,5 @@
 PROJECT_NAME=silver-blockchain
-PACKAGE=go-labs/silver-blockchain
+PACKAGE=github.com/wuleying/go-labs/silver-blockchain
 BASE_DIR=$(GOPATH)/src/$(PACKAGE)
 SRC_DIR=$(BASE_DIR)/src
 BIN_DIR=$(BASE_DIR)/bin

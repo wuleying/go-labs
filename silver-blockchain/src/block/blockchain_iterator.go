@@ -3,7 +3,7 @@ package block
 import (
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
 )
 
 // 区块链迭代器结构体

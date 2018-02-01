@@ -2,9 +2,9 @@ package commands
 
 import (
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/server"
-	"go-labs/silver-blockchain/src/util"
-	"go-labs/silver-blockchain/src/wallet"
+	"github.com/wuleying/go-labs/silver-blockchain/src/server"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/wallet"
 )
 
 func startNode(nodeId string, minerAddress string) {

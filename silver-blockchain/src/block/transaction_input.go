@@ -2,7 +2,7 @@ package block
 
 import (
 	"bytes"
-	"go-labs/silver-blockchain/src/wallet"
+	"github.com/wuleying/go-labs/silver-blockchain/src/wallet"
 )
 
 type TInput struct {

@@ -2,7 +2,7 @@ package cli
 
 import (
 	ucli "github.com/urfave/cli"
-	"go-labs/silver-blockchain/src/cli/commands"
+	"github.com/wuleying/go-labs/silver-blockchain/src/cli/commands"
 	"os"
 )
 

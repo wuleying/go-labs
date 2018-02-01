@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-blockchain/src/cli"
+	"github.com/wuleying/go-labs/silver-blockchain/src/cli"
 	"os"
 )
 

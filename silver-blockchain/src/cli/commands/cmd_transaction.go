@@ -2,9 +2,9 @@ package commands
 
 import (
 	"github.com/go-clog/clog"
-	b "go-labs/silver-blockchain/src/block"
-	"go-labs/silver-blockchain/src/util"
-	"go-labs/silver-blockchain/src/wallet"
+	b "github.com/wuleying/go-labs/silver-blockchain/src/block"
+	"github.com/wuleying/go-labs/silver-blockchain/src/util"
+	"github.com/wuleying/go-labs/silver-blockchain/src/wallet"
 )
 
 // 交易货币
