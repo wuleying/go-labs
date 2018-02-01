@@ -1,10 +1,12 @@
 PROJECT_NAME=silver-blockchain
-SRC_DIR=$(CURDIR)/src
-BIN_DIR=$(CURDIR)/bin
-DB_DIR=$(CURDIR)/db
+PACKAGE=go-labs/silver-blockchain
+BASE_DIR=$(GOPATH)/src/$(PACKAGE)
+SRC_DIR=$(BASE_DIR)/src
+BIN_DIR=$(BASE_DIR)/bin
+DB_DIR=$(BASE_DIR)/db
 
 # Go parameters
-GO_CMD=go
+GO_CMD=godep go
 GO_BUILD=$(GO_CMD) build
 GO_CLEAN=$(GO_CMD) clean
 GO_TEST=$(GO_CMD) test
