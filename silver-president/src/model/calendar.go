@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"go-labs/silver-president/src/util"
+	"github.com/wuleying/go-labs/silver-president/src/util"
 )
 
 // 日历数据结构体

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"go-labs/silver-president/src/util"
+	"github.com/wuleying/go-labs/silver-president/src/util"
 	"log"
 )
 

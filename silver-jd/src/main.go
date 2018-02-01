@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-jd/src/jd"
+	"github.com/wuleying/go-labs/silver-jd/src/jd"
 	"os"
 	"time"
 )

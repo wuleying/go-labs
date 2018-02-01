@@ -3,7 +3,7 @@ package jd
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"go-labs/silver-jd/src/util"
+	"github.com/wuleying/go-labs/silver-jd/src/util"
 	"log"
 	"net/http"
 	"strings"

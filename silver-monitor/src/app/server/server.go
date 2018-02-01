@@ -10,8 +10,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/robfig/cron"
 
-	"go-labs/silver-monitor/src/model"
-	"go-labs/silver-monitor/src/util"
+	"github.com/wuleying/go-labs/silver-monitor/src/model"
+	"github.com/wuleying/go-labs/silver-monitor/src/util"
 )
 
 // 全局配置

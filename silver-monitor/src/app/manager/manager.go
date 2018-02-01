@@ -9,8 +9,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"go-labs/silver-monitor/src/model"
-	"go-labs/silver-monitor/src/util"
+	"github.com/wuleying/go-labs/silver-monitor/src/model"
+	"github.com/wuleying/go-labs/silver-monitor/src/util"
 )
 
 // 首页数据结构体

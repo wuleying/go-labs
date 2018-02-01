@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 
-	"go-labs/silver-monitor/src/util"
+	"github.com/wuleying/go-labs/silver-monitor/src/util"
 )
 
 // 初始化数据库配置项
