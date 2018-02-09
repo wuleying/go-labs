@@ -13,12 +13,12 @@ all: build
 
 build:
 	$(GO_BUILD) -o $(BIN_DIR)/$(PROJECT_NAME) -v $(CUR_DIR)/*.go
-	@echo "Build completed"
+	@echo "[INFO] Build completed"
 
 clean:
 	$(GO_CLEAN)
 	rm $(BIN_DIR)/$(PROJECT_NAME)
-	@echo "Clean completed"
+	@echo "[INFO] Clean completed"
 
 test:
 	@echo "Todo"

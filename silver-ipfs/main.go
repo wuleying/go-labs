@@ -7,11 +7,13 @@ import (
 )
 
 func init() {
-	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
+	consoleConfig := clog.ConsoleConfig{
 		Level:      clog.INFO,
-		BufferSize: 100},
-	); err != nil {
-		fmt.Printf("init console log failed. error %+v.", err)
+		BufferSize: 100,
+	}
+
+	if err := clog.New(clog.CONSOLE, consoleConfig); err != nil {
+		fmt.Printf("Init console log failed. error %+v.", err)
 		os.Exit(1)
 	}
 }
