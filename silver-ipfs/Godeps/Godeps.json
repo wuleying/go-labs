@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/wuleying/go-labs/silver-ipfs/src",
+	"ImportPath": "github.com/wuleying/go-labs/silver-ipfs",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Deps": [
