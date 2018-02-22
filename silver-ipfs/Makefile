@@ -23,6 +23,10 @@ clean:
 test:
 	@echo "Todo"
 
+godep:
+	godep save
+	@echo "[INFO] Godep saved"
+
 run:
 	@echo [INFO] CUR_DIR=$(CUR_DIR)
 	@echo [INFO] BIN_DIR=$(BIN_DIR)
