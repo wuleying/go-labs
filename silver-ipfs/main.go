@@ -11,7 +11,7 @@ func init() {
 		Level:      clog.INFO,
 		BufferSize: 100,
 	}); err != nil {
-		fmt.Printf("Init console log failed. error %+v.", err)
+		fmt.Printf("[INFO] Init console log failed. error %+v.", err)
 		os.Exit(1)
 	}
 }
