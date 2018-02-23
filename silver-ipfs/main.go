@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
+	"github.com/wuleying/go-labs/silver-ipfs/util"
 	"os"
 )
 
@@ -19,5 +20,13 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	clog.Info("hello world.")
+	command := "ipfs"
+	params := []string{"add", "~/Desktop/1.png"}
+	err, result := util.ExecCommand(command, params)
+
+	if err != nil {
+		clog.Fatal(2, err.Error())
+	}
+
+	clog.Info(result)
 }

@@ -2,23 +2,22 @@ package util
 
 import (
 	"bufio"
-	"fmt"
+	"github.com/go-clog/clog"
 	"io"
 	"os/exec"
 )
 
 // 执行命令
-func execCommand(commandName string, params []string) bool {
+func ExecCommand(commandName string, params []string) (err error, result string) {
 	cmd := exec.Command(commandName, params...)
 
 	//显示运行的命令
-	fmt.Println(cmd.Args)
+	clog.Info("%s", cmd.Args)
 
-	stdout, err := cmd.StdoutPipe()
+	stdout, e := cmd.StdoutPipe()
 
-	if err != nil {
-		fmt.Println(err)
-		return false
+	if e != nil {
+		return e, result
 	}
 
 	cmd.Start()
@@ -27,13 +26,13 @@ func execCommand(commandName string, params []string) bool {
 
 	//实时循环读取输出流中的一行内容
 	for {
-		line, err2 := reader.ReadString('\n')
-		if err2 != nil || io.EOF == err2 {
-			break
+		line, e := reader.ReadString('\n')
+		if e != nil || io.EOF == e {
+			return e, result
 		}
-		fmt.Println(line)
+		clog.Info(line)
 	}
 
 	cmd.Wait()
-	return true
+	return nil, result
 }
