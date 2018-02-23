@@ -28,6 +28,6 @@ godep:
 	@echo "[INFO] Godep saved"
 
 run:
-	@echo [INFO] CUR_DIR=$(CUR_DIR)
-	@echo [INFO] BIN_DIR=$(BIN_DIR)
+	@echo [INFO] CUR_DIR=\"$(CUR_DIR)\"
+	@echo [INFO] BIN_DIR=\"$(BIN_DIR)\"
 	$(BIN_DIR)/$(PROJECT_NAME)
