@@ -16,19 +16,19 @@ all: build
 
 build:
 	$(GO_BUILD) -o $(BIN_DIR)/$(PROJECT_NAME) -v $(CUR_DIR)/*.go
-	@echo "$(CURRENT_TIME) [INFO ] Build completed\n"
+	@echo "$(CURRENT_TIME) [INFO ] Build completed"
 
 clean:
 	$(GO_CLEAN)
 	rm $(BIN_DIR)/$(PROJECT_NAME)
-	@echo "$(CURRENT_TIME) [INFO ] Clean completed\n"
+	@echo "$(CURRENT_TIME) [INFO ] Clean completed"
 
 test:
 	@echo "Todo"
 
 godep:
 	godep save
-	@echo "$(CURRENT_TIME) [INFO ] Godep saved\n"
+	@echo "$(CURRENT_TIME) [INFO ] Godep saved"
 
 run:
 	@echo $(CURRENT_TIME) [INFO ] CUR_DIR=\"$(CUR_DIR)\"

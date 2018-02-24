@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"github.com/wuleying/go-labs/silver-ipfs/command"
+	"github.com/wuleying/go-labs/silver-ipfs/commands"
 	"github.com/wuleying/go-labs/silver-ipfs/util"
 	"os"
 )
@@ -23,7 +23,7 @@ func main() {
 
 	command := "ipfs"
 	params := []string{"add", "/Users/luoliang/Desktop/1.png"}
-	err, out := command.ExecCommand(command, params)
+	err, out := commands.ExecCommand(command, params)
 
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
