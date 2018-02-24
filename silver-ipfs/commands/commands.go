@@ -17,22 +17,17 @@ func execCommand(commandName string, params []string) (error, string) {
 		return err, ""
 	}
 
-	/*
-		cmd.Start()
-
-		reader := bufio.NewReader(stdout)
-
-		//实时循环读取输出流中的一行内容
-		for {
-			line, e := reader.ReadString('\n')
-			if e != nil || io.EOF == e {
-				return e, result
-			}
-			clog.Trace(line)
-		}
-
-		cmd.Wait()
-	*/
-
 	return nil, string(out)
+}
+
+func execIPFSCommand(commandType string, param string) (error, string) {
+	command := "ipfs"
+	params := []string{commandType, param}
+	err, out := execCommand(command, params)
+
+	if err != nil {
+		return err, ""
+	}
+
+	return nil, out
 }
