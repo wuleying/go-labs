@@ -9,25 +9,28 @@ GO_CLEAN=$(GO_CMD) clean
 GO_TEST=$(GO_CMD) test
 GO_GET=$(GO_CMD) get
 
+# Current time
+CURRENT_TIME=`date "+%Y/%m/%d %H:%M:%S"`
+
 all: build
 
 build:
 	$(GO_BUILD) -o $(BIN_DIR)/$(PROJECT_NAME) -v $(CUR_DIR)/*.go
-	@echo "[INFO] Build completed"
+	@echo "$(CURRENT_TIME) [INFO ] Build completed"
 
 clean:
 	$(GO_CLEAN)
 	rm $(BIN_DIR)/$(PROJECT_NAME)
-	@echo "[INFO] Clean completed"
+	@echo "$(CURRENT_TIME) [INFO ] Clean completed"
 
 test:
 	@echo "Todo"
 
 godep:
 	godep save
-	@echo "[INFO] Godep saved"
+	@echo "$(CURRENT_TIME) [INFO ] Godep saved"
 
 run:
-	@echo [INFO] CUR_DIR=\"$(CUR_DIR)\"
-	@echo [INFO] BIN_DIR=\"$(BIN_DIR)\"
+	@echo $(CURRENT_TIME) [INFO ] CUR_DIR=\"$(CUR_DIR)\"
+	@echo $(CURRENT_TIME) [INFO ] BIN_DIR=\"$(BIN_DIR)\"
 	$(BIN_DIR)/$(PROJECT_NAME)
