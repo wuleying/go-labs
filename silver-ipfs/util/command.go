@@ -1,38 +1,34 @@
 package util
 
 import (
-	"bufio"
-	"github.com/go-clog/clog"
-	"io"
 	"os/exec"
 )
 
 // 执行命令
-func ExecCommand(commandName string, params []string) (err error, result string) {
+func ExecCommand(commandName string, params []string) (error, string) {
 	cmd := exec.Command(commandName, params...)
+	out, err := cmd.CombinedOutput()
 
-	//显示运行的命令
-	clog.Info("%s", cmd.Args)
-
-	stdout, e := cmd.StdoutPipe()
-
-	if e != nil {
-		return e, result
+	if err != nil {
+		return err, ""
 	}
 
-	cmd.Start()
+	/*
+		cmd.Start()
 
-	reader := bufio.NewReader(stdout)
+		reader := bufio.NewReader(stdout)
 
-	//实时循环读取输出流中的一行内容
-	for {
-		line, e := reader.ReadString('\n')
-		if e != nil || io.EOF == e {
-			return e, result
+		//实时循环读取输出流中的一行内容
+		for {
+			line, e := reader.ReadString('\n')
+			if e != nil || io.EOF == e {
+				return e, result
+			}
+			clog.Trace(line)
 		}
-		clog.Info(line)
-	}
 
-	cmd.Wait()
-	return nil, result
+		cmd.Wait()
+	*/
+
+	return nil, string(out)
 }

@@ -9,7 +9,7 @@ import (
 
 func init() {
 	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
-		Level:      clog.INFO,
+		Level:      clog.TRACE,
 		BufferSize: 100,
 	}); err != nil {
 		fmt.Printf("[INFO] Init console log failed. error %+v.", err)
@@ -22,11 +22,11 @@ func main() {
 
 	command := "ipfs"
 	params := []string{"add", "~/Desktop/1.png"}
-	err, result := util.ExecCommand(command, params)
+	err, out := util.ExecCommand(command, params)
 
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
-	clog.Info(result)
+	clog.Trace(out)
 }
