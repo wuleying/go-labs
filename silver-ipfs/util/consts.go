@@ -17,6 +17,9 @@ const (
 	// clog skip级别
 	CLOG_SKIP_DEFAULT      = 0
 	CLOG_SKIP_DISPLAY_INFO = 2
+
+	// 数据库路径
+	DB_FILE_PATH = "db/silver-ipfs.db"
 )
 
 // 全局变量
