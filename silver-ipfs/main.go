@@ -21,9 +21,8 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	command := "ipfs"
-	params := []string{"add", "/Users/luoliang/Desktop/1.png"}
-	err, out := commands.ExecCommand(command, params)
+	//err, out := commands.AddFile("/Users/luoliang/Desktop/test.txt")
+	err, out := commands.CatFile("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
 
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())

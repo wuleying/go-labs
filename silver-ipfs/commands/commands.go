@@ -6,7 +6,7 @@ import (
 )
 
 // 执行命令
-func ExecCommand(commandName string, params []string) (error, string) {
+func execCommand(commandName string, params []string) (error, string) {
 	cmd := exec.Command(commandName, params...)
 
 	clog.Trace("%s", cmd.Args)
