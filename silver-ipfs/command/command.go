@@ -1,13 +1,17 @@
-package util
+package command
 
 import (
+	"github.com/go-clog/clog"
 	"os/exec"
 )
 
 // 执行命令
 func ExecCommand(commandName string, params []string) (error, string) {
 	cmd := exec.Command(commandName, params...)
-	out, err := cmd.CombinedOutput()
+
+	clog.Trace("%s", cmd.Args)
+
+	out, err := cmd.Output()
 
 	if err != nil {
 		return err, ""
