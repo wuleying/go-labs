@@ -6,7 +6,7 @@ import (
 )
 
 // 执行命令
-func execCommand(commandName string, params []string) (error, string) {
+func execCommand(commandName string, params []string) (string, error) {
 	cmd := exec.Command(commandName, params...)
 
 	clog.Trace("%s", cmd.Args)
@@ -14,20 +14,20 @@ func execCommand(commandName string, params []string) (error, string) {
 	out, err := cmd.Output()
 
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 
-	return nil, string(out)
+	return string(out), nil
 }
 
-func execIPFSCommand(commandType string, param string) (error, string) {
+func execIPFSCommand(commandType string, param string) (string, error) {
 	command := "ipfs"
 	params := []string{commandType, param}
-	err, out := execCommand(command, params)
+	out, err := execCommand(command, params)
 
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 
-	return nil, out
+	return out, nil
 }

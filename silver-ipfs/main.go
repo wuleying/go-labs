@@ -21,12 +21,12 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	err, out := commands.AddFile("/Users/luoliang/Desktop/test.txt")
+	out, err := commands.AddFile("/Users/luoliang/Desktop/test.txt")
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
-	err, out = commands.CatFile("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
+	out, err = commands.CatFile("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
