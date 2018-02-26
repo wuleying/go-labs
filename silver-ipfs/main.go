@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"github.com/wuleying/go-labs/silver-ipfs/commands"
-	"github.com/wuleying/go-labs/silver-ipfs/util"
+	"github.com/wuleying/go-labs/silver-ipfs/ipfs"
 	"os"
 )
 
 func init() {
 	if err := clog.New(clog.CONSOLE, clog.ConsoleConfig{
-		Level:      clog.TRACE,
+		Level:      clog.INFO,
 		BufferSize: 100,
 	}); err != nil {
 		fmt.Printf("[INFO] Init console log failed. error %+v.", err)
@@ -21,15 +20,8 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	out, err := commands.AddFile("/Users/luoliang/Desktop/test.txt")
-	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-	}
+	object := ipfs.NewObject()
+	object.Save("/Users/luoliang/Desktop/test.txt")
 
-	out, err = commands.CatFile("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
-	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-	}
-
-	clog.Trace(out)
+	clog.Info("%x", object)
 }

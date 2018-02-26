@@ -14,12 +14,14 @@ const (
 	DIR_READ_MODE   = 0755
 	DIR_WRITE_MODE  = 0777
 
-	// clog skip级别
+	// Clog skip 级别
 	CLOG_SKIP_DEFAULT      = 0
 	CLOG_SKIP_DISPLAY_INFO = 2
 
 	// 数据库路径
 	DB_FILE_PATH = "db/silver-ipfs.db"
+	// Bucket name
+	BLOCK_BUCKET_NAME = "silver-ipfs"
 )
 
 // 全局变量
