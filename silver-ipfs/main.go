@@ -21,20 +21,10 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	object := ipfs.NewObject()
-	fileHash, err := object.Save("/Users/luoliang/Desktop/test.txt")
+	fileHash, err := ipfs.AddObject("/Users/luoliang/Desktop/test.txt")
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	clog.Info("fileHash = %s", fileHash)
-
-	/*
-		objectInfo, err := ipfs.GetObject(fileHash)
-		if err != nil {
-			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-		}
-
-		clog.Info("objectInfo.FileHash = %s", objectInfo.FileHash)
-	*/
 }

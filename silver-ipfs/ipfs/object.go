@@ -18,11 +18,6 @@ type IPFSObject struct {
 	Timestamp int64
 }
 
-// 添加IPFS对象
-func NewObject() *IPFSObject {
-	return &IPFSObject{[]byte{}, []byte{}, 0, 0}
-}
-
 // 获取IPFS对象
 func GetObject(fileHash string) (*IPFSObject, error) {
 	db, err := bolt.Open(util.DB_FILE_PATH, 0600, nil)
@@ -47,18 +42,13 @@ func GetObject(fileHash string) (*IPFSObject, error) {
 }
 
 // 保存数据
-func (o *IPFSObject) Save(filePath string) (string, error) {
+func AddObject(filePath string) (string, error) {
 	fileHash, err := commands.AddFile(filePath)
 	if err != nil {
 		return "", err
 	}
 
-	o.FileHash = []byte(fileHash)
-	// todo
-	o.Name = []byte("test")
-	o.Size = 12
-	o.Timestamp = time.Now().Unix()
-
+	object := IPFSObject{[]byte(fileHash), []byte("test"), 12, time.Now().Unix()}
 	db, err := bolt.Open(util.DB_FILE_PATH, 0600, nil)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
@@ -70,7 +60,7 @@ func (o *IPFSObject) Save(filePath string) (string, error) {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
-		err = b.Put(o.FileHash, o.Serialize())
+		err = b.Put(object.FileHash, object.Serialize())
 		if err != nil {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
