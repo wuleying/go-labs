@@ -28,8 +28,8 @@ func GetObject(fileHash string) (*IPFSObject, error) {
 	var object *IPFSObject
 
 	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(util.BLOCK_BUCKET_NAME))
-		object = DeserializeBlock(b.Get([]byte(fileHash)))
+		bucket := tx.Bucket([]byte(util.BLOCK_BUCKET_NAME))
+		object = DeserializeBlock(bucket.Get([]byte(fileHash)))
 
 		return nil
 	})
@@ -55,12 +55,12 @@ func AddObject(filePath string) (string, error) {
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(util.BLOCK_BUCKET_NAME))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(util.BLOCK_BUCKET_NAME))
 		if err != nil {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
-		err = b.Put(object.FileHash, object.Serialize())
+		err = bucket.Put(object.FileHash, object.Serialize())
 		if err != nil {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
@@ -76,11 +76,11 @@ func AddObject(filePath string) (string, error) {
 }
 
 // 序列化对象
-func (o *IPFSObject) Serialize() []byte {
+func (object *IPFSObject) Serialize() []byte {
 	var result bytes.Buffer
 
 	encoder := gob.NewEncoder(&result)
-	err := encoder.Encode(o)
+	err := encoder.Encode(object)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
@@ -89,16 +89,16 @@ func (o *IPFSObject) Serialize() []byte {
 }
 
 // 反序列化对象
-func DeserializeBlock(d []byte) *IPFSObject {
-	var o IPFSObject
+func DeserializeBlock(data []byte) *IPFSObject {
+	var object IPFSObject
 
-	decoder := gob.NewDecoder(bytes.NewReader(d))
-	err := decoder.Decode(&o)
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+	err := decoder.Decode(&object)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
-	return &o
+	return &object
 }
 
 // 检查数据库文件是否存在
