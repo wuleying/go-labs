@@ -41,7 +41,7 @@ func (o *IPFSObject) Save(filePath string) (string, error) {
 	}
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucket([]byte(util.BLOCK_BUCKET_NAME))
+		b, err := tx.CreateBucketIfNotExists([]byte(util.BLOCK_BUCKET_NAME))
 		if err != nil {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
