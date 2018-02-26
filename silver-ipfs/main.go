@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-clog/clog"
 	"github.com/wuleying/go-labs/silver-ipfs/ipfs"
+	"github.com/wuleying/go-labs/silver-ipfs/util"
 	"os"
 )
 
@@ -21,7 +22,17 @@ func main() {
 	defer clog.Shutdown()
 
 	object := ipfs.NewObject()
-	object.Save("/Users/luoliang/Desktop/test.txt")
+	fileHash, err := object.Save("/Users/luoliang/Desktop/test.txt")
+	if err != nil {
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+	}
 
-	clog.Info("%x", object)
+	clog.Info("fileHash = %s", fileHash)
+
+	ojectInfo, err := ipfs.GetObject(fileHash)
+	if err != nil {
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+	}
+
+	clog.Info("ojectInfo.FileHash = %s", ojectInfo.FileHash)
 }

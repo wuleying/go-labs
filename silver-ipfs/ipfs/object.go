@@ -18,9 +18,32 @@ type IPFSObject struct {
 	Timestamp int64
 }
 
-// IPFS对象
+// 添加IPFS对象
 func NewObject() *IPFSObject {
 	return &IPFSObject{[]byte{}, []byte{}, 0, 0}
+}
+
+// 获取IPFS对象
+func GetObject(fileHash string) (*IPFSObject, error) {
+	db, err := bolt.Open(util.DB_FILE_PATH, 0600, nil)
+	if err != nil {
+		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+	}
+
+	var object *IPFSObject
+
+	err = db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(util.BLOCK_BUCKET_NAME))
+		object = DeserializeBlock(b.Get([]byte(fileHash)))
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return object, nil
 }
 
 // 保存数据
@@ -31,6 +54,7 @@ func (o *IPFSObject) Save(filePath string) (string, error) {
 	}
 
 	o.FileHash = []byte(fileHash)
+	// todo
 	o.Name = []byte("test")
 	o.Size = 12
 	o.Timestamp = time.Now().Unix()
