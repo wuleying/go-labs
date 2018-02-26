@@ -29,10 +29,12 @@ func main() {
 
 	clog.Info("fileHash = %s", fileHash)
 
-	ojectInfo, err := ipfs.GetObject(fileHash)
-	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-	}
+	/*
+		objectInfo, err := ipfs.GetObject(fileHash)
+		if err != nil {
+			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		}
 
-	clog.Info("ojectInfo.FileHash = %s", ojectInfo.FileHash)
+		clog.Info("objectInfo.FileHash = %s", objectInfo.FileHash)
+	*/
 }
