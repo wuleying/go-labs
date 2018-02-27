@@ -20,6 +20,7 @@ func execCommand(commandName string, params []string) (string, error) {
 	return string(out), nil
 }
 
+// 执行IPFS命令
 func execIPFSCommand(commandType string, param string) (string, error) {
 	command := "ipfs"
 	params := []string{commandType, param}

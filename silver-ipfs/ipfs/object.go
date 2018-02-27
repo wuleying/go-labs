@@ -20,7 +20,7 @@ type IPFSObject struct {
 
 // 获取IPFS对象
 func GetObject(fileHash string) (*IPFSObject, error) {
-	db, err := bolt.Open(util.DB_FILE_PATH, 0600, nil)
+	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
@@ -49,7 +49,7 @@ func AddObject(filePath string) (string, error) {
 	}
 
 	object := IPFSObject{[]byte(fileHash), []byte("test"), 12, time.Now().Unix()}
-	db, err := bolt.Open(util.DB_FILE_PATH, 0600, nil)
+	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
