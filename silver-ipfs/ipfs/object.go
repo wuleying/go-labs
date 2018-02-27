@@ -24,6 +24,7 @@ func GetObject(fileHash string) (*IPFSObject, error) {
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
+	defer db.Close()
 
 	var object *IPFSObject
 
@@ -53,6 +54,7 @@ func AddObject(filePath string) (string, error) {
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
+	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(util.BLOCK_BUCKET_NAME))
