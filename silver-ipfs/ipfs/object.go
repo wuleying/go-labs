@@ -29,8 +29,8 @@ func GetObject(fileHash string) (*IPFSObject, error) {
 	var object *IPFSObject
 
 	err = db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte(util.BLOCK_BUCKET_NAME))
-		object = DeserializeBlock(bucket.Get([]byte(fileHash)))
+		bucket := tx.Bucket(util.Str2bytes(util.BLOCK_BUCKET_NAME))
+		object = DeserializeBlock(bucket.Get(util.Str2bytes(fileHash)))
 
 		return nil
 	})
@@ -49,7 +49,7 @@ func AddObject(filePath string) (string, error) {
 		return "", err
 	}
 
-	object := IPFSObject{[]byte(fileHash), []byte("test"), 12, time.Now().Unix()}
+	object := IPFSObject{util.Str2bytes(fileHash), util.Str2bytes("test"), 12, time.Now().Unix()}
 	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
@@ -57,7 +57,7 @@ func AddObject(filePath string) (string, error) {
 	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(util.BLOCK_BUCKET_NAME))
+		bucket, err := tx.CreateBucketIfNotExists(util.Str2bytes(util.BLOCK_BUCKET_NAME))
 		if err != nil {
 			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}

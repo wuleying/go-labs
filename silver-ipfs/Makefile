@@ -24,7 +24,10 @@ clean:
 	@echo "$(CUR_TIME) [INFO ] Clean completed"
 
 test:
-	@echo "Todo"
+	$(GO_TEST)
+
+testCover:
+	$(GO_TEST) -cover
 
 godep:
 	godep save

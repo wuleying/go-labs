@@ -32,5 +32,5 @@ func main() {
 	// QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP
 	object, _ := ipfs.GetObject("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
 
-	clog.Info("fileHash = %s", object.FileHash)
+	clog.Info("fileHash = %s", object.Name)
 }
