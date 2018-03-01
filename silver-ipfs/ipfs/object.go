@@ -6,7 +6,7 @@ import (
 	"github.com/boltdb/bolt"
 	"github.com/go-clog/clog"
 	"github.com/wuleying/go-labs/silver-ipfs/commands"
-	"github.com/wuleying/go-labs/silver-ipfs/util"
+	"github.com/wuleying/go-labs/silver-ipfs/utils"
 	"os"
 	"time"
 )
@@ -20,17 +20,17 @@ type IPFSObject struct {
 
 // 获取IPFS对象
 func GetObject(fileHash string) (*IPFSObject, error) {
-	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
+	db, err := bolt.Open(utils.DB_FILE_PATH, utils.DB_FILE_MODE, nil)
 	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 	defer db.Close()
 
 	var object *IPFSObject
 
 	err = db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket(util.Str2bytes(util.BLOCK_BUCKET_NAME))
-		object = DeserializeBlock(bucket.Get(util.Str2bytes(fileHash)))
+		bucket := tx.Bucket(utils.Str2bytes(utils.BLOCK_BUCKET_NAME))
+		object = DeserializeBlock(bucket.Get(utils.Str2bytes(fileHash)))
 
 		return nil
 	})
@@ -49,25 +49,25 @@ func AddObject(filePath string) (string, error) {
 		return "", err
 	}
 
-	fileName := util.FileGetName(filePath)
-	fileSize := util.FileGetSize(filePath)
+	fileName := utils.FileGetName(filePath)
+	fileSize := utils.FileGetSize(filePath)
 
-	object := IPFSObject{util.Str2bytes(fileHash), util.Str2bytes(fileName), fileSize, time.Now().Unix()}
-	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
+	object := IPFSObject{utils.Str2bytes(fileHash), utils.Str2bytes(fileName), fileSize, time.Now().Unix()}
+	db, err := bolt.Open(utils.DB_FILE_PATH, utils.DB_FILE_MODE, nil)
 	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists(util.Str2bytes(util.BLOCK_BUCKET_NAME))
+		bucket, err := tx.CreateBucketIfNotExists(utils.Str2bytes(utils.BLOCK_BUCKET_NAME))
 		if err != nil {
-			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+			clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		err = bucket.Put(object.FileHash, object.Serialize())
 		if err != nil {
-			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+			clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 		}
 
 		return nil
@@ -87,7 +87,7 @@ func (object *IPFSObject) Serialize() []byte {
 	encoder := gob.NewEncoder(&result)
 	err := encoder.Encode(object)
 	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return result.Bytes()
@@ -100,7 +100,7 @@ func DeserializeBlock(data []byte) *IPFSObject {
 	decoder := gob.NewDecoder(bytes.NewReader(data))
 	err := decoder.Decode(&object)
 	if err != nil {
-		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
 
 	return &object
