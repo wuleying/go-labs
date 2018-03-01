@@ -49,7 +49,10 @@ func AddObject(filePath string) (string, error) {
 		return "", err
 	}
 
-	object := IPFSObject{util.Str2bytes(fileHash), util.Str2bytes("test"), 12, time.Now().Unix()}
+	fileName := util.FileGetName(filePath)
+	fileSize := util.FileGetSize(filePath)
+
+	object := IPFSObject{util.Str2bytes(fileHash), util.Str2bytes(fileName), fileSize, time.Now().Unix()}
 	db, err := bolt.Open(util.DB_FILE_PATH, util.DB_FILE_MODE, nil)
 	if err != nil {
 		clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())

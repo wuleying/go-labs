@@ -3,6 +3,7 @@ package util
 import (
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -20,4 +21,20 @@ func FileGetCurrentDirectory() string {
 // 获取上级目录
 func FileGetParentDirectory(dirctory string) string {
 	return StringSubstr(dirctory, 0, strings.LastIndex(dirctory, "/"))
+}
+
+// 获取文件名称
+func FileGetName(filePath string) string {
+	return path.Base(filePath)
+}
+
+// 藜取文件大小
+func FileGetSize(filePath string) int64 {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		log.Fatal(CLOG_SKIP_DISPLAY_INFO, err)
+	}
+
+	fileSize := fileInfo.Size()
+	return fileSize
 }
