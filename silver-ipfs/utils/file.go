@@ -19,8 +19,8 @@ func FileGetCurrentDirectory() string {
 }
 
 // 获取上级目录
-func FileGetParentDirectory(dirctory string) string {
-	return StringSubstr(dirctory, 0, strings.LastIndex(dirctory, "/"))
+func FileGetParentDirectory(directory string) string {
+	return StringSub(directory, 0, strings.LastIndex(directory, "/"))
 }
 
 // 获取文件名称
