@@ -1,1 +1,5 @@
-package silver_ipfs
+package main
+
+func main() {
+
+}
