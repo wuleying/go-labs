@@ -29,6 +29,8 @@ const (
 var (
 	// 根目录
 	ROOT_DIR = FileGetParentDirectory(FileGetCurrentDirectory())
+	// 视图目录
+	TEMPLATES_DIR = ROOT_DIR + "/views"
 	// 当前时间
 	CURRENT_TIME = time.Now().String()
 )

@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
-	"github.com/wuleying/go-labs/silver-ipfs/ipfs"
+	"github.com/wuleying/go-labs/silver-ipfs/utils"
+	"html/template"
+	"net/http"
 	"os"
 )
 
@@ -19,18 +21,39 @@ func init() {
 
 func main() {
 	defer clog.Shutdown()
-
 	/*
-		fileHash, err := ipfs.AddObject("/Users/luoliang/Desktop/test.txt")
-		if err != nil {
-			clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-		}
+			fileHash, err := ipfs.AddObject("/Users/luoliang/Desktop/test.txt")
+			if err != nil {
+				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
+			}
 
-		clog.Info("fileHash = %s", fileHash)
+			clog.Info("fileHash = %s", fileHash)
+
+
+		// QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP
+		object, _ := ipfs.GetObject("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
+
+		clog.Info("fileSize = %d", object.Size)
 	*/
 
-	// QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP
-	object, _ := ipfs.GetObject("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
+	http.HandleFunc("/", HomeHandler)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(fmt.Sprintf("%s/%s", utils.ROOT_DIR, "static")))))
 
-	clog.Info("fileSize = %d", object.Size)
+	err := http.ListenAndServe(fmt.Sprintf(":%s", "10099"), nil)
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
+	}
+
+}
+
+// 首页
+func HomeHandler(response http.ResponseWriter, request *http.Request) {
+	template, err := template.ParseFiles(utils.TEMPLATES_DIR + "/home.html")
+
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
+		return
+	}
+
+	template.Execute(response, nil)
 }
