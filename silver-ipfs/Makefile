@@ -33,7 +33,13 @@ godep:
 	godep save
 	@echo "$(CUR_TIME) [INFO ] Godep saved"
 
+ps:
+	ps -ef | grep $(PROJECT_NAME)
+
 run:
 	@echo $(CUR_TIME) [INFO ] CUR_DIR=\"$(CUR_DIR)\"
 	@echo $(CUR_TIME) [INFO ] BIN_DIR=\"$(BIN_DIR)\"
 	$(BIN_DIR)/$(PROJECT_NAME)
+
+stop:
+	pgrep -f $(PROJECT_NAME) | xargs kill -9

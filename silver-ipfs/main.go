@@ -21,20 +21,6 @@ func init() {
 
 func main() {
 	defer clog.Shutdown()
-	/*
-			fileHash, err := ipfs.AddObject("/Users/luoliang/Desktop/test.txt")
-			if err != nil {
-				clog.Fatal(util.CLOG_SKIP_DISPLAY_INFO, err.Error())
-			}
-
-			clog.Info("fileHash = %s", fileHash)
-
-
-		// QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP
-		object, _ := ipfs.GetObject("QmXsjqFzpz5e7qC2fkPb12HiMPtj81BXrJBfC5zWkJRPcP")
-
-		clog.Info("fileSize = %d", object.Size)
-	*/
 
 	http.HandleFunc("/", HomeHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(fmt.Sprintf("%s/%s", utils.ROOT_DIR, "static")))))
@@ -43,7 +29,6 @@ func main() {
 	if err != nil {
 		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, err.Error())
 	}
-
 }
 
 // 首页
