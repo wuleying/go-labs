@@ -1,11 +1,8 @@
 jQuery(function() {
-    var $ = jQuery,    // just in case. Make sure it's not an other libaray.
-
+    var $ = jQuery,
         $wrap = $('#uploader'),
-
         // 图片容器
-        $queue = $('<ul class="filelist"></ul>')
-            .appendTo( $wrap.find('.queueList') ),
+        $queue = $('<ul class="filelist"></ul>').appendTo( $wrap.find('.queueList')),
         // 状态栏，包括进度和控制按钮
         $statusBar = $wrap.find('.statusBar'),
         // 文件总体选择信息。
@@ -71,7 +68,7 @@ jQuery(function() {
         disableGlobalDnd: true,
         chunked: true,
         server: '/upload',
-        fileNumLimit: 300,
+        fileNumLimit: 10,
         fileSizeLimit: 5 * 1024 * 1024,    // 200 M
         fileSingleSizeLimit: 1 * 1024 * 1024    // 50 M
     });
@@ -310,7 +307,7 @@ jQuery(function() {
             case 'finish':
                 stats = uploader.getStats();
                 if ( stats.successNum ) {
-                    alert( '上传成功' );
+                    //alert( '上传成功' );
                 } else {
                     // 没有成功的图片，重设
                     state = 'done';
