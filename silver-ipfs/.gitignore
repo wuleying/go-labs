@@ -1,2 +1,4 @@
 bin/silver-ipfs
+files/*
+!files/README.md
 *.db

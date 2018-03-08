@@ -5,6 +5,7 @@ import (
 	"github.com/go-clog/clog"
 	"github.com/wuleying/go-labs/silver-ipfs/utils"
 	"html/template"
+	"io"
 	"net/http"
 	"os"
 )
@@ -46,5 +47,27 @@ func homeHandler(response http.ResponseWriter, request *http.Request) {
 
 // 上传
 func uploadHandler(response http.ResponseWriter, request *http.Request) {
-	response.Write([]byte("test"))
+	request.ParseForm()
+
+	if request.Method == "GET" {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Must post method.")
+	}
+
+	file, handle, err := request.FormFile("file")
+
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Get file info failure.")
+	}
+
+	f, err := os.OpenFile(utils.ROOT_DIR+"/files/"+handle.Filename, os.O_WRONLY|os.O_CREATE, utils.FILE_WRITE_MODE)
+	io.Copy(f, file)
+
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Copy file failure.")
+	}
+
+	defer f.Close()
+	defer file.Close()
+
+	fmt.Println("upload success")
 }
