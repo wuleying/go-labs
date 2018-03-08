@@ -22,7 +22,8 @@ func init() {
 func main() {
 	defer clog.Shutdown()
 
-	http.HandleFunc("/", HomeHandler)
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/upload", uploadHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(fmt.Sprintf("%s/%s", utils.ROOT_DIR, "static")))))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%s", "10099"), nil)
@@ -32,7 +33,7 @@ func main() {
 }
 
 // 首页
-func HomeHandler(response http.ResponseWriter, request *http.Request) {
+func homeHandler(response http.ResponseWriter, request *http.Request) {
 	template, err := template.ParseFiles(utils.TEMPLATES_DIR + "/home.html")
 
 	if err != nil {
@@ -41,4 +42,9 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
 	}
 
 	template.Execute(response, nil)
+}
+
+// 上传
+func uploadHandler(response http.ResponseWriter, request *http.Request) {
+	response.Write([]byte("test"))
 }
