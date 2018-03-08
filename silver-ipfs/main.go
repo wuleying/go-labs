@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/go-clog/clog"
+	"github.com/wuleying/go-labs/silver-ipfs/ipfs"
 	"github.com/wuleying/go-labs/silver-ipfs/utils"
 	"html/template"
 	"io"
 	"net/http"
 	"os"
+	"path"
 )
 
 func init() {
@@ -59,7 +61,9 @@ func uploadHandler(response http.ResponseWriter, request *http.Request) {
 		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Get file info failure.")
 	}
 
-	f, err := os.OpenFile(utils.ROOT_DIR+"/files/"+handle.Filename, os.O_WRONLY|os.O_CREATE, utils.FILE_WRITE_MODE)
+	tmpFile := utils.ROOT_DIR + "/files/" + handle.Filename
+
+	f, err := os.OpenFile(tmpFile, os.O_WRONLY|os.O_CREATE, utils.FILE_WRITE_MODE)
 	io.Copy(f, file)
 
 	if err != nil {
@@ -69,5 +73,21 @@ func uploadHandler(response http.ResponseWriter, request *http.Request) {
 	defer f.Close()
 	defer file.Close()
 
-	fmt.Println("upload success")
+	fileHash, err := ipfs.AddObject(tmpFile)
+
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Add IPFS failure.")
+	}
+
+	fileSuffix := path.Ext(handle.Filename)
+
+	newFile := utils.ROOT_DIR + "/files/" + fileHash + fileSuffix
+
+	err = os.Rename(tmpFile, newFile)
+
+	if err != nil {
+		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Move file failure.")
+	}
+
+	fmt.Println(newFile)
 }
