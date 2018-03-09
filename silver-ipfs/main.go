@@ -63,15 +63,15 @@ func uploadHandler(response http.ResponseWriter, request *http.Request) {
 
 	tmpFile := utils.ROOT_DIR + "/files/" + handle.Filename
 
-	f, err := os.OpenFile(tmpFile, os.O_WRONLY|os.O_CREATE, utils.FILE_WRITE_MODE)
-	io.Copy(f, file)
+	fileHandle, err := os.OpenFile(tmpFile, os.O_WRONLY|os.O_CREATE, utils.FILE_WRITE_MODE)
+	io.Copy(fileHandle, file)
 
 	if err != nil {
 		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Copy file failure.")
 	}
 
-	defer f.Close()
 	defer file.Close()
+	defer fileHandle.Close()
 
 	fileHash, err := ipfs.AddObject(tmpFile)
 
@@ -79,10 +79,12 @@ func uploadHandler(response http.ResponseWriter, request *http.Request) {
 		clog.Fatal(utils.CLOG_SKIP_DISPLAY_INFO, "Add IPFS failure.")
 	}
 
+	// 获取文件扩展名
 	fileSuffix := path.Ext(handle.Filename)
 
-	newFile := utils.ROOT_DIR + "/files/" + fileHash + fileSuffix
+	// todo 检查文件扩展名
 
+	newFile := utils.ROOT_DIR + "/files/" + fileHash + fileSuffix
 	err = os.Rename(tmpFile, newFile)
 
 	if err != nil {
