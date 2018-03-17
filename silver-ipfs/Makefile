@@ -26,7 +26,7 @@ clean:
 test:
 	$(GO_TEST)
 
-testCover:
+test_cover:
 	$(GO_TEST) -cover
 
 godep:
