@@ -7,4 +7,5 @@ import (
 
 func main() {
 	fmt.Println(pkg.Add(2, 15))
+	fmt.Println(pkg.Id)
 }
