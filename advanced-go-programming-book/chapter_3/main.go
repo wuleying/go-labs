@@ -1,7 +1,10 @@
 package main
 
-import "github.com/wuleying/go-labs/advanced-go-programming-book/chapter_3/pkg"
+import (
+	"github.com/wuleying/go-labs/advanced-go-programming-book/chapter_3/pkg"
+	"fmt"
+)
 
 func main() {
-	println(pkg.Id)
+	fmt.Println(pkg.Add(2, 15))
 }

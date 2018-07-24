@@ -1,10 +1,6 @@
-GLOBL ·Id(SB),$8
-
-DATA ·Id+0(SB)/1,$0x37
-DATA ·Id+1(SB)/1,$0x25
-DATA ·Id+2(SB)/1,$0x00
-DATA ·Id+3(SB)/1,$0x00
-DATA ·Id+4(SB)/1,$0x00
-DATA ·Id+5(SB)/1,$0x00
-DATA ·Id+6(SB)/1,$0x00
-DATA ·Id+7(SB)/1,$0x00
+TEXT    ·Add+0(SB),$0-24
+MOVQ    a+0(FP),BX
+MOVQ    b+8(FP),BP
+ADDQ    BP,BX
+MOVQ    BX,res+16(FP)
+RET     ,
