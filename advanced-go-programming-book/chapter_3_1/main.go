@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/wuleying/go-labs/advanced-go-programming-book/chapter_3_1/add"
 	"fmt"
+	"github.com/wuleying/go-labs/advanced-go-programming-book/chapter_3_1/add"
 )
 
 func main() {
