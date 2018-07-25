@@ -1,10 +1,8 @@
 package main
 
-import (
-	"fmt"
-	"github.com/wuleying/go-labs/advanced-go-programming-book/chapter_3_1/add"
-)
+//void SayHello(const char* s);
+import "C"
 
 func main() {
-	fmt.Println(add.Add(2, 15))
+	C.SayHello(C.CString("Hello, World\n"))
 }
