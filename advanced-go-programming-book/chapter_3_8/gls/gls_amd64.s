@@ -1,25 +1,9 @@
-// func getg() interface{}
-TEXT ·getg(SB), NOSPLIT, $32-16
-    NO_LOCAL_POINTERS
+#include "go_asm.h"
+#include "textflag.h"
 
-    MOVQ $0, ret_type+0(FP)
-    MOVQ $0, ret_data+8(FP)
-    GO_RESULTS_INITIALIZED
-
-    // get runtime.g
-    MOVQ (TLS), AX
-
-    // get runtime.g type
-    MOVQ $type·runtime·g(SB), BX
-
-    // convert (*g) to interface{}
-    MOVQ AX, 8(SP)
-    MOVQ BX, 0(SP)
-    CALL runtime·convT2E(SB)
-    MOVQ 16(SP), AX
-    MOVQ 24(SP), BX
-
-    // return interface{}
-    MOVQ AX, ret_type+0(FP)
-    MOVQ BX, ret_data+8(FP)
-    RET
+// func Get() int64
+TEXT ·Get(SB),NOSPLIT,$0-8
+	MOVQ (TLS), R14
+	MOVQ g_goid(R14), R13
+	MOVQ R13, ret+0(FP)
+	RET
