@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	print(GetGoid())
+	fmt.Println(GetGoid())
 }
 
 func GetGoid() int64 {
